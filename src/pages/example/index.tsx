@@ -73,19 +73,19 @@ export const MOCK_BANNERS: BannerMockItem[] = [
 		id: 1,
 		title: '夏季限时特惠活动',
 		pic: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop&q=80',
-		url: '/pages/index/index',
+		url: '/pages/home/index',
 	},
 	{
 		id: 2,
 		title: '全新优质服务上线',
 		pic: 'https://images.unsplash.com/photo-1519046904884-53103b34b206?w=800&auto=format&fit=crop&q=80',
-		url: '/pages/index/index',
+		url: '/pages/home/index',
 	},
 	{
 		id: 3,
 		title: '新手专属立减礼包',
 		pic: 'https://images.unsplash.com/photo-1473116763249-2faaef81ccda?w=800&auto=format&fit=crop&q=80',
-		url: '/pages/index/index',
+		url: '/pages/home/index',
 	},
 ];
 
@@ -160,11 +160,7 @@ export default function Index() {
 
 				{/* Avatar 头像组件展示 */}
 				<Card className="flex flex-col gap-3">
-					<Heading
-						title="Avatar 头像族"
-						size="sm"
-						subtitle="尺寸预设 & 在线状态角标 (AvatarBadge)"
-					/>
+					<Heading title="Avatar 头像族" size="sm" subtitle="尺寸预设 & 在线状态角标 (AvatarBadge)" />
 					<View className="flex items-center gap-4">
 						<View className="relative">
 							<Avatar src={MOCK_USER.avatar} name={MOCK_USER.name} size="sm" />
@@ -187,11 +183,7 @@ export default function Index() {
 				{/* Badge 徽章/标签展示 */}
 
 				<Card className="flex flex-col gap-3">
-					<Heading
-						title="Badge 徽章族"
-						size="sm"
-						subtitle="CVA 语义变体 & Dot 状态红点"
-					/>
+					<Heading title="Badge 徽章族" size="sm" subtitle="CVA 语义变体 & Dot 状态红点" />
 					<View className="flex flex-wrap gap-2">
 						<Badge variant="primary">Primary</Badge>
 						<Badge variant="success" dot>
@@ -211,11 +203,7 @@ export default function Index() {
 
 				{/* Card 卡片族展示 */}
 				<Card className="flex flex-col gap-3">
-					<Heading
-						title="Card 卡片族"
-						size="sm"
-						subtitle="纵向卡片、大图卡片 & 横向图文卡片"
-					/>
+					<Heading title="Card 卡片族" size="sm" subtitle="纵向卡片、大图卡片 & 横向图文卡片" />
 
 					{/* 纵向卡片 */}
 					<Card clickable onClick={() => Taro.showToast({ title: '点击卡片', icon: 'none' })}>
@@ -288,11 +276,7 @@ export default function Index() {
 
 				{/* NavItem 导航族 */}
 				<Card className="flex flex-col gap-3">
-					<Heading
-						title="NavItem 导航族 (Grid 宫格)"
-						size="sm"
-						subtitle="Grid 宫格导航模式 (4列网格)"
-					/>
+					<Heading title="NavItem 导航族 (Grid 宫格)" size="sm" subtitle="Grid 宫格导航模式 (4列网格)" />
 					<View className="grid grid-cols-4 gap-4">
 						<NavItem
 							label="名表估价"
@@ -323,11 +307,7 @@ export default function Index() {
 
 				<Card className="p-0 overflow-hidden flex flex-col">
 					<View className="p-4 pb-0">
-						<Heading
-							title="NavItem 列表形态"
-							size="sm"
-							subtitle="支持 openType 微信客服与 extra 扩展"
-						/>
+						<Heading title="NavItem 列表形态" size="sm" subtitle="支持 openType 微信客服与 extra 扩展" />
 					</View>
 					<View className="flex flex-col mt-2">
 						<NavItem
@@ -355,11 +335,7 @@ export default function Index() {
 				{/* Tabs 选项卡族 */}
 				<Card className="p-0 overflow-hidden flex flex-col">
 					<View className="p-4 pb-0">
-						<Heading
-							title="Tabs 选项卡族"
-							size="sm"
-							subtitle="基础视图与高级数据视图切换"
-						/>
+						<Heading title="Tabs 选项卡族" size="sm" subtitle="基础视图与高级数据视图切换" />
 					</View>
 					<Tabs value={activeTabSub} onValueChange={setActiveTabSub}>
 						<TabsList>
@@ -391,11 +367,7 @@ export default function Index() {
 
 				{/* AspectRatio 宽高比容器族 */}
 				<Card className="flex flex-col gap-3">
-					<Heading
-						title="AspectRatio 宽高比容器"
-						size="sm"
-						subtitle="16:9 经典横屏、1:1 正方形与 4:3 布局"
-					/>
+					<Heading title="AspectRatio 宽高比容器" size="sm" subtitle="16:9 经典横屏、1:1 正方形与 4:3 布局" />
 					<AspectRatio ratio={16 / 9} className="rounded-card bg-gray-100">
 						<Image
 							src="https://images.unsplash.com/photo-1519046904884-53103b34b206?w=800&auto=format&fit=crop&q=80"
@@ -423,11 +395,7 @@ export default function Index() {
 
 				{/* Alert 提示框族 */}
 				<Card className="flex flex-col gap-3">
-					<Heading
-						title="Alert 提示框族"
-						size="sm"
-						subtitle="基础提示文案与标题描述组合"
-					/>
+					<Heading title="Alert 提示框族" size="sm" subtitle="基础提示文案与标题描述组合" />
 					<Alert variant="info">请确保凭证边缘完整、公章清晰，格式支持 JPG、PNG</Alert>
 					<Alert variant="warning">
 						<AlertTitle>实名认证提示</AlertTitle>
@@ -448,11 +416,7 @@ export default function Index() {
 
 				{/* Dialog 居中模态框 & Drawer 抽屉族 */}
 				<Card className="flex flex-col gap-3">
-					<Heading
-						title="Dialog 居中模态框 & Drawer 抽屉族"
-						size="sm"
-						subtitle="居中对话框与侧边/底部抽屉"
-					/>
+					<Heading title="Dialog 居中模态框 & Drawer 抽屉族" size="sm" subtitle="居中对话框与侧边/底部抽屉" />
 					<View className="flex flex-wrap gap-2.5">
 						<Button size="sm" variant="primary" onClick={() => setDialogOpen(true)}>
 							打开 Dialog 居中对话框
@@ -468,11 +432,7 @@ export default function Index() {
 
 				{/* Skeleton 骨架屏预加载族 */}
 				<Card className="flex flex-col gap-3">
-					<Heading
-						title="Skeleton 骨架屏预加载族"
-						size="sm"
-						subtitle="基础波浪骨架与全套卡片预加载骨架"
-					/>
+					<Heading title="Skeleton 骨架屏预加载族" size="sm" subtitle="基础波浪骨架与全套卡片预加载骨架" />
 					<View className="flex items-center gap-3">
 						<SkeletonAvatar size="md" />
 						<SkeletonText lines={2} className="flex-1" />
@@ -482,11 +442,7 @@ export default function Index() {
 
 				{/* SearchBar 搜索栏族 */}
 				<Card className="flex flex-col gap-3">
-					<Heading
-						title="SearchBar 搜索栏族"
-						size="sm"
-						subtitle="Filled 胶囊、Outline 线框与只读模式"
-					/>
+					<Heading title="SearchBar 搜索栏族" size="sm" subtitle="Filled 胶囊、Outline 线框与只读模式" />
 					<SearchBar
 						variant="filled"
 						action={
@@ -512,11 +468,7 @@ export default function Index() {
 
 				{/* DescriptionList 描述规格族 */}
 				<Card className="flex flex-col gap-3">
-					<Heading
-						title="DescriptionList 描述规格族"
-						size="sm"
-						subtitle="左右键值对及分隔线展示"
-					/>
+					<Heading title="DescriptionList 描述规格族" size="sm" subtitle="左右键值对及分隔线展示" />
 					<DescriptionList divider>
 						<Description label="鉴定订单号" value="ORD-20260729-8890" variant="between" />
 						<Description label="评估分类" value="腕表 / 劳力士" variant="between" />
@@ -535,11 +487,7 @@ export default function Index() {
 
 				{/* FormItem 表单校验族 */}
 				<Card className="flex flex-col gap-3">
-					<Heading
-						title="FormItem 表单校验族"
-						size="sm"
-						subtitle="输入框表单项与校验错误提示"
-					/>
+					<Heading title="FormItem 表单校验族" size="sm" subtitle="输入框表单项与校验错误提示" />
 					<FormItem label="微信真实姓名" required helper="用于核对估价协议与转账卡号">
 						<Input
 							className="text-right text-sm text-text-title"
@@ -635,10 +583,7 @@ export default function Index() {
 
 				{/* 手写签名画板 */}
 				<Card>
-					<Heading
-						title="手写签名 (Signature)"
-						subtitle="微信原生 Canvas 2D 笔迹绘制与透明 PNG 导出"
-					/>
+					<Heading title="手写签名 (Signature)" subtitle="微信原生 Canvas 2D 笔迹绘制与透明 PNG 导出" />
 					<Signature
 						height={180}
 						onConfirm={(tempFilePath) =>

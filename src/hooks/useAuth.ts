@@ -92,7 +92,7 @@ export const useAuth = () => {
 			console.warn('登出接口调用异常，已本地退出', err);
 		} finally {
 			setLogout();
-			Taro.reLaunch({ url: '/pages/index/index' });
+			Taro.reLaunch({ url: '/pages/home/index' });
 		}
 	};
 

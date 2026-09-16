@@ -1,6 +1,6 @@
 export default defineAppConfig({
 	pages: [
-		'pages/index/index',
+		'pages/home/index',
 		'pages/user/index',
 		'pages/user/profile/index',
 		'pages/article/index',
@@ -19,7 +19,7 @@ export default defineAppConfig({
 			{
 				iconPath: 'assets/tabbar/home.png',
 				selectedIconPath: 'assets/tabbar/home_fill.png',
-				pagePath: 'pages/index/index',
+				pagePath: 'pages/home/index',
 				text: '首页',
 			},
 			{

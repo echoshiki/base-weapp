@@ -25,7 +25,7 @@ export const serializeParams = (params: any = {}): string => {
 export const getCurrentPageUrl = (): string => {
 	const pages = Taro.getCurrentPages();
 	const currentPage = pages[pages.length - 1];
-	if (!currentPage) return '/pages/index/index';
+	if (!currentPage) return '/pages/home/index';
 	const route = `/${currentPage.route}`;
 	const queryString = serializeParams(currentPage.options);
 	return `${route}${queryString}`;
@@ -36,7 +36,7 @@ export const getCurrentPageUrl = (): string => {
  * @param path 页面路径
  */
 export const isTabBarPage = (path: string): boolean => {
-	const tabBars = ['pages/index/index', 'pages/example/index', 'pages/user/index'];
+	const tabBars = ['pages/home/index', 'pages/example/index', 'pages/user/index'];
 	const normalizedPath = path.startsWith('/') ? path.substring(1) : path;
 	const purePath = normalizedPath.split('?')[0];
 	return tabBars.includes(purePath);

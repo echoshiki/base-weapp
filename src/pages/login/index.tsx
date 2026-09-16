@@ -36,7 +36,7 @@ const LoginPage = () => {
 		}
 
 		// 兜底回首页 (mapsTo 会自动识别 TabBar 执行 switchTab)
-		mapsTo('/pages/index/index', 'reLaunch');
+		mapsTo('/pages/home/index', 'reLaunch');
 	};
 
 	// 协议勾选检查
@@ -196,7 +196,7 @@ const LoginPage = () => {
 				<View className="mt-8">
 					<Text
 						className="text-xs text-stone-400 hover:text-stone-600 active:text-primary transition-colors py-1 px-3"
-						onClick={() => mapsTo('/pages/index/index', 'reLaunch')}
+						onClick={() => mapsTo('/pages/home/index', 'reLaunch')}
 					>
 						暂不登录，先去首页看看 &gt;
 					</Text>
