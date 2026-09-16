@@ -39,13 +39,13 @@ import { Page, Card, Button, FormItem, Badge, Avatar, Drawer, Tabs } from '@/com
 
 页面级 Layout 顶级容器组件。自动收归全站背景色 (`bg-main-bg`)、左右边距 (`paddingX`/`container-x`)、页面级 Loading 居中占位与底部 TabBar/安全区留白 (`hasTabBar`/`pb-safe`)。导出 `<Page>` 与 `<PageContent>`。
 
-| Prop | 类型 | 说明 |
-| --- | --- | --- |
-| `hasTabBar` | `boolean` | 是否包含底部 TabBar（启用 `pb-24` 留白，默认 `false`） |
-| `paddingX` | `boolean` | 是否启用全站统一左右边距 (`container-x`)，默认 `true` |
-| `loading` | `boolean` | 页面级统一 Loading 状态，默认 `false` |
-| `header` | `ReactNode` | 页面顶部固定 Header 槽位 (如吸顶搜索栏) |
-| `footer` | `ReactNode` | 页面底部 Fixed 吸底操作栏槽位 |
+| Prop        | 类型        | 说明                                                   |
+| ----------- | ----------- | ------------------------------------------------------ |
+| `hasTabBar` | `boolean`   | 是否包含底部 TabBar（启用 `pb-24` 留白，默认 `false`） |
+| `paddingX`  | `boolean`   | 是否启用全站统一左右边距 (`container-x`)，默认 `true`  |
+| `loading`   | `boolean`   | 页面级统一 Loading 状态，默认 `false`                  |
+| `header`    | `ReactNode` | 页面顶部固定 Header 槽位 (如吸顶搜索栏)                |
+| `footer`    | `ReactNode` | 页面底部 Fixed 吸底操作栏槽位                          |
 
 ```tsx
 // 1. 默认统一边距与 TabBar 留白页面
@@ -63,8 +63,8 @@ import { Page, Card, Button, FormItem, Badge, Avatar, Drawer, Tabs } from '@/com
 
 宽高比约束容器组件（shadcn 架构）。将子元素（图片、视频、骨架屏等）强约束在指定的宽高比例容器内，有效防止图片/媒体异步加载时的布局塌陷与页面跳变 (CLS)。
 
-| Prop | 类型 | 说明 |
-| --- | --- | --- |
+| Prop    | 类型     | 说明                                                              |
+| ------- | -------- | ----------------------------------------------------------------- |
 | `ratio` | `number` | 宽高比例（如 `16 / 9`, `4 / 3`, `1 / 1`, `3 / 4`），默认 `16 / 9` |
 
 ```tsx
@@ -410,17 +410,17 @@ return isLoading ? <Loading title="加载中..." /> : <List />;
 
 全能选择器组件（收归普通单选 `selector`、日期 `date`、省市区 `region`、时间 `time`），统一支持 `outlined`（框体卡片）/ `underline`（单下划线）/ `ghost`（极简行内）三种主题变体。
 
-| Prop | 类型 | 适用模式 | 说明 |
-| --- | --- | --- | --- |
-| `mode` | `'selector' \| 'date' \| 'region' \| 'time'` | 全部 | 选择器模式，默认 `'selector'` |
-| `variant` | `'outlined' \| 'underline' \| 'ghost'` | 全部 | 变体风格，默认 `'outlined'` |
-| `placeholder` | `string` | 全部 | 占位文案 |
-| `icon` | `ReactNode \| string` | 全部 | 左侧图标 |
-| `children` | `ReactNode` | 全部 | 自定义触发插槽（不传则渲染内置标准框） |
-| `options` | `(T \| string \| number)[]` | `selector` | 数据源数组 |
-| `value` | `any` | 全部 | 当前选中的值 |
-| `onChange` | `Function` | 全部 | 选中变更回调（根据 mode 智能推导参数） |
-| `fields` | `'year' \| 'month' \| 'day'` | `date` | 日期选择粒度，默认 `'day'` |
+| Prop          | 类型                                         | 适用模式   | 说明                                   |
+| ------------- | -------------------------------------------- | ---------- | -------------------------------------- |
+| `mode`        | `'selector' \| 'date' \| 'region' \| 'time'` | 全部       | 选择器模式，默认 `'selector'`          |
+| `variant`     | `'outlined' \| 'underline' \| 'ghost'`       | 全部       | 变体风格，默认 `'outlined'`            |
+| `placeholder` | `string`                                     | 全部       | 占位文案                               |
+| `icon`        | `ReactNode \| string`                        | 全部       | 左侧图标                               |
+| `children`    | `ReactNode`                                  | 全部       | 自定义触发插槽（不传则渲染内置标准框） |
+| `options`     | `(T \| string \| number)[]`                  | `selector` | 数据源数组                             |
+| `value`       | `any`                                        | 全部       | 当前选中的值                           |
+| `onChange`    | `Function`                                   | 全部       | 选中变更回调（根据 mode 智能推导参数） |
+| `fields`      | `'year' \| 'month' \| 'day'`                 | `date`     | 日期选择粒度，默认 `'day'`             |
 
 ```tsx
 // 1. 普通下拉单选 (估价页 / 独立卡片)
@@ -428,7 +428,7 @@ return isLoading ? <Loading title="加载中..." /> : <List />;
   options={categoryList}
   value={selectedCatId}
   onChange={(val) => setCatId(val)}
-  placeholder="请点击选择典当大类"
+  placeholder="请点击选择大类"
   icon="icon-[ph--cube-light]"
   variant="outlined"
 />
@@ -545,16 +545,20 @@ ImagePreview.show({ urls: imgList, current: 0 });
 
 ```tsx
 <Dialog open={open} onOpenChange={setOpen}>
-  <DialogContent>
-    <DialogHeader>
-      <DialogTitle>二次确认</DialogTitle>
-      <DialogDescription>确定要删除此条记录吗？</DialogDescription>
-    </DialogHeader>
-    <DialogFooter>
-      <Button size="xs" variant="outline" onClick={() => setOpen(false)}>取消</Button>
-      <Button size="xs" variant="destructive" onClick={handleDelete}>删除</Button>
-    </DialogFooter>
-  </DialogContent>
+	<DialogContent>
+		<DialogHeader>
+			<DialogTitle>二次确认</DialogTitle>
+			<DialogDescription>确定要删除此条记录吗？</DialogDescription>
+		</DialogHeader>
+		<DialogFooter>
+			<Button size="xs" variant="outline" onClick={() => setOpen(false)}>
+				取消
+			</Button>
+			<Button size="xs" variant="destructive" onClick={handleDelete}>
+				删除
+			</Button>
+		</DialogFooter>
+	</DialogContent>
 </Dialog>
 ```
 
@@ -580,15 +584,15 @@ ImagePreview.show({ urls: imgList, current: 0 });
 
 ```tsx
 <Signature
-  height={200}
-  strokeWidth={3.5}
-  placeholder="请在此区域亲笔手写您的全名"
-  onConfirm={(tempFilePath) => {
-    console.log('导出透明签名图片路径:', tempFilePath);
-  }}
-  onClear={() => {
-    console.log('签名已清空');
-  }}
+	height={200}
+	strokeWidth={3.5}
+	placeholder="请在此区域亲笔手写您的全名"
+	onConfirm={(tempFilePath) => {
+		console.log('导出透明签名图片路径:', tempFilePath);
+	}}
+	onClear={() => {
+		console.log('签名已清空');
+	}}
 />
 ```
 

@@ -51,7 +51,7 @@ export default function ArticleListPage() {
 				) : articleList.length === 0 ? (
 					// 空状态
 					<View className="py-16">
-						<Empty title="暂无相关文章" subTitle="平台常见问题、典当指南与服务指引将在此更新" />
+						<Empty title="暂无相关文章" subTitle="平台常见问题与服务指引将在此更新" />
 					</View>
 				) : (
 					// 文章列表卡片

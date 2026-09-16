@@ -102,7 +102,6 @@ export default function ArticleDetailPage() {
 					>
 						返回文章列表
 					</Button>
-					<Text className="text-xs text-text-muted/60">物廷龙典当 · 规范透明 放心托付</Text>
 				</View>
 			</View>
 		</Page>

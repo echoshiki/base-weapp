@@ -71,12 +71,10 @@ export default function AgreementPage() {
 			<View className="container-x pt-4">
 				<Card className="flex flex-col p-5 bg-white shadow-2xs border-0">
 					{/* 页面主标题 */}
-					<Text className="text-xl font-bold text-text-title leading-snug tracking-tight">
-						{title}
-					</Text>
+					<Text className="text-xl font-bold text-text-title leading-snug tracking-tight">{title}</Text>
 
 					<View className="flex items-center gap-2 mt-2 pb-3 border-b border-gray-100 text-xs text-text-muted/60">
-						<Text>{config?.appName || '物廷龙典当'}</Text>
+						<Text>{config?.appName || '小程序项目'}</Text>
 						<Text>·</Text>
 						<Text>规范合规保障</Text>
 					</View>
@@ -105,10 +103,7 @@ export default function AgreementPage() {
 					{externalUrl && (
 						<View className="mt-8 pt-4 border-t border-gray-100 flex items-center justify-between text-xs text-text-muted">
 							<Text className="truncate mr-2">官方原址: {externalUrl}</Text>
-							<Text
-								className="text-primary font-medium shrink-0 cursor-pointer"
-								onClick={handleCopyUrl}
-							>
+							<Text className="text-primary font-medium shrink-0 cursor-pointer" onClick={handleCopyUrl}>
 								复制链接
 							</Text>
 						</View>

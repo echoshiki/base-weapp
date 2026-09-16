@@ -5,7 +5,7 @@ import { Page, Button } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
 import { useAppConfig } from '@/hooks/useAppConfig';
 import { mapsTo, cn } from '@/utils/common';
-import defaultLogo from '@/assets/images/logo.svg';
+import defaultCover from '@/assets/images/default-cover.svg';
 
 const LoginPage = () => {
 	const { data: config } = useAppConfig();
@@ -87,9 +87,9 @@ const LoginPage = () => {
 	};
 
 	// 品牌信息
-	const logoSrc = config?.appLogo || defaultLogo;
-	const appName = config?.appName || '乌廷龙典当';
-	const appDesc = config?.appDescription || '诚信质押 · 典当评估 · 资产变现 · 专业守护';
+	const logoSrc = config?.appLogo || defaultCover;
+	const appName = config?.appName || '小程序项目';
+	const appDesc = config?.appDescription || '我们竭诚为您提供优质的服务体验';
 
 	return (
 		<Page
@@ -112,24 +112,6 @@ const LoginPage = () => {
 					<Text className="text-xl font-extrabold tracking-wider mb-2">{appName}</Text>
 					<Text className="text-xs opacity-60 leading-relaxed px-2">{appDesc}</Text>
 				</View>
-
-				{/* 核心服务信任徽章 */}
-				<View className="flex items-center gap-3 mt-8 bg-white/80 backdrop-blur-xs py-3 px-4 rounded-full border border-primary/15 shadow-xs">
-					<View className="flex items-center gap-1">
-						<View className="icon-[ph--shield-check-fill] size-4 text-primary" />
-						<Text className="text-xs text-text-title font-medium">正规持牌</Text>
-					</View>
-					<View className="w-px h-3 bg-primary/50" />
-					<View className="flex items-center gap-1">
-						<View className="icon-[ph--lock-key-fill] size-4 text-primary" />
-						<Text className="text-xs text-text-title font-medium">资产安保</Text>
-					</View>
-					<View className="w-px h-3 bg-primary/50" />
-					<View className="flex items-center gap-1">
-						<View className="icon-[ph--lightning-fill] size-4 text-primary" />
-						<Text className="text-xs text-text-title font-medium">极速放款</Text>
-					</View>
-				</View>
 			</View>
 
 			{/* 下半部分：操作与协议 */}
@@ -150,7 +132,7 @@ const LoginPage = () => {
 							</Button>
 							<View className="flex items-center justify-center gap-1 text-xs text-text-muted/80">
 								<View className="icon-[ph--check-circle] size-3 text-primary" />
-								<Text>我们从始自终保障账户隐私安全</Text>
+								<Text>我们从始自终保障您的隐私安全</Text>
 							</View>
 						</View>
 					)}
