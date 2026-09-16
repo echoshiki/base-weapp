@@ -1,0 +1,45 @@
+@import 'weapp-tailwindcss/index.css';
+@plugin "@iconify/tailwind4";
+
+@font-face {
+	font-family: 'Manrope';
+	src: url('./assets/fonts/Manrope.woff2') format('woff2');
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+@theme {
+	/* 核心色彩 */
+	--color-primary: #c5a059;
+
+	/* 点缀色/辅助色*/
+	--color-main-bg: #fafafa;
+	--color-text-title: #09090b;
+	--color-text-body: #27272a;
+	--color-text-muted: #71717a;
+
+	/* 圆角 */
+	--radius-card: 12rpx;
+
+	/* 容器间距 */
+	--container-p-x: 32rpx;
+
+	/** 字体 */
+	--font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+}
+
+@utility container-x {
+	padding-left: var(--container-p-x);
+	padding-right: var(--container-p-x);
+}
+
+* {
+	font-family: var(--font-sans);
+	color: var(--font-body);
+}
+
+/* 清除微信小程序原生 button::after 默认边框，防止黑边/重影锯齿 */
+button::after {
+	border: none !important;
+}
