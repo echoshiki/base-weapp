@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro';
 import { useAuthStore } from '@/store/auth';
-import { checkWxCodeAPI, bindPhoneAPI, logoutAPI } from '@/services/auth';
+import { checkWxCodeAPI, bindPhoneAPI, logoutAPI, AccountLoginRequest, accountLoginAPI } from '@/services/auth';
 import { getUserInfoAPI } from '@/services/user';
 import { toLogin, mapsTo } from '@/utils/common';
 
@@ -22,6 +22,28 @@ export const useAuth = () => {
 			updateUserInfo(raw);
 		} catch (e) {
 			console.error('获取用户信息失败，请检查 token 有效性', e);
+		}
+	};
+
+	/**
+	 * 传统账号/密码登录方式 (适用于政企内部、B端、巡查员、H5端)
+	 * @param params { userName, password }
+	 */
+	const onAccountLogin = async (params: AccountLoginRequest) => {
+		Taro.showLoading({ title: '登录中...', mask: true });
+		try {
+			const res = await accountLoginAPI(params);
+			if (res.token) {
+				await handleLoginEffect(res.token);
+				Taro.showToast({ title: '登录成功', icon: 'success' });
+				return { success: true, token: res.token };
+			}
+			return { success: false, message: '未获取到有效凭证' };
+		} catch (err: any) {
+			Taro.showToast({ title: err?.message || '账号或密码错误', icon: 'none' });
+			return { success: false, error: err };
+		} finally {
+			Taro.hideLoading();
 		}
 	};
 
@@ -120,20 +142,46 @@ export const useAuth = () => {
 	/** 跳转前验证 */
 	const navigateWithAuth = (targetUrl: string) => runWithAuth(() => mapsTo(targetUrl));
 
+	/**
+	 * 冷启动初始化鉴权状态
+	 * @param mode 'account' (账号密码模式，默认) | 'wechat' (微信静默换票模式)
+	 */
+	const initAuth = async (mode: 'account' | 'wechat' = 'account') => {
+		if (mode === 'wechat') return onSilentLogin();
+
+		// 账号密码模式：检查本地是否有历史 Token
+		if (token) {
+			try {
+				const raw = await getUserInfoAPI();
+				updateUserInfo(raw);
+			} catch (e) {
+				console.warn('冷启动校验 Token 异常', e);
+			}
+		} else {
+			// toLogin(undefined, 'reLaunch');
+		}
+	};
+
 	return {
 		// 状态
 		token,
 		authStage,
 		isLoggedIn,
 
-		// 动作
+		// 微信登录
 		onSilentLogin,
 		onManualLogin,
 		onBindPhone,
+
+		// 账号密码登录
+		onAccountLogin,
+
+		// 通用方法
 		onLogout,
 		toLogin,
 		runWithAuth,
 		checkLogin,
 		navigateWithAuth,
+		initAuth,
 	};
 };

@@ -39,3 +39,20 @@ export const bindPhoneAPI = (data: BindPhoneRequest) => http.post<BindPhoneRespo
  * 用户登出
  */
 export const logoutAPI = () => http.get('/logout');
+
+export interface AccountLoginRequest {
+	/** 用户名 */
+	userName: string;
+	/** 密码 */
+	password: string;
+}
+
+export interface AccountLoginResponse {
+	/** 用户 token 凭证 */
+	token?: string;
+}
+
+/**
+ * 账户/密码登录方式
+ */
+export const accountLoginAPI = (data: AccountLoginRequest) => http.post<AccountLoginResponse>(`/wx/login`, data);

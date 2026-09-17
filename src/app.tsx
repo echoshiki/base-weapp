@@ -17,11 +17,9 @@ const queryClient = new QueryClient({
 });
 
 function App({ children }: PropsWithChildren<any>) {
-	const { onSilentLogin } = useAuth();
+	const { initAuth } = useAuth();
 
-	useLaunch(() => {
-		onSilentLogin();
-	});
+	useLaunch(() => initAuth('wechat'));
 
 	return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 }

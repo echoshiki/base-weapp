@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import Taro from '@tarojs/taro';
-import { AuthStage, UserInfo } from '@/types/user';
+import { UserInfo } from '@/types/user';
 
 interface AuthState {
 	/** 登录成功后的 Token 值 */
@@ -11,7 +11,7 @@ interface AuthState {
 	/** 用户信息 */
 	userInfo: UserInfo | null;
 	/** 登陆阶段状态机：UNLOGIN-未登录, NEED_BIND_PHONE-需绑定手机, LOGGED_IN-已登录 */
-	authStage: AuthStage;
+	authStage: 'UNLOGIN' | 'NEED_BIND_PHONE' | 'LOGGED_IN';
 
 	/** 状态设置：登录成功 */
 	setLoginSuccess: (token: string) => void;

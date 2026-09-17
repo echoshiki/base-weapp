@@ -1,13 +1,5 @@
 import { Gender } from './common';
 
-/**
- * 登录阶段状态机
- */
-export type AuthStage =
-	| 'UNLOGIN' // 未登录
-	| 'NEED_BIND_PHONE' // 需要绑定手机号
-	| 'LOGGED_IN'; // 已登录
-
 /** 用户信息 */
 export interface UserInfo {
 	/** 用户ID */
