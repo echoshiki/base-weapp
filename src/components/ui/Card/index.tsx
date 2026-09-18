@@ -81,7 +81,7 @@ export function CardImage({ src, mode = 'aspectFill', className, ...props }: Car
  */
 export function CardHeader({ className, children, ...props }: ViewProps) {
 	return (
-		<View className={cn('flex flex-col gap-1 mb-1.5', className)} {...props}>
+		<View className={cn('flex flex-col gap-1 mb-1.5 pb-3 border-b border-gray-100', className)} {...props}>
 			{children}
 		</View>
 	);

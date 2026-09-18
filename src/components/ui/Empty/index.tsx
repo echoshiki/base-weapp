@@ -33,7 +33,13 @@ export function Empty({
 }: EmptyProps) {
 	if (!children) {
 		return (
-			<View className={cn('w-full py-12 flex flex-col gap-4 items-center justify-center animate-fade-in', className)} {...props}>
+			<View
+				className={cn(
+					'w-full py-12 flex flex-col gap-4 items-center justify-center animate-fade-in flex-1',
+					className,
+				)}
+				{...props}
+			>
 				<EmptyIcon icon={icon} />
 				<View className="flex flex-col items-center gap-1">
 					<EmptyTitle>{title}</EmptyTitle>
@@ -51,7 +57,10 @@ export function Empty({
 	}
 
 	return (
-		<View className={cn('w-full py-12 flex flex-col gap-4 items-center justify-center animate-fade-in', className)} {...props}>
+		<View
+			className={cn('w-full py-12 flex flex-col gap-4 items-center justify-center animate-fade-in', className)}
+			{...props}
+		>
 			{children}
 		</View>
 	);
@@ -60,7 +69,15 @@ export function Empty({
 /**
  * EmptyIcon 空状态图标/插图
  */
-export function EmptyIcon({ icon = 'icon-[ph--mailbox-duotone]', className, children }: { icon?: string; className?: string; children?: ReactNode }) {
+export function EmptyIcon({
+	icon = 'icon-[ph--mailbox-duotone]',
+	className,
+	children,
+}: {
+	icon?: string;
+	className?: string;
+	children?: ReactNode;
+}) {
 	return (
 		<View className={cn('rounded-full bg-gray-100 p-4 flex items-center justify-center', className)}>
 			{children ? children : <View className={cn('w-10 h-10 text-gray-400', icon)} />}
