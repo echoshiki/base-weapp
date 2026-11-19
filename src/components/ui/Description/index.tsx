@@ -17,10 +17,7 @@ export interface DescriptionListProps extends ViewProps {
 export function DescriptionList({ divider = false, className, children, ...props }: DescriptionListProps) {
 	return (
 		<DescriptionListContext.Provider value={{ divider }}>
-			<View
-				className={cn('flex flex-col w-full', divider ? 'gap-0' : 'gap-2.5', className)}
-				{...props}
-			>
+			<View className={cn('flex flex-col w-full', divider ? 'gap-0' : 'gap-2.5', className)} {...props}>
 				{children}
 			</View>
 		</DescriptionListContext.Provider>
@@ -51,8 +48,8 @@ export function Description({
 	variant = 'start',
 	align = 'center',
 	labelWidth = 'w-20',
-	valueTextClass = 'text-text-title font-medium',
-	labelTextClass = 'text-text-muted',
+	valueTextClass = 'text-current font-medium',
+	labelTextClass = 'opacity-60',
 	className,
 	...props
 }: DescriptionProps) {
@@ -64,11 +61,11 @@ export function Description({
 	return (
 		<View
 			className={cn(
-				'text-xs flex w-full gap-2',
-				divider && 'py-2.5 border-b border-gray-100/80 last:border-b-0 last:pb-0 first:pt-0',
+				'text-sm flex w-full gap-2',
+				divider && 'py-3 border-b border-gray-200/80 last:border-b-0 last:pb-0 first:pt-0',
 				variant === 'between' ? 'justify-between' : 'justify-start',
 				flexAlignClass,
-				className
+				className,
 			)}
 			{...props}
 		>
@@ -81,7 +78,7 @@ export function Description({
 					className={cn(
 						'flex-1 leading-relaxed text-inherit',
 						variant === 'between' ? 'text-right' : 'text-left',
-						valueTextClass
+						valueTextClass,
 					)}
 				>
 					{value}

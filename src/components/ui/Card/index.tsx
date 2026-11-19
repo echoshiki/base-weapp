@@ -38,7 +38,7 @@ export function Card({
 					'bg-white overflow-hidden transition-all border border-gray-100/80 shadow-xs',
 					layout === 'horizontal' ? 'flex items-start gap-3.5' : 'flex flex-col',
 					rounded ? 'rounded-card' : 'rounded-none',
-					noPadding ? 'p-0' : 'p-4',
+					noPadding ? 'p-0' : 'px-4 py-5',
 					clickable && 'active:scale-[0.98] transition-transform',
 					className,
 				)}
