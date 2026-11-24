@@ -1,8 +1,8 @@
 import { View, Text, Image, ViewProps } from '@tarojs/components';
-import { useState, ReactNode } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 import { cn } from '@/utils/common';
 
-export type AvatarSize = 'sm' | 'md' | 'lg' | 'xl';
+export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 const BG_COLORS = [
 	'bg-blue-400',
@@ -14,148 +14,65 @@ const BG_COLORS = [
 	'bg-cyan-400',
 ];
 
-const SIZE_MAP: Record<AvatarSize, { container: string; badge: string }> = {
-	sm: { container: 'w-8 h-8 text-xs', badge: 'w-2.5 h-2.5' },
-	md: { container: 'w-12 h-12 text-sm', badge: 'w-3.5 h-3.5' },
-	lg: { container: 'w-16 h-16 text-base', badge: 'w-4 h-4' },
-	xl: { container: 'w-20 h-20 text-xl', badge: 'w-5 h-5' },
+const SIZE_MAP: Record<AvatarSize, string> = {
+	xs: 'size-6 text-xs',
+	sm: 'size-8 text-xs',
+	md: 'size-12 text-sm',
+	lg: 'size-16 text-base',
+	xl: 'size-20 text-xl',
+};
+
+const getBgColor = (str: string) => {
+	const charCodeSum = str.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+	return BG_COLORS[charCodeSum % BG_COLORS.length];
 };
 
 export interface AvatarProps extends ViewProps {
+	/** 头像图片地址 */
 	src?: string;
+	/** 用户名（用于无图/加载失败时的首字母兜底与背景色计算） */
 	name?: string;
+	/** 尺寸预设，默认 md */
 	size?: AvatarSize;
+	/** 自定义兜底占位内容（优先级高于默认首字母） */
+	fallback?: ReactNode;
 	className?: string;
-	children?: ReactNode;
 }
 
 /**
- * Avatar 根容器组件
+ * Avatar 头像组件
+ * 支持图片展示、加载失败自动回退首字母彩底占位及自定义 fallback
  */
-export function Avatar({ src, name = 'U', size = 'md', className, children, ...props }: AvatarProps) {
+export function Avatar({ src, name = 'U', size = 'md', fallback, className, ...props }: AvatarProps) {
 	const [isError, setIsError] = useState(false);
 
-	const getBgColor = (str: string) => {
-		const charCodeSum = str.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-		return BG_COLORS[charCodeSum % BG_COLORS.length];
-	};
+	// src 变化时重置错误状态，确保更换头像后能正常加载新图
+	useEffect(() => {
+		setIsError(false);
+	}, [src]);
 
-	const displayChar = name.charAt(0).toUpperCase();
-	const sizeConfig = SIZE_MAP[size] || SIZE_MAP.md;
+	const safeName = name?.trim() || 'U';
+	const displayChar = safeName.charAt(0).toUpperCase();
+	const sizeClass = SIZE_MAP[size] || SIZE_MAP.md;
 
-	// 如果没有子节点且传入了 src/name，走经典方便模式
-	if (!children) {
-		return (
-			<View
-				className={cn(
-					'relative rounded-full overflow-hidden flex items-center justify-center shrink-0 border-2 border-white/20 shadow-xs',
-					sizeConfig.container,
-					className
-				)}
-				{...props}
-			>
-				{src && !isError ? (
-					<Image
-						src={src}
-						className="w-full h-full"
-						mode="aspectFill"
-						onError={() => setIsError(true)}
-					/>
-				) : (
-					<View className={cn('w-full h-full flex items-center justify-center text-white font-bold', getBgColor(name))}>
-						<Text>{displayChar}</Text>
-					</View>
-				)}
-			</View>
-		);
-	}
-
-	// 否则走复合组件模式
 	return (
 		<View
 			className={cn(
 				'relative rounded-full overflow-hidden flex items-center justify-center shrink-0 border-2 border-white/20 shadow-xs',
-				sizeConfig.container,
-				className
+				sizeClass,
+				className,
 			)}
 			{...props}
 		>
-			{children}
-		</View>
-	);
-}
-
-/**
- * AvatarImage 头像图片子组件
- */
-export function AvatarImage({ src, className, ...props }: { src: string; className?: string }) {
-	const [isError, setIsError] = useState(false);
-
-	if (isError || !src) return null;
-
-	return (
-		<Image
-			src={src}
-			className={cn('w-full h-full', className)}
-			mode="aspectFill"
-			onError={() => setIsError(true)}
-			{...props}
-		/>
-	);
-}
-
-/**
- * AvatarFallback 头像后备占位组件
- */
-export function AvatarFallback({
-	name = 'U',
-	className,
-	children,
-}: {
-	name?: string;
-	className?: string;
-	children?: ReactNode;
-}) {
-	const displayChar = name.charAt(0).toUpperCase();
-
-	return (
-		<View
-			className={cn(
-				'w-full h-full flex items-center justify-center bg-zinc-200 text-zinc-700 font-bold',
-				className
+			{src && !isError ? (
+				<Image src={src} className="size-full" mode="aspectFill" onError={() => setIsError(true)} />
+			) : fallback !== undefined ? (
+				fallback
+			) : (
+				<View className={cn('size-full flex items-center justify-center text-white font-bold', getBgColor(safeName))}>
+					<Text>{displayChar}</Text>
+				</View>
 			)}
-		>
-			{children ? children : <Text>{displayChar}</Text>}
 		</View>
-	);
-}
-
-export type AvatarBadgeStatus = 'online' | 'offline' | 'busy' | 'away';
-
-const BADGE_STATUS_MAP: Record<AvatarBadgeStatus, string> = {
-	online: 'bg-emerald-500',
-	offline: 'bg-zinc-400',
-	busy: 'bg-rose-500',
-	away: 'bg-amber-500',
-};
-
-/**
- * AvatarBadge 头像右下角状态角标
- */
-export function AvatarBadge({
-	status = 'online',
-	className,
-}: {
-	status?: AvatarBadgeStatus;
-	className?: string;
-}) {
-	return (
-		<View
-			className={cn(
-				'absolute bottom-0 right-0 rounded-full border-2 border-white',
-				BADGE_STATUS_MAP[status],
-				className
-			)}
-		/>
 	);
 }

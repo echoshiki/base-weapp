@@ -59,7 +59,7 @@ const EXAMPLE_GROUPS: ExampleGroup[] = [
 			{
 				key: 'avatar',
 				name: 'Avatar 头像',
-				desc: '尺寸预设与在线状态角标 (AvatarBadge)',
+				desc: '五档尺寸预设与首字母彩底自动兜底',
 				render: () => <AvatarDemo />,
 			},
 			{

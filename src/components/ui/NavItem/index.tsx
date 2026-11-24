@@ -74,7 +74,7 @@ export function NavItem({
 				isList
 					? cn(
 							'flex items-center gap-3 px-3 py-3.5 transition-colors active:bg-zinc-50/80 w-full',
-							border && 'border-b border-zinc-100/80',
+							border && 'border-b border-zinc-200 rounded-none',
 						)
 					: 'flex flex-col items-center gap-1.5 active:scale-95 transition-transform',
 				className,

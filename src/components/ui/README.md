@@ -81,49 +81,38 @@ import { Page, Card, Button, FormItem, Badge, Avatar, Drawer, Tabs } from '@/com
 
 ### Card
 
-卡片容器组件族（shadcn 架构）。支持纵向与横向图文（`layout="horizontal"`）双重布局。
+卡片容器组件，提供统一的背景、圆角、边框、阴影、内边距控制，支持纵向 (`vertical`) 与横向 (`horizontal`) 布局。
 
-#### 子组件导出：
-
-- `<Card>`: 容器
-- `<CardImage>`: 封面图片组件（自动根据 layout 适配尺寸）
-- `<CardHeader>`, `<CardTitle>`, `<CardDescription>`: 头部与标题说明
-- `<CardContent>`, `<CardFooter>`: 内容区与底部操作区
+| Prop | 类型 | 说明 |
+| ---- | ---- | ---- |
+| `layout` | `'vertical' \| 'horizontal'` | 布局方向，默认 `'vertical'` |
+| `noPadding` | `boolean` | 取消内边距（适合顶部通栏大图卡片），默认 `false` |
+| `rounded` | `boolean` | 是否启用圆角，默认 `true` |
+| `clickable` | `boolean` | 点击缩放反馈（传入 `onClick` 时默认开启） |
 
 ```tsx
-// 1. 纵向面板卡片
-<Card clickable onClick={goDetail}>
-  <CardHeader>
-    <CardTitle>奢品鉴定服务</CardTitle>
-    <CardDescription>发布时间：2026-07-29</CardDescription>
-  </CardHeader>
-  <CardContent>内容摘要描述...</CardContent>
-  <CardFooter>
-    <Text>分类：手表</Text>
-    <Button size="xs" variant="ghost">查看</Button>
-  </CardFooter>
+// 1. 基础卡片
+<Card className="gap-2" onClick={goDetail}>
+  <Heading title="奢品鉴定服务" subtitle="发布时间：2026-07-29" />
+  <Text className="text-xs text-text-body">内容摘要描述...</Text>
 </Card>
 
-// 2. 纵向大图卡片 (上面大图，下面标题信息)
-<Card noPadding clickable onClick={goDetail}>
-  <CardImage src="https://.../cover.jpg" className="h-36" />
-  <View className="p-3.5 space-y-2">
-    <CardTitle>Rolex 劳力士预估服务</CardTitle>
-    <CardDescription>包含机芯检测与行情参考</CardDescription>
+// 2. 通栏大图卡片
+<Card noPadding onClick={goDetail}>
+  <Image src="https://.../cover.jpg" mode="aspectFill" className="w-full h-36" />
+  <View className="p-4 flex flex-col gap-2">
+    <Text className="font-medium text-text-title">Rolex 劳力士预估服务</Text>
+    <Text className="text-xs text-text-muted">包含机芯检测与行情参考</Text>
   </View>
 </Card>
 
-// 3. 横向图文卡片 (替代旧版 ArticleCard，零硬编码)
-<Card layout="horizontal" clickable onClick={goDetail}>
-  <CardImage src="https://.../thumb.jpg" />
-  <CardContent>
-    <CardTitle className="line-clamp-1">最新便民社区服务指南</CardTitle>
-    <CardDescription className="line-clamp-2">摘要描述...</CardDescription>
-    <CardFooter>
-      <Badge size="xs" variant="secondary">便民信息</Badge>
-      <Text>2026-07-29</Text>
-    </CardFooter>
-  </CardContent>
+// 3. 横向图文卡片
+<Card layout="horizontal" onClick={goDetail}>
+  <Image src="https://.../thumb.jpg" mode="aspectFill" className="w-24 h-20 rounded shrink-0" />
+  <View className="flex-1 min-w-0 flex flex-col justify-between">
+    <Text className="font-medium text-sm text-text-title line-clamp-2">最新便民社区服务指南</Text>
+    <Text className="text-xs text-text-muted">2026-07-29</Text>
+  </View>
 </Card>
 ```
 
@@ -175,17 +164,14 @@ import { Page, Card, Button, FormItem, Badge, Avatar, Drawer, Tabs } from '@/com
 
 ### Avatar
 
-头像组件族，导出 `<Avatar>`, `<AvatarImage>`, `<AvatarFallback>`, `<AvatarBadge>`。
+头像组件，支持 `xs` / `sm` / `md` / `lg` / `xl` 五档尺寸，图片加载失败或未传 `src` 时自动回退为首字母彩底占位，也支持通过 `fallback` 自定义兜底内容。
 
 ```tsx
-// 1. 开箱即用单标签模式
+// 1. 标准头像（带首字母自动兜底）
 <Avatar src={user.avatar} name={user.nickName} size="lg" />
 
-// 2. 复合组件模式 (带状态角标)
-<View className="relative">
-  <Avatar src={user.avatar} name={user.nickName} size="md" />
-  <AvatarBadge status="online" />
-</View>
+// 2. 自定义兜底图标
+<Avatar src={user.avatar} fallback={<View className="icon-[ph--user] size-5 text-zinc-400" />} />
 ```
 
 ### Description / DescriptionList

@@ -3,18 +3,11 @@ import Taro from '@tarojs/taro';
 import { useState } from 'react';
 import {
 	Card,
-	CardImage,
-	CardHeader,
-	CardTitle,
-	CardDescription,
-	CardContent,
-	CardFooter,
 	Alert,
 	AlertTitle,
 	AlertDescription,
 	Badge,
 	Avatar,
-	AvatarBadge,
 	Button,
 	Carousel,
 	CarouselContent,
@@ -75,20 +68,11 @@ import { MOCK_BANNERS, MOCK_USER, MOCK_CARD_ITEM } from './mock';
 export function AvatarDemo() {
 	return (
 		<View className="flex items-center gap-4">
-			<View className="relative">
-				<Avatar src={MOCK_USER.avatar} name={MOCK_USER.name} size="sm" />
-			</View>
-			<View className="relative">
-				<Avatar src={MOCK_USER.avatar} name={MOCK_USER.name} size="md" />
-				<AvatarBadge status="online" />
-			</View>
-			<View className="relative">
-				<Avatar src={MOCK_USER.avatar} name={MOCK_USER.name} size="lg" />
-				<AvatarBadge status="away" />
-			</View>
-			<View className="relative">
-				<Avatar name="李四" size="lg" />
-			</View>
+			<Avatar src={MOCK_USER.avatar} name={MOCK_USER.name} size="xs" />
+			<Avatar src={MOCK_USER.avatar} name={MOCK_USER.name} size="sm" />
+			<Avatar src={MOCK_USER.avatar} name={MOCK_USER.name} size="md" />
+			<Avatar src={MOCK_USER.avatar} name={MOCK_USER.name} size="lg" />
+			<Avatar name="李四" size="lg" />
 		</View>
 	);
 }
@@ -116,61 +100,61 @@ export function CardDemo() {
 	return (
 		<View className="flex flex-col gap-3">
 			{/* 纵向卡片 */}
-			<Card clickable onClick={() => Taro.showToast({ title: '点击卡片', icon: 'none' })}>
-				<CardHeader>
-					<View className="flex items-center justify-between">
-						<CardTitle>{MOCK_CARD_ITEM.title}</CardTitle>
+			<Card className="gap-4" onClick={() => Taro.showToast({ title: '点击卡片', icon: 'none' })}>
+				<View className="flex flex-col gap-2 border-b pb-4 border-zinc-200">
+					<Text className="font-medium leading-tight">{MOCK_CARD_ITEM.title}</Text>
+					<Text className="text-xs opacity-60">发布时间：{MOCK_CARD_ITEM.time}</Text>
+				</View>
+				<Text className="text-xs opacity-60 leading-relaxed line-clamp-2">{MOCK_CARD_ITEM.desc}</Text>
+				<View className="flex items-center justify-between ">
+					<View className="flex items-center gap-1">
 						<Badge variant="primary">{MOCK_CARD_ITEM.tag}</Badge>
+						<Badge variant="zinc">奢侈品估价</Badge>
 					</View>
-					<CardDescription>发布时间：{MOCK_CARD_ITEM.time}</CardDescription>
-				</CardHeader>
-				<CardContent>
-					<Text className="text-xs text-text-body leading-relaxed">{MOCK_CARD_ITEM.desc}</Text>
-				</CardContent>
-				<CardFooter>
-					<Text className="text-xs text-text-muted">所属分类：奢侈品估价</Text>
-					<Button size="xs">查看详情</Button>
-				</CardFooter>
+					<Button size="xs" rounded={false}>
+						查看详情
+					</Button>
+				</View>
 			</Card>
 
 			{/* 纵向大图卡片 */}
-			<Card noPadding clickable onClick={() => Taro.showToast({ title: '点击商品/大图卡片', icon: 'none' })}>
-				<CardImage
-					src="https://images.unsplash.com/photo-1519046904884-53103b34b206?w=800&auto=format&fit=crop&q=80"
-					className="h-36"
+			<Card noPadding onClick={() => Taro.showToast({ title: '点击商品/大图卡片', icon: 'none' })}>
+				<Image
+					src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&auto=format&fit=crop&q=80"
+					mode="aspectFill"
+					className="w-full h-36"
 				/>
-				<View className="p-3.5 space-y-2">
-					<View className="flex items-center justify-between">
-						<CardTitle className="text-base">Rolex 劳力士切利尼经典腕表预估服务</CardTitle>
-						<Badge variant="emerald">可上门</Badge>
+				<View className="px-4 py-4 flex flex-col gap-2">
+					<View className="flex items-center justify-between gap-2">
+						<Text className="font-medium leading-tight truncate">Rolex 劳力士切利尼经典腕表预估服务</Text>
 					</View>
-					<CardDescription className="line-clamp-2">
-						专业奢品成色评估，包含机芯检测、原装配件核验与市场行情参考。
-					</CardDescription>
-					<CardFooter className="pt-2 mt-2">
-						<Text className="text-xs text-text-muted">已有 128 人成功评估</Text>
+					<Text className="text-xs opacity-60 leading-relaxed line-clamp-2">{MOCK_CARD_ITEM.desc}</Text>
+					<View className="flex items-center justify-between pt-2 border-t border-zinc-200">
+						<View className="flex gap-1 items-center">
+							<Badge variant="emerald">可上门</Badge>
+							<Text className="text-xs opacity-60">已有 128 人成功评估</Text>
+						</View>
 						<Button size="xs" variant="primary">
 							立即预约
 						</Button>
-					</CardFooter>
+					</View>
 				</View>
 			</Card>
 
 			{/* 横向图文卡片 */}
-			<Card layout="horizontal" clickable onClick={() => Taro.showToast({ title: '点击文章卡片', icon: 'none' })}>
-				<CardImage src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&auto=format&fit=crop&q=80" />
-				<CardContent>
-					<View>
-						<CardTitle className="line-clamp-1">最新便民社区服务与通知指南</CardTitle>
-						<CardDescription className="line-clamp-2 mt-1">
-							本周社区卫生中心开展免费健康体检与疫苗接种宣传活动...
-						</CardDescription>
-					</View>
-					<CardFooter>
+			<Card layout="horizontal" onClick={() => Taro.showToast({ title: '点击文章卡片', icon: 'none' })}>
+				<Image
+					src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&auto=format&fit=crop&q=80"
+					mode="aspectFill"
+					className="w-24 h-20 rounded shrink-0"
+				/>
+				<View className="flex-1 min-w-0 flex flex-col justify-between">
+					<Text className="font-medium text-sm line-clamp-2">最新便民社区服务与通知指南</Text>
+					<View className="flex items-center justify-between">
 						<Badge variant="zinc">便民信息</Badge>
-						<Text className="text-xs text-text-muted">2026-07-29</Text>
-					</CardFooter>
-				</CardContent>
+						<Text className="text-xs opacity-60">2026-07-29</Text>
+					</View>
+				</View>
 			</Card>
 		</View>
 	);
@@ -305,10 +289,10 @@ export function TabsDemo() {
 					<TabsTrigger value="tab2">高级数据</TabsTrigger>
 				</TabsList>
 				<TabsContent value="tab1" className="p-3">
-					<Text className="text-xs text-text-body">这是 Tab1 的复合内容视图。</Text>
+					<Text className="text-xs">这是 Tab1 的复合内容视图。</Text>
 				</TabsContent>
 				<TabsContent value="tab2" className="p-3">
-					<Text className="text-xs text-text-body">这是 Tab2 的高级数据视图。</Text>
+					<Text className="text-xs">这是 Tab2 的高级数据视图。</Text>
 				</TabsContent>
 			</Tabs>
 		</View>
@@ -427,7 +411,7 @@ export function DrawerDemo() {
 						<DrawerDescription>按品牌、年份与估价区间条件过滤</DrawerDescription>
 					</DrawerHeader>
 					<View className="p-4 space-y-4">
-						<Text className="text-xs text-text-muted block">成色要求</Text>
+						<Text className="text-xs opacity-60 block">成色要求</Text>
 						<View className="flex flex-wrap gap-2">
 							<Badge variant="primary">全新未拆</Badge>
 							<Badge variant="zinc">95新微瑕</Badge>
@@ -456,7 +440,7 @@ export function DrawerDemo() {
 						<Text className="font-bold text-base">
 							{MOCK_USER.name} ({MOCK_USER.role})
 						</Text>
-						<Text className="text-xs text-text-muted text-center">
+						<Text className="text-xs opacity-60 text-center">
 							确认使用 138****8888 预约上门成色评估服务？
 						</Text>
 					</View>
@@ -478,7 +462,7 @@ export function FormItemDemo() {
 		<View className="flex flex-col gap-3">
 			<FormItem label="微信真实姓名" required helper="用于核对估价协议与转账卡号">
 				<Input
-					className="text-right text-sm text-text-title"
+					className="text-right text-sm"
 					placeholder="请输入真实姓名"
 					value={userName}
 					onInput={(e) => setUserName(e.detail.value)}
@@ -563,10 +547,10 @@ export function HeadingDemo() {
 			<Heading
 				title="最新通知"
 				size="md"
-				icon="icon-[ph--bell-duotone]"
+				className="border-l-10 border-primary pl-3 mt-3"
 				extra={<Badge variant="primary">3条未读</Badge>}
 			/>
-			<Heading title="小号标题 (sm)" subtitle="辅助说明文案" size="sm" />
+			<Heading title="小号标题" subtitle="辅助说明文案" size="sm" />
 		</View>
 	);
 }
@@ -589,7 +573,7 @@ export function DividerDemo() {
 			<Divider />
 			<Divider dashed />
 			<Divider>中间嵌入文字</Divider>
-			<View className="flex items-center justify-center text-xs text-text-body py-1">
+			<View className="flex items-center justify-center text-xs py-1">
 				<Text>左侧项</Text>
 				<Divider orientation="vertical" />
 				<Text>中间项</Text>
@@ -624,15 +608,15 @@ export function GenderDemo() {
 		<View className="flex items-center gap-4">
 			<View className="flex items-center gap-1.5">
 				<Gender gender="0" size="xs" />
-				<Text className="text-xs text-text-muted">男 (xs)</Text>
+				<Text className="text-xs opacity-60">男 (xs)</Text>
 			</View>
 			<View className="flex items-center gap-1.5">
 				<Gender gender="1" size="sm" />
-				<Text className="text-xs text-text-muted">女 (sm)</Text>
+				<Text className="text-xs opacity-60">女 (sm)</Text>
 			</View>
 			<View className="flex items-center gap-1.5">
 				<Gender gender="0" size="md" />
-				<Text className="text-xs text-text-muted">男 (md)</Text>
+				<Text className="text-xs opacity-60">男 (md)</Text>
 			</View>
 		</View>
 	);
@@ -641,8 +625,9 @@ export function GenderDemo() {
 export function PageDemo() {
 	return (
 		<View className="flex flex-col gap-2.5">
-			<Text className="text-xs text-text-muted leading-relaxed">
-				当前示例页即由 &lt;Page&gt; 包裹，自动提供全站背景色 (bg-main-bg)、左右边距 (container-x)、页面级 Loading 与悬浮快捷菜单。
+			<Text className="text-xs opacity-60 leading-relaxed">
+				当前示例页即由 &lt;Page&gt; 包裹，自动提供全站背景色 (bg-main-bg)、左右边距 (container-x)、页面级
+				Loading 与悬浮快捷菜单。
 			</Text>
 			<View className="bg-white rounded-card border border-zinc-200/80 overflow-hidden py-2">
 				<PageContent className="bg-zinc-100/80 py-2 rounded">
@@ -662,7 +647,12 @@ export function ImagePreviewDemo() {
 			<Button size="sm" variant="primary" onClick={() => setOpen(true)}>
 				打开自定义预览弹窗
 			</Button>
-			<Button size="sm" variant="zinc" appearance="outline" onClick={() => ImagePreview.show({ urls, current: 0 })}>
+			<Button
+				size="sm"
+				variant="zinc"
+				appearance="outline"
+				onClick={() => ImagePreview.show({ urls, current: 0 })}
+			>
 				调用原生 previewImage
 			</Button>
 			<ImagePreview open={open} urls={urls} current={0} onClose={() => setOpen(false)} />
@@ -809,8 +799,9 @@ export function FloatWidgetsDemo() {
 
 	return (
 		<View className="flex flex-col gap-2.5">
-			<Text className="text-xs text-text-muted leading-relaxed">
-				右下角已默认挂载 FloatQuickMenu（可拖拽悬浮快捷菜单）。点击下方按钮可临时开启 FloatCustomerService 在线客服悬浮球。
+			<Text className="text-xs opacity-60 leading-relaxed">
+				右下角已默认挂载 FloatQuickMenu（可拖拽悬浮快捷菜单）。点击下方按钮可临时开启 FloatCustomerService
+				在线客服悬浮球。
 			</Text>
 			<Button size="sm" variant={showService ? 'rose' : 'primary'} onClick={() => setShowService((v) => !v)}>
 				{showService ? '隐藏客服悬浮球' : '显示客服悬浮球'}
@@ -883,8 +874,10 @@ export function AuthMaskDemo() {
 				onLoginClick={() => setLocked(false)}
 			>
 				<Card>
-					<CardTitle>机密业务报告</CardTitle>
-					<CardDescription className="mt-1">当前已完成身份验证，您正在查看受保护的完整内容。</CardDescription>
+					<Text className="font-medium text-sm">机密业务报告</Text>
+					<Text className="text-xs opacity-60 mt-1 leading-relaxed">
+						当前已完成身份验证，您正在查看受保护的完整内容。
+					</Text>
 				</Card>
 			</AuthMask>
 		</View>

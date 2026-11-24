@@ -48,7 +48,7 @@ export function Description({
 	variant = 'start',
 	align = 'center',
 	labelWidth = 'w-20',
-	valueTextClass = 'text-current font-medium',
+	valueTextClass = 'text-current',
 	labelTextClass = 'opacity-60',
 	className,
 	...props
@@ -62,7 +62,7 @@ export function Description({
 		<View
 			className={cn(
 				'text-sm flex w-full gap-2',
-				divider && 'py-3 border-b border-zinc-200/80 last:border-b-0 last:pb-0 first:pt-0',
+				divider && 'py-3 border-b border-zinc-200 last:border-b-0 last:pb-0 first:pt-0',
 				variant === 'between' ? 'justify-between' : 'justify-start',
 				flexAlignClass,
 				className,
