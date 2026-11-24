@@ -1,17 +1,14 @@
-import { View, Text, Input, Image } from '@tarojs/components';
+import { View, Text, Input } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import { useState } from 'react';
-import { Page, Button } from '@/components/ui';
+import { Page, Button, Alert } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
-import { useAppConfig } from '@/hooks/useAppConfig';
 import { mapsTo, cn } from '@/utils/common';
-import defaultCover from '@/assets/images/default-cover.svg';
 
 const AccountLoginPage = () => {
-	const { data: config } = useAppConfig();
 	const { onAccountLogin } = useAuth();
 
-	const [userName, setUserName] = useState('');
+	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [showPassword, setShowPassword] = useState(false);
 	const [loading, setLoading] = useState(false);
@@ -45,18 +42,26 @@ const AccountLoginPage = () => {
 
 	// 执行账号密码登录
 	const handleLogin = async () => {
-		if (!userName.trim()) {
+		const trimmedUsername = username.trim();
+		const trimmedPassword = password.trim();
+		if (!trimmedUsername) {
 			return Taro.showToast({ title: '请输入分配的管理账户', icon: 'none' });
 		}
-		if (!password.trim()) {
+		if (trimmedUsername.length > 30) {
+			return Taro.showToast({ title: '账号长度不能超过30个字符', icon: 'none' });
+		}
+		if (!trimmedPassword) {
 			return Taro.showToast({ title: '请输入登录密码', icon: 'none' });
+		}
+		if (trimmedPassword.length > 20) {
+			return Taro.showToast({ title: '密码长度不能超过20个字符', icon: 'none' });
 		}
 
 		setLoading(true);
 		try {
 			const res = await onAccountLogin({
-				userName: userName.trim(),
-				password: password.trim(),
+				username: trimmedUsername,
+				password: trimmedPassword,
 			});
 
 			if (res.success) {
@@ -69,43 +74,38 @@ const AccountLoginPage = () => {
 		}
 	};
 
-	const logoSrc = config?.appLogo || defaultCover;
-
 	return (
-		<Page paddingX={false} className="min-h-screen bg-slate-50 flex flex-col justify-between">
-			<View className="flex-1 flex flex-col px-7 pt-12">
-				{/* 顶部系统徽章与标题 */}
-				<View className="flex flex-col items-center text-center mb-8">
-					<Text className="text-xl font-bold text-slate-900 tracking-tight">{config?.appName}</Text>
-					<Text className="text-xs text-slate-400 mt-1">{config?.appDescription}</Text>
-				</View>
-
+		<Page paddingX={false} showQuickMenu={false}>
+			<View className="flex-1 flex flex-col px-5 pt-28">
 				{/* 登录表单卡片 */}
-				<View className="bg-white rounded p-6 shadow-sm border border-slate-100 flex flex-col gap-4">
-					<Text className="font-bold text-slate-800 mb-1">账号密码登录</Text>
+				<View className="bg-white rounded p-6 py-8 shadow-sm border border-slate-100 flex flex-col gap-4">
+					<View className="flex flex-col justify-center items-center gap-1">
+						<Text className="font-bold text-slate-800 text-xl">管理人员登录</Text>
+						<Text className="font-light text-sm text-slate-500">MANAGER LOGIN</Text>
+					</View>
 
 					{/* 账号输入框 */}
 					<View className="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-xl px-3.5 h-12">
-						<View className="icon-[ph--user] size-5 text-slate-400 shrink-0" />
+						<View className="icon-[ph--user] size-5 shrink-0" />
 						<Input
-							value={userName}
-							onInput={(e) => setUserName(e.detail.value)}
+							value={username}
+							maxlength={30}
+							onInput={(e) => setUsername(e.detail.value)}
 							placeholder="请输入管理账户"
-							placeholderClass="text-slate-400 text-xs"
-							className="flex-1 text-sm text-slate-800"
+							className="flex-1 text-sm text-slate-800 flex items-center"
 						/>
 					</View>
 
 					{/* 密码输入框 */}
 					<View className="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-xl px-3.5 h-12">
-						<View className="icon-[ph--lock-key] size-5 text-slate-400 shrink-0" />
+						<View className="icon-[ph--lock-key] size-5 shrink-0" />
 						<Input
 							value={password}
+							maxlength={20}
 							password={!showPassword}
 							onInput={(e) => setPassword(e.detail.value)}
 							placeholder="请输入登录密码"
-							placeholderClass="text-slate-400 text-xs"
-							className="flex-1 text-sm text-slate-800"
+							className="flex-1 text-slate-800 text-sm flex items-center"
 						/>
 						<View
 							onClick={() => setShowPassword(!showPassword)}
@@ -117,20 +117,14 @@ const AccountLoginPage = () => {
 					</View>
 
 					{/* 登录提交按钮 */}
-					<Button
-						size="xl"
-						variant="primary"
-						loading={loading}
-						onClick={handleLogin}
-						className="w-full h-12 bg-linear-to-r from-blue-600 to-indigo-600 text-white font-bold text-sm rounded-xl border-none shadow-md shadow-blue-500/25 mt-2 active:scale-98 transition-all"
-					>
+					<Button size="xl" block variant="primary" loading={loading} onClick={handleLogin}>
 						立即登录
 					</Button>
 
 					{/* 提示说明 */}
-					<View className="bg-amber-50/70 border border-amber-200/60 rounded-lg p-2.5 mt-1 text-xs text-amber-800 leading-relaxed">
-						<Text>注：账号密码由应急管理部门在后台统一开通分配，初次登录请及时修改初始密码。</Text>
-					</View>
+					<Alert variant="warning" hideIcon>
+						注：账号密码由应急管理部门在后台统一开通分配，初次登录请及时修改初始密码。
+					</Alert>
 				</View>
 			</View>
 		</Page>

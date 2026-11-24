@@ -1,6 +1,7 @@
 import { View, ViewProps } from '@tarojs/components';
 import { ReactNode } from 'react';
 import { Loading } from '../Loading';
+import { FloatQuickMenu } from '../FloatQuickMenu';
 import { cn } from '@/utils/common';
 
 export interface PageProps extends ViewProps {
@@ -10,6 +11,10 @@ export interface PageProps extends ViewProps {
 	paddingX?: boolean;
 	/** 页面级统一加载状态 (居中展示统一 Loading 占位) */
 	loading?: boolean;
+	/** 是否显示全局悬浮快捷功能菜单，默认 true（首页可设为 false） */
+	showQuickMenu?: boolean;
+	/** 顶部自定义插槽（如业务头部） */
+	header?: ReactNode;
 	className?: string;
 	children?: ReactNode;
 }
@@ -22,6 +27,8 @@ export function Page({
 	hasTabBar = false,
 	paddingX = true,
 	loading = false,
+	showQuickMenu = true,
+	header,
 	className,
 	children,
 	...props
@@ -30,6 +37,8 @@ export function Page({
 
 	return (
 		<View className={cn('min-h-screen bg-main-bg flex flex-col relative', pbClass, className)} {...props}>
+			{header}
+
 			{/* 主内容区 */}
 			{loading ? (
 				<View className="flex-1 flex items-center justify-center py-20">
@@ -38,6 +47,8 @@ export function Page({
 			) : (
 				<View className={cn('flex-1 flex flex-col', paddingX && 'container-x')}>{children}</View>
 			)}
+
+			{showQuickMenu && <FloatQuickMenu />}
 		</View>
 	);
 }

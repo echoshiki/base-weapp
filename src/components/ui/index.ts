@@ -1,3 +1,4 @@
+export * from './types';
 export * from './Page';
 export * from './Card';
 export * from './Button';
@@ -30,3 +31,7 @@ export * from './Gender';
 export * from './Select';
 export * from './Signature';
 export * from './FloatCustomerService';
+export * from './FloatQuickMenu';
+export * from './AuthMask';
+export * from './ActionTile';
+export * from './Icon';

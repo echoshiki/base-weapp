@@ -1,109 +1,186 @@
 import Taro from '@tarojs/taro';
 import { useAuthStore } from '@/store/auth';
-import { checkWxCodeAPI, bindPhoneAPI, logoutAPI, AccountLoginRequest, accountLoginAPI } from '@/services/auth';
+import {
+	logoutAPI,
+	accountLoginAPI,
+	sendSmsCodeAPI,
+	enterpriseLoginAPI,
+	enterpriseRegisterAPI,
+	getEnterpriseUserInfoAPI,
+} from '@/services/auth';
 import { getUserInfoAPI } from '@/services/user';
-import { toLogin, mapsTo } from '@/utils/common';
+import {
+	AccountLoginRequest,
+	EnterpriseLoginRequest,
+	EnterpriseRegisterRequest,
+	EnterpriseUserInfo,
+	LoginRoleType,
+} from '@/types/auth';
+import { toLogin, mapsTo, maskPhone } from '@/utils/common';
+
+/**
+ * 从 /enterprise/getInfo 响应中提取企业信息对象（兼容 data 包裹或平铺结构）
+ */
+export const extractEnterpriseInfo = (res: any): EnterpriseUserInfo | null => {
+	const raw = res?.data && typeof res.data === 'object' ? res.data : res;
+	if (!raw || (!raw.entId && !raw.entName && !raw.user)) return null;
+	return raw as EnterpriseUserInfo;
+};
+
+/**
+ * 将企业端详情映射为通用的 UserInfo 供基础展示组件使用（账户信息取 user[0]）
+ */
+export const mapEnterpriseToUserInfo = (ent: EnterpriseUserInfo) => {
+	const primaryUser = Array.isArray(ent.user) ? ent.user[0] : (ent.user as any);
+	const phone = primaryUser?.phone || ent.contPhone || '';
+	const firstPhoto = ent.bsPhoto?.split(',')[0]?.trim() || '';
+	return {
+		nickName: primaryUser?.name || ent.contPerson || ent.entName || '',
+		userName: ent.entName || primaryUser?.name || '',
+		phonenumber: phone,
+		maskedPhone: maskPhone(phone),
+		email: ent.email,
+		avatar: firstPhoto,
+	};
+};
 
 /**
  * 应用级 Auth 用户认证与授权 Hook
  */
 export const useAuth = () => {
-	const { token, authStage, uuid, setLoginSuccess, setNeedBind, updateUserInfo, setLogout } = useAuthStore();
+	const { token, authStage, loginType, roles, setLoginSuccess, updateUserInfo, updateEnterpriseInfo, setLogout } =
+		useAuthStore();
 	const isLoggedIn = authStage === 'LOGGED_IN' && !!token;
+	const isAdmin =
+		isLoggedIn &&
+		(loginType === 'admin' || roles.includes('common') || roles.some((r) => r.toLowerCase().includes('admin')));
+	const isEnterprise = isLoggedIn && (loginType === 'enterprise' || roles.includes('enterpriseUser'));
+
+	/**
+	 * 拉取并同步最新用户信息、角色与权限
+	 */
+	const syncUserInfo = async (targetType?: LoginRoleType) => {
+		const activeType = targetType ?? useAuthStore.getState().loginType ?? 'admin';
+		if (activeType === 'enterprise') {
+			const res = await getEnterpriseUserInfoAPI();
+			const entData = extractEnterpriseInfo(res);
+			if (entData) {
+				updateEnterpriseInfo(entData);
+				updateUserInfo(
+					mapEnterpriseToUserInfo(entData),
+					entData.roles?.length ? entData.roles : ['enterpriseUser'],
+					[],
+				);
+			}
+			return res;
+		}
+
+		const res = await getUserInfoAPI();
+		if (res.user) {
+			updateEnterpriseInfo(null);
+			updateUserInfo(
+				{
+					...res.user,
+					maskedPhone: maskPhone(res.user.phonenumber),
+				},
+				res.roles || [],
+				res.permissions || [],
+			);
+		}
+		return res;
+	};
 
 	/**
 	 * 统一处理登录成功的副作用
 	 * @description 同步登陆状态、拉取用户信息
 	 */
-	const handleLoginEffect = async (newToken: string) => {
-		setLoginSuccess(newToken);
+	const handleLoginEffect = async (newToken: string, type: LoginRoleType) => {
+		setLoginSuccess(newToken, type);
 		try {
-			const raw = await getUserInfoAPI();
-			updateUserInfo(raw);
+			await syncUserInfo(type);
 		} catch (e) {
 			console.error('获取用户信息失败，请检查 token 有效性', e);
 		}
 	};
 
 	/**
-	 * 传统账号/密码登录方式 (适用于政企内部、B端、巡查员、H5端)
-	 * @param params { userName, password }
+	 * 传统账号/密码登录方式 (适用于管理员端)
+	 * @param params { username, password, code?, uuid? }
 	 */
 	const onAccountLogin = async (params: AccountLoginRequest) => {
 		Taro.showLoading({ title: '登录中...', mask: true });
 		try {
 			const res = await accountLoginAPI(params);
+			Taro.hideLoading();
 			if (res.token) {
-				await handleLoginEffect(res.token);
+				await handleLoginEffect(res.token, 'admin');
 				Taro.showToast({ title: '登录成功', icon: 'success' });
 				return { success: true, token: res.token };
 			}
+			Taro.showToast({ title: res.msg || '未获取到有效凭证', icon: 'none' });
 			return { success: false, message: '未获取到有效凭证' };
 		} catch (err: any) {
-			Taro.showToast({ title: err?.message || '账号或密码错误', icon: 'none' });
-			return { success: false, error: err };
-		} finally {
 			Taro.hideLoading();
+			Taro.showToast({ title: err?.msg || err?.message || '账号或密码错误', icon: 'none' });
+			return { success: false, error: err };
 		}
 	};
 
 	/**
-	 * 执行微信登录并进行静默预检
-	 * @param isManual 是否由用户手动触发（决定是否显示 Loading）
-	 * @returns 返回当前登录所处的最新阶段状态，供页面层进行路由流转
+	 * 发送企业登录短信验证码（不锁全屏，发送成功后直接进入倒计时）
 	 */
-	const execWxLogin = async (isManual = false) => {
-		if (isManual) Taro.showLoading({ title: '登录中...', mask: true });
+	const onSendSmsCode = async (phone: string) => {
 		try {
-			const { code } = await Taro.login();
-			const res = await checkWxCodeAPI(code);
-			if (res.token) {
-				await handleLoginEffect(res.token);
-				return { success: true, stage: 'LOGGED_IN' as const };
-			} else if (res.uuid) {
-				setNeedBind(res.uuid);
-				return { success: true, stage: 'NEED_BIND_PHONE' as const };
-			}
-			return { success: false };
-		} catch (e) {
-			if (isManual) Taro.showToast({ title: '登录服务异常', icon: 'none' });
-			return { success: false };
-		} finally {
-			if (isManual) Taro.hideLoading();
+			const res = await sendSmsCodeAPI(phone);
+			return { success: true, data: res.data };
+		} catch (err: any) {
+			Taro.showToast({ title: err?.msg || err?.message || '验证码发送失败', icon: 'none' });
+			return { success: false, error: err };
 		}
 	};
 
-	/** 静默启动登录 (App.tsx 调用) */
-	const onSilentLogin = () => execWxLogin(false);
-
-	/** 手动登录 (登录页调用) */
-	const onManualLogin = () => execWxLogin(true);
-
-	/** 手机号一键绑定 (微信 getPhoneNumber 回调) */
-	const onBindPhone = async (e: { detail: { code?: string; errMsg?: string } }) => {
-		if (!e.detail.code || !uuid) {
-			if (e.detail.errMsg?.includes('deny') || e.detail.errMsg?.includes('cancel')) {
-				Taro.showToast({ title: '已取消授权', icon: 'none' });
-			}
-			return null;
-		}
-		Taro.showLoading({ title: '安全校验中...', mask: true });
+	/**
+	 * 企业端手机号验证码登录
+	 */
+	const onEnterpriseLogin = async (params: EnterpriseLoginRequest) => {
+		Taro.showLoading({ title: '登录中...', mask: true });
 		try {
-			const res = await bindPhoneAPI({
-				uuid: uuid,
-				code: e.detail.code,
-			});
-			if (res.token) {
-				await handleLoginEffect(res.token);
-				Taro.showToast({ title: '登录成功', icon: 'success' });
-				return res.token;
-			}
-		} catch (err) {
-			console.error('手机号绑定失败', err);
-		} finally {
+			const res = await enterpriseLoginAPI(params);
 			Taro.hideLoading();
+			if (res.token) {
+				await handleLoginEffect(res.token, 'enterprise');
+				Taro.showToast({ title: '登录成功', icon: 'success' });
+				return { success: true, token: res.token };
+			}
+			Taro.showToast({ title: res.msg || '未获取到有效凭证', icon: 'none' });
+			return { success: false, message: '未获取到有效凭证' };
+		} catch (err: any) {
+			Taro.hideLoading();
+			Taro.showToast({ title: err?.msg || err?.message || '登录失败，请检查手机号或验证码', icon: 'none' });
+			return { success: false, error: err };
 		}
-		return null;
+	};
+
+	/**
+	 * 企业用户注册
+	 */
+	const onEnterpriseRegister = async (params: EnterpriseRegisterRequest) => {
+		Taro.showLoading({ title: '提交中...', mask: true });
+		try {
+			const res = await enterpriseRegisterAPI(params);
+			Taro.hideLoading();
+			await Taro.showModal({
+				title: '提交成功',
+				content: '请耐心等待后台审核短信通知，通过之后方能登录本系统。',
+				showCancel: false,
+				confirmText: '我知道了',
+			});
+			return { success: true, data: res };
+		} catch (err: any) {
+			Taro.hideLoading();
+			Taro.showToast({ title: err?.msg || err?.message || '注册提交失败，请稍后重试', icon: 'none' });
+			return { success: false, error: err };
+		}
 	};
 
 	/** 注销登录 */
@@ -144,21 +221,15 @@ export const useAuth = () => {
 
 	/**
 	 * 冷启动初始化鉴权状态
-	 * @param mode 'account' (账号密码模式，默认) | 'wechat' (微信静默换票模式)
 	 */
-	const initAuth = async (mode: 'account' | 'wechat' = 'account') => {
-		if (mode === 'wechat') return onSilentLogin();
-
-		// 账号密码模式：检查本地是否有历史 Token
+	const initAuth = async (_mode: 'account' | 'wechat' = 'account') => {
+		// 检查本地是否有历史 Token
 		if (token) {
 			try {
-				const raw = await getUserInfoAPI();
-				updateUserInfo(raw);
+				await syncUserInfo();
 			} catch (e) {
 				console.warn('冷启动校验 Token 异常', e);
 			}
-		} else {
-			// toLogin(undefined, 'reLaunch');
 		}
 	};
 
@@ -166,17 +237,19 @@ export const useAuth = () => {
 		// 状态
 		token,
 		authStage,
+		loginType,
 		isLoggedIn,
+		isAdmin,
+		isEnterprise,
 
-		// 微信登录
-		onSilentLogin,
-		onManualLogin,
-		onBindPhone,
-
-		// 账号密码登录
+		// 登录与注册方法
 		onAccountLogin,
+		onSendSmsCode,
+		onEnterpriseLogin,
+		onEnterpriseRegister,
 
 		// 通用方法
+		syncUserInfo,
 		onLogout,
 		toLogin,
 		runWithAuth,

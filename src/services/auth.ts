@@ -1,58 +1,61 @@
 import { http } from '@/utils/http';
-
-export interface CheckWxCodeResponse {
-	/** 是否已注册 (true:直接登录, false:需绑定手机号) */
-	isWxCode?: boolean;
-	/** 用户 token (isWxCode 为 true 时返回) */
-	token?: string;
-	/** 用户临时登录凭证 (isWxCode 为 false 时返回，存入 Redis) */
-	uuid?: string;
-}
-
-/**
- * 微信静默登陆接口 (预检)
- * @description 传 wx.login 的 code，判断是否已注册
- * @param code wx.login 获取的微信 code
- */
-export const checkWxCodeAPI = (code: string) => http.post<CheckWxCodeResponse>(`/wx/isWxCode?code=${code}`);
-
-export interface BindPhoneRequest {
-	/** 微信 getPhoneNumber 获取的手机号 code (code2) */
-	code: string;
-	/** 第一步获取的临时凭证 (authKey) */
-	uuid: string;
-}
-
-export interface BindPhoneResponse {
-	/** 用户 token 凭证 */
-	token?: string;
-}
+import { BaseResponse, DataResponse, TableDataInfo } from '@/types/common';
+import {
+	AccountLoginRequest,
+	AccountLoginResponse,
+	EnterpriseLoginRequest,
+	EnterpriseLoginResponse,
+	EnterpriseOptionItem,
+	EnterpriseOptionParams,
+	EnterpriseRegisterRequest,
+	EnterpriseUserInfo,
+	SendSmsCodeData,
+} from '@/types/auth';
 
 /**
- * 绑定手机号接口 (正式注册/登录)
- * @description 传手机号 code + uuid 换取 token
- * @param data 包含 uuid 和手机号凭证的对象
+ * 管理员账号密码登录
+ * POST /login
  */
-export const bindPhoneAPI = (data: BindPhoneRequest) => http.post<BindPhoneResponse>(`/wx/login`, data);
+export const accountLoginAPI = (data: AccountLoginRequest) =>
+	http.post<AccountLoginResponse>('/login', data);
 
 /**
- * 用户登出
+ * 退出登录
+ * POST /logout
  */
-export const logoutAPI = () => http.get('/logout');
-
-export interface AccountLoginRequest {
-	/** 用户名 */
-	userName: string;
-	/** 密码 */
-	password: string;
-}
-
-export interface AccountLoginResponse {
-	/** 用户 token 凭证 */
-	token?: string;
-}
+export const logoutAPI = () => http.post<BaseResponse>('/logout');
 
 /**
- * 账户/密码登录方式
+ * 获取企业登录短信验证码
+ * POST /enterprise/code
  */
-export const accountLoginAPI = (data: AccountLoginRequest) => http.post<AccountLoginResponse>(`/wx/login`, data);
+export const sendSmsCodeAPI = (phone: string) =>
+	http.post<DataResponse<SendSmsCodeData>>(`/enterprise/code?phone=${encodeURIComponent(phone)}`);
+
+/**
+ * 企业手机号验证码登录
+ * POST /enterprise/login
+ */
+export const enterpriseLoginAPI = (data: EnterpriseLoginRequest) =>
+	http.post<EnterpriseLoginResponse>('/enterprise/login', data);
+
+/**
+ * 企业用户注册
+ * POST /enterprise/register
+ */
+export const enterpriseRegisterAPI = (data: EnterpriseRegisterRequest) =>
+	http.post<BaseResponse>('/enterprise/register', data);
+
+/**
+ * 动态获取企业列表（注册选择企业）
+ * GET /enterprise/cnList
+ */
+export const getEnterpriseOptionsAPI = (params: EnterpriseOptionParams) =>
+	http.get<TableDataInfo<EnterpriseOptionItem>>('/enterprise/cnList', params);
+
+/**
+ * 获取企业用户登录信息
+ * GET /enterprise/getInfo
+ */
+export const getEnterpriseUserInfoAPI = () =>
+	http.get<DataResponse<EnterpriseUserInfo>>('/enterprise/getInfo');

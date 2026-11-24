@@ -1,8 +1,8 @@
 {
   "miniprogramRoot": "dist/",
-  "projectname": "examination-weapp",
+  "projectname": "enterprice-service-taro",
   "description": "",
-  "appid": "wx66955e289d0d2a27",
+  "appid": "wx54c3739954bf8604",
   "setting": {
     "urlCheck": true,
     "es6": false,

@@ -92,7 +92,7 @@ export default function AgreementPage() {
 						<View className="py-12 flex flex-col items-center justify-center gap-2">
 							<Text className="text-sm text-text-muted">暂未配置条款正文</Text>
 							{externalUrl && (
-								<Button size="sm" variant="secondary" onClick={handleCopyUrl}>
+								<Button size="sm" variant="slate" onClick={handleCopyUrl}>
 									复制在线条款链接
 								</Button>
 							)}

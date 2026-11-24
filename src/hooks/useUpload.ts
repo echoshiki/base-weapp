@@ -1,30 +1,45 @@
 import { useState } from 'react';
 import Taro from '@tarojs/taro';
 import { uploadImageAPI } from '@/services/upload';
+import { UploadFileItem } from '@/types/common';
 
 /**
- * 上传图片 Hook
+ * 上传文件/图片/视频 Hook
  */
 export const useUpload = () => {
 	const [isUploading, setIsUploading] = useState(false);
 
 	/**
-	 * @param count 允许选择的数量 (默认 1)
-	 * @returns 返回上传成功后的远程 URL 数组
+	 * 批量上传并返回完整文件元数据数组 (UploadFileItem[])
 	 */
-	const triggerUpload = async (filePaths: string[]): Promise<string[]> => {
+	const triggerUploadFiles = async (
+		filePaths: string[],
+		fallbackMetas?: Partial<UploadFileItem>[],
+	): Promise<UploadFileItem[]> => {
 		if (filePaths.length === 0) return [];
 		setIsUploading(true);
 		Taro.showLoading({ title: '上传中...', mask: true });
 		try {
-			const uploadedUrls: string[] = [];
-			for (const path of filePaths) {
-				const data = await uploadImageAPI(path);
-				if (data.list?.length > 0) uploadedUrls.push(data.list[0].filePath);
+			const uploadedItems: UploadFileItem[] = [];
+			for (let i = 0; i < filePaths.length; i++) {
+				const path = filePaths[i];
+				const fallback = fallbackMetas?.[i];
+				const res = await uploadImageAPI(path, fallback?.fileName);
+				const item = res.data?.list?.[0];
+				if (item) {
+					const rawName = item.fileName || fallback?.fileName || path.split('/').pop() || 'file';
+					const ext = item.fileType || fallback?.fileType || rawName.split('.').pop() || '';
+					uploadedItems.push({
+						filePath: item.filePath,
+						fileName: rawName,
+						fileType: ext,
+						fileSize: item.fileSize ?? fallback?.fileSize ?? 0,
+					});
+				}
 			}
-			return uploadedUrls;
+			return uploadedItems;
 		} catch (error) {
-			console.error('上传图片中断或失败:', error);
+			console.error('上传文件中断或失败:', error);
 			throw error;
 		} finally {
 			setIsUploading(false);
@@ -32,5 +47,13 @@ export const useUpload = () => {
 		}
 	};
 
-	return { triggerUpload, isUploading };
+	/**
+	 * 兼容旧版：仅返回远程路径数组
+	 */
+	const triggerUpload = async (filePaths: string[]): Promise<string[]> => {
+		const items = await triggerUploadFiles(filePaths);
+		return items.map((item) => item.filePath);
+	};
+
+	return { triggerUpload, triggerUploadFiles, isUploading };
 };

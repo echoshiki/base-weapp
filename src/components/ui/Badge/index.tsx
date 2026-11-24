@@ -1,80 +1,61 @@
 import { View, Text, ViewProps } from '@tarojs/components';
 import { ReactNode } from 'react';
 import { cn } from '@/utils/common';
+import { UiColor } from '../types';
 
-export type BadgeVariant =
-	| 'default'
-	| 'primary'
-	| 'secondary'
-	| 'success'
-	| 'warning'
-	| 'destructive'
-	| 'danger'
-	| 'info'
-	| 'outline';
-
-export type BadgeSize = 'xs' | 'sm' | 'md' | 'lg';
+export type BadgeVariant = UiColor;
 
 const VARIANT_MAP: Record<BadgeVariant, { bgClass: string; textClass: string; dotClass: string }> = {
-	default: {
-		bgClass: 'bg-primary/10 border-primary/20',
-		textClass: 'text-primary',
-		dotClass: 'bg-primary',
-	},
 	primary: {
 		bgClass: 'bg-primary/10 border-primary/20',
 		textClass: 'text-primary',
 		dotClass: 'bg-primary',
 	},
-	secondary: {
-		bgClass: 'bg-gray-500/10 border-gray-200',
-		textClass: 'text-gray-600',
-		dotClass: 'bg-gray-400',
-	},
-	success: {
-		bgClass: 'bg-emerald-500/10 border-emerald-200',
-		textClass: 'text-emerald-600',
-		dotClass: 'bg-emerald-500',
-	},
-	warning: {
-		bgClass: 'bg-amber-500/10 border-amber-200',
-		textClass: 'text-amber-600',
-		dotClass: 'bg-amber-500',
-	},
-	destructive: {
-		bgClass: 'bg-rose-500/10 border-rose-200',
-		textClass: 'text-rose-600',
-		dotClass: 'bg-rose-500',
-	},
-	danger: {
-		bgClass: 'bg-rose-500/10 border-rose-200',
-		textClass: 'text-rose-600',
-		dotClass: 'bg-rose-500',
-	},
-	info: {
-		bgClass: 'bg-blue-500/10 border-blue-200',
+	blue: {
+		bgClass: 'bg-blue-600/10 border-blue-200',
 		textClass: 'text-blue-600',
 		dotClass: 'bg-blue-500',
 	},
-	outline: {
-		bgClass: 'bg-transparent border border-gray-300',
-		textClass: 'text-text-body',
-		dotClass: 'bg-gray-400',
+	sky: {
+		bgClass: 'bg-sky-600/10 border-sky-200',
+		textClass: 'text-sky-600',
+		dotClass: 'bg-sky-500',
+	},
+	indigo: {
+		bgClass: 'bg-indigo-600/10 border-indigo-200',
+		textClass: 'text-indigo-600',
+		dotClass: 'bg-indigo-500',
+	},
+	emerald: {
+		bgClass: 'bg-emerald-600/10 border-emerald-200',
+		textClass: 'text-emerald-600',
+		dotClass: 'bg-emerald-500',
+	},
+	amber: {
+		bgClass: 'bg-amber-600/10 border-amber-200',
+		textClass: 'text-amber-600',
+		dotClass: 'bg-amber-500',
+	},
+	orange: {
+		bgClass: 'bg-orange-600/10 border-orange-200',
+		textClass: 'text-orange-600',
+		dotClass: 'bg-orange-500',
+	},
+	rose: {
+		bgClass: 'bg-rose-600/10 border-rose-200',
+		textClass: 'text-rose-600',
+		dotClass: 'bg-rose-500',
+	},
+	slate: {
+		bgClass: 'bg-slate-600/10 border-slate-200',
+		textClass: 'text-slate-600',
+		dotClass: 'bg-slate-400',
 	},
 };
 
-const SIZE_MAP: Record<BadgeSize, string> = {
-	xs: 'text-[20rpx] px-1.5 py-0.5 gap-1',
-	sm: 'text-xs px-2 py-0.5 gap-1',
-	md: 'text-xs px-2.5 py-1 gap-1.5 font-medium',
-	lg: 'text-sm px-3 py-1 gap-1.5 font-semibold',
-};
-
 export interface BadgeProps extends ViewProps {
-	/** 视觉变体，默认 secondary */
+	/** 颜色主题，默认 slate */
 	variant?: BadgeVariant;
-	/** 尺寸，默认 sm */
-	size?: BadgeSize;
 	/** 是否为胶囊形状（全圆角），默认 false */
 	pill?: boolean;
 	/** 是否在文字左侧显示状态圆点 */
@@ -90,8 +71,7 @@ export interface BadgeProps extends ViewProps {
  */
 export function Badge({
 	children,
-	variant = 'secondary',
-	size = 'sm',
+	variant = 'slate',
 	pill = false,
 	dot = false,
 	icon,
@@ -99,15 +79,15 @@ export function Badge({
 	onClick,
 	...props
 }: BadgeProps) {
-	const config = VARIANT_MAP[variant] || VARIANT_MAP.secondary;
+	const config = VARIANT_MAP[variant] || VARIANT_MAP.slate;
 
 	const renderIcon = () => {
 		if (dot) {
-			return <View className={cn('w-1.5 h-1.5 rounded-full shrink-0', config.dotClass)} />;
+			return <View className={cn('size-1.5 rounded-full shrink-0', config.dotClass)} />;
 		}
 		if (icon) {
 			if (typeof icon === 'string') {
-				return <View className={cn('w-3 h-3 shrink-0', icon)} />;
+				return <View className={cn('size-3 shrink-0', icon)} />;
 			}
 			return icon;
 		}
@@ -118,13 +98,12 @@ export function Badge({
 		<View
 			onClick={onClick}
 			className={cn(
-				'inline-flex items-center justify-center tracking-wide border border-transparent transition-colors',
+				'flex items-center justify-center border border-transparent transition-colors gap-1 text-xs px-2 py-0.5 ring-1 ring-inset',
 				pill ? 'rounded-full' : 'rounded-md',
 				config.bgClass,
 				config.textClass,
-				SIZE_MAP[size],
 				onClick && 'active:opacity-80',
-				className
+				className,
 			)}
 			{...props}
 		>

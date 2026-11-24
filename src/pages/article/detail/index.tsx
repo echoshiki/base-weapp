@@ -95,7 +95,7 @@ export default function ArticleDetailPage() {
 				{/* 底部引导与返回 */}
 				<View className="mt-6 flex flex-col items-center gap-3">
 					<Button
-						variant="outline"
+						appearance="outline"
 						size="md"
 						className="px-6 rounded-full"
 						onClick={() => Taro.navigateBack()}

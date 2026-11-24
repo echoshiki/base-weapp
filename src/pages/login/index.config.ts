@@ -1,5 +1,5 @@
 export default definePageConfig({
-	navigationBarTitleText: '账号登录',
+	navigationBarTitleText: '选择登录身份',
 	navigationBarBackgroundColor: '#ffffff',
 	navigationBarTextStyle: 'black',
 });

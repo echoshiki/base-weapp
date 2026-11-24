@@ -1,16 +1,20 @@
 import { View, Text, Button as TaroButton, ButtonProps as TaroButtonProps } from '@tarojs/components';
 import { ReactNode } from 'react';
 import { cn } from '@/utils/common';
+import { UiColor } from '../types';
 
-export type NavIconVariant = 'primary' | 'success' | 'secondary' | 'warning' | 'danger' | 'info' | 'ghost' | 'none';
+export type NavIconVariant = UiColor | 'ghost' | 'none';
 
 const VARIANT_MAP: Record<Exclude<NavIconVariant, 'none'>, string> = {
 	primary: 'bg-primary/10 text-primary',
-	success: 'bg-emerald-500/10 text-emerald-600',
-	secondary: 'bg-zinc-500/10 text-zinc-600',
-	warning: 'bg-amber-500/10 text-amber-600',
-	danger: 'bg-rose-500/10 text-rose-600',
-	info: 'bg-blue-500/10 text-blue-600',
+	blue: 'bg-blue-500/10 text-blue-600',
+	sky: 'bg-sky-500/10 text-sky-600',
+	indigo: 'bg-indigo-500/10 text-indigo-600',
+	emerald: 'bg-emerald-500/10 text-emerald-600',
+	amber: 'bg-amber-500/10 text-amber-600',
+	orange: 'bg-orange-500/10 text-orange-600',
+	rose: 'bg-rose-500/10 text-rose-600',
+	slate: 'bg-slate-500/10 text-slate-600',
 	ghost: 'bg-transparent text-text-title',
 };
 

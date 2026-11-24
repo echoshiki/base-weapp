@@ -159,15 +159,15 @@ import { Page, Card, Button, FormItem, Badge, Avatar, Drawer, Tabs } from '@/com
 
 | Prop      | 类型                                                                                                      | 说明                       |
 | --------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
-| `variant` | `'default' \| 'primary' \| 'secondary' \| 'success' \| 'warning' \| 'destructive' \| 'info' \| 'outline'` | 变体样式，默认 `secondary` |
-| `size`    | `'xs' \| 'sm' \| 'md' \| 'lg'`                                                                            | 尺寸，默认 `sm`            |
-| `pill`    | `boolean`                                                                                                 | 是否胶囊圆角               |
-| `dot`     | `boolean`                                                                                                 | 文字左侧是否显示状态小红点 |
-| `icon`    | `ReactNode` \| `string`                                                                                   | 前缀图标                   |
+| `variant` | `UiColor` (`'primary' \| 'blue' \| 'sky' \| 'indigo' \| 'emerald' \| 'amber' \| 'orange' \| 'rose' \| 'slate'`) | 颜色主题，默认 `slate` |
+| `size`    | `'sm' \| 'md' \| 'lg'`                                                                                         | 尺寸，默认 `sm`        |
+| `pill`    | `boolean`                                                                                                      | 是否胶囊圆角           |
+| `dot`     | `boolean`                                                                                                      | 文字左侧是否显示状态点 |
+| `icon`    | `ReactNode` \| `string`                                                                                        | 前缀图标               |
 
 ```tsx
-<Badge variant="success" dot>已上线</Badge>
-<Badge variant="warning" dot>审核中</Badge>
+<Badge variant="emerald" dot>已上线</Badge>
+<Badge variant="amber" dot>审核中</Badge>
 <Badge variant="destructive">已驳回</Badge>
 <Badge variant="outline">轮播标签</Badge>
 <Badge variant="secondary" pill>VIP 胶囊</Badge>

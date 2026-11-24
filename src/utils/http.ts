@@ -22,8 +22,26 @@ type RequestConfig = Taro.request.Option & {
 type UploadConfig = Omit<RequestConfig, 'url' | 'data' | 'method'> & {
 	/** 文件对应的 key，默认 'file' */
 	name?: string;
+	/** 指定上传文件名（H5 blob 路径自动补全后缀时优先使用） */
+	fileName?: string;
 	/** 额外的表单数据 */
 	formData?: Record<string, any>;
+};
+
+const MIME_EXT_MAP: Record<string, string> = {
+	'image/jpeg': 'jpg',
+	'image/jpg': 'jpg',
+	'image/png': 'png',
+	'image/webp': 'webp',
+	'image/gif': 'gif',
+	'video/mp4': 'mp4',
+	'video/quicktime': 'mov',
+	'video/webm': 'webm',
+	'application/pdf': 'pdf',
+	'application/msword': 'doc',
+	'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx',
+	'application/vnd.ms-excel': 'xls',
+	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'xlsx',
 };
 
 /**
@@ -101,11 +119,52 @@ class HttpRequest {
 
 		if (config?.showLoading) this.showLoading();
 
+		// H5 端从 chooseImage/chooseVideo 拿到的 blob: URL 无文件扩展名，直接走 Taro.uploadFile 会导致后端拿到的文件名为 "blob" 而解析不到后缀
+		if (
+			process.env.TARO_ENV === 'h5' &&
+			(filePath.startsWith('blob:') || filePath.startsWith('data:')) &&
+			typeof window !== 'undefined'
+		) {
+			try {
+				const blobRes = await fetch(filePath);
+				const blob = await blobRes.blob();
+				const mimeExt = MIME_EXT_MAP[blob.type] || blob.type.split('/')[1]?.split(';')[0] || 'bin';
+				const rawName = config?.fileName?.trim() || '';
+				const finalName = rawName.includes('.') ? rawName : `${rawName || `upload_${Date.now()}`}.${mimeExt}`;
+				const fileObj = new File([blob], finalName, { type: blob.type || undefined });
+
+				const formData = new FormData();
+				formData.append(config?.name || 'file', fileObj, finalName);
+				if (config?.formData) {
+					Object.entries(config.formData).forEach(([k, v]) => {
+						if (v !== undefined && v !== null) formData.append(k, String(v));
+					});
+				}
+
+				const fetchRes = await fetch(fullUrl, {
+					method: 'POST',
+					headers: header,
+					body: formData,
+				});
+				const parsedData = await fetchRes.json();
+				return await new Promise<T>((resolve, reject) => {
+					this.handleSuccess<T>(fetchRes.status, parsedData, config || {}, resolve, reject);
+				});
+			} catch (err) {
+				return await new Promise<T>((_, reject) => {
+					this.handleNetworkFail(err, reject);
+				});
+			} finally {
+				if (config?.showLoading) this.hideLoading();
+			}
+		}
+
 		return new Promise((resolve, reject) => {
 			Taro.uploadFile({
 				url: fullUrl,
 				filePath: filePath,
 				name: config?.name || 'file',
+				fileName: config?.fileName,
 				formData: config?.formData,
 				header,
 				success: (res) => {
@@ -137,12 +196,14 @@ class HttpRequest {
 		reject: Function,
 	) {
 		if (statusCode === 200) {
-			const { code, msg, data } = responseData as BaseResponse<T>;
+			const { code, msg } = responseData as BaseResponse;
 
 			if (code === 200 || code === 0) {
-				const finalData = options.interceptors?.response ? options.interceptors.response(data) : data;
+				const finalData = options.interceptors?.response
+					? options.interceptors.response(responseData)
+					: responseData;
 				resolve(finalData as T);
-			} else if ([410000, 410001, 410002, 401, 402].includes(code)) {
+			} else if (code !== undefined && [410000, 410001, 410002, 401, 402].includes(code)) {
 				this.handleAuthError();
 				reject(responseData);
 			} else {

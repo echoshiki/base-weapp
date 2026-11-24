@@ -9,7 +9,7 @@ import { mapsTo } from '@/utils/common';
 
 export default function UserPage() {
 	const { userInfo } = useAuthStore();
-	const { isLoggedIn, onLogout, navigateWithAuth } = useAuth();
+	const { isLoggedIn, isAdmin, onLogout, navigateWithAuth } = useAuth();
 
 	// 全局系统配置
 	const { data: appConfig } = useAppConfig();
@@ -23,13 +23,13 @@ export default function UserPage() {
 
 	return (
 		<Page hasTabBar paddingX={false}>
-			<View className="bg-linear-to-b from-[#0a0a0a] via-[#12100e] to-[#1e1914] h-42 pt-8 px-6">
+			<View className="bg-linear-to-b from-[#0e49ec] via-[#5690ee] to-[#3c96f3] h-42 pt-8 px-6">
 				<View className="flex items-center gap-4">
 					{/* 用户头像 */}
 					<View className="border-8 border-primary rounded-full">
 						<Avatar
 							src={isLoggedIn ? userInfo?.avatar : ''}
-							name={isLoggedIn ? userInfo?.name : '游客'}
+							name={isLoggedIn ? userInfo?.nickName || userInfo?.userName : '企业'}
 							size="md"
 						/>
 					</View>
@@ -39,8 +39,10 @@ export default function UserPage() {
 						{isLoggedIn && userInfo ? (
 							<View className="flex flex-col text-white">
 								<View className="flex items-center gap-1.5">
-									<Text className="text-lg font-bold text-current block">{userInfo.name}</Text>
-									<Gender gender={userInfo.gender} />
+									<Text className="text-lg font-bold text-current block">
+										{userInfo.nickName || userInfo.userName}
+									</Text>
+									<Gender gender={userInfo.sex} />
 								</View>
 								<View className="flex items-center gap-1 text-xs opacity-60">
 									<View className="flex items-center gap-1 mt-1">
@@ -57,8 +59,8 @@ export default function UserPage() {
 						)}
 					</View>
 
-					{/* 设置按钮 */}
-					{isLoggedIn && (
+					{/* 设置按钮（仅管理员） */}
+					{isLoggedIn && isAdmin && (
 						<View
 							className="icon-[ph--gear] w-6 h-6 text-text-title"
 							onClick={() => navigateWithAuth('/pages/user/profile/index')}
@@ -69,19 +71,21 @@ export default function UserPage() {
 
 			<View className="px-4 -mt-15 flex flex-col gap-5">
 				<Card className="flex flex-row">
-					<Asset label="年度积分" value={userInfo?.accumulatedAccount || 0} />
-					<Asset label="补分额度" value={userInfo?.currentTicket || 0} valueColor="text-zinc-600" />
-					<Asset label="安全等级" value={userInfo?.registeredDays || 0} valueColor="text-zinc-600" />
+					<Asset label="年度积分" value={0} />
+					<Asset label="补分额度" value={0} valueColor="text-zinc-600" />
+					<Asset label="安全等级" value={0} valueColor="text-zinc-600" />
 				</Card>
 
 				{/* 功能列表区域 */}
 				<Card noPadding>
-					<NavItem
-						icon="icon-[ph--user-gear]"
-						layout="list"
-						label="个人资料"
-						onClick={() => navigateWithAuth('/pages/user/profile/index')}
-					/>
+					{isAdmin && (
+						<NavItem
+							icon="icon-[ph--user-gear]"
+							layout="list"
+							label="个人资料"
+							onClick={() => navigateWithAuth('/pages/user/profile/index')}
+						/>
+					)}
 					<NavItem
 						icon="icon-[ph--question]"
 						layout="list"

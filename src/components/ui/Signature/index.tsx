@@ -173,7 +173,7 @@ export function Signature({
 				<View className="flex items-center justify-between pt-1">
 					<Button
 						size="sm"
-						variant="outline"
+						appearance="outline"
 						className="px-4 text-xs"
 						onClick={handleClear}
 						disabled={disabled || !hasDrawn}

@@ -64,7 +64,7 @@ export function Drawer({
 					className={cn(
 						'fixed inset-0 z-50 transition-opacity duration-300 ease-in-out',
 						activeOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none',
-						className
+						className,
 					)}
 					{...props}
 				>
@@ -76,7 +76,7 @@ export function Drawer({
 						className={cn(
 							'absolute top-0 right-0 h-full bg-white flex flex-col shadow-2xl transition-transform duration-300 ease-out transform',
 							width,
-							activeOpen ? 'translate-x-0' : 'translate-x-full'
+							activeOpen ? 'translate-x-0' : 'translate-x-full',
 						)}
 					>
 						{title && (
@@ -94,9 +94,7 @@ export function Drawer({
 						</ScrollView>
 
 						{footer && (
-							<View className="shrink-0 p-4 border-t border-gray-100/80 bg-white pb-safe">
-								{footer}
-							</View>
+							<View className="shrink-0 p-4 border-t border-gray-100/80 bg-white pb-safe">{footer}</View>
 						)}
 					</View>
 				</View>
@@ -111,7 +109,7 @@ export function Drawer({
 				className={cn(
 					'fixed inset-0 z-50 transition-opacity duration-300 ease-in-out',
 					activeOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none',
-					className
+					className,
 				)}
 				{...props}
 			>
@@ -141,26 +139,26 @@ export function DrawerContent({ sizeClass, className, children, ...props }: Draw
 				return cn(
 					'left-0 right-0 bottom-0 max-h-[85vh] rounded-t-2xl',
 					sizeClass || 'h-auto',
-					isOpen ? 'translate-y-0' : 'translate-y-full'
+					isOpen ? 'translate-y-0' : 'translate-y-full',
 				);
 			case 'left':
 				return cn(
 					'top-0 left-0 h-full',
 					sizeClass || 'w-[85vw]',
-					isOpen ? 'translate-x-0' : '-translate-x-full'
+					isOpen ? 'translate-x-0' : '-translate-x-full',
 				);
 			case 'top':
 				return cn(
 					'top-0 left-0 right-0 max-h-[85vh] rounded-b-2xl',
 					sizeClass || 'h-auto',
-					isOpen ? 'translate-y-0' : '-translate-y-full'
+					isOpen ? 'translate-y-0' : '-translate-y-full',
 				);
 			case 'right':
 			default:
 				return cn(
 					'top-0 right-0 h-full',
 					sizeClass || 'w-[85vw]',
-					isOpen ? 'translate-x-0' : 'translate-x-full'
+					isOpen ? 'translate-x-0' : 'translate-x-full',
 				);
 		}
 	};
@@ -170,7 +168,7 @@ export function DrawerContent({ sizeClass, className, children, ...props }: Draw
 			className={cn(
 				'absolute bg-white flex flex-col shadow-2xl transition-transform duration-300 ease-out transform',
 				getPositionClasses(),
-				className
+				className,
 			)}
 			{...props}
 		>
@@ -188,7 +186,13 @@ export function DrawerHeader({ className, children, ...props }: ViewProps) {
 	const { onClose } = useContext(DrawerContext);
 
 	return (
-		<View className={cn('flex items-center justify-between px-4 h-14 border-b border-gray-100/80 shrink-0', className)} {...props}>
+		<View
+			className={cn(
+				'flex items-center justify-between px-4 h-14 border-b border-gray-100/80 shrink-0',
+				className,
+			)}
+			{...props}
+		>
 			<View className="flex flex-col gap-0.5 flex-1 min-w-0">{children}</View>
 			<View
 				className="icon-[ph--x-bold] size-5 text-gray-400 active:text-gray-600 transition-colors p-1 shrink-0 ml-2"
@@ -203,7 +207,7 @@ export function DrawerHeader({ className, children, ...props }: ViewProps) {
  */
 export function DrawerTitle({ className, children, ...props }: ViewProps) {
 	return (
-		<View className={cn('font-bold text-sm text-text-title leading-tight', className)} {...props}>
+		<View className={cn('font-bold text-base leading-tight', className)} {...props}>
 			{typeof children === 'string' ? <Text>{children}</Text> : children}
 		</View>
 	);
@@ -225,7 +229,13 @@ export function DrawerDescription({ className, children, ...props }: ViewProps) 
  */
 export function DrawerFooter({ className, children, ...props }: ViewProps) {
 	return (
-		<View className={cn('shrink-0 p-4 border-t border-gray-100/80 bg-white pb-safe flex items-center justify-end gap-3', className)} {...props}>
+		<View
+			className={cn(
+				'shrink-0 p-4 border-t border-gray-100/80 bg-white pb-safe flex items-center justify-end gap-3',
+				className,
+			)}
+			{...props}
+		>
 			{children}
 		</View>
 	);

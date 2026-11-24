@@ -11,7 +11,7 @@
 
 @theme {
 	/* 核心色彩 */
-	--color-primary: #c5a059;
+	--color-primary: #155dfc;
 
 	/* 点缀色/辅助色*/
 	--color-main-bg: #fafafa;
@@ -42,4 +42,23 @@
 /* 清除微信小程序原生 button::after 默认边框，防止黑边/重影锯齿 */
 button::after {
 	border: none !important;
+}
+
+/* 让 Taro H5 端 Textarea 内部原生节点继承外层 className 的字号、行高、颜色并撑满高度 */
+taro-textarea-core .taro-textarea {
+	font-size: inherit;
+	line-height: inherit;
+	color: inherit;
+	height: 100%;
+}
+
+/* 约束 Taro H5 端 Video 内部视频节点尺寸，防止按原分辨率撑爆容器 */
+taro-video-core {
+	display: block;
+	overflow: hidden;
+}
+taro-video-core .taro-video-container,
+taro-video-core video {
+	width: 100%;
+	height: 100%;
 }

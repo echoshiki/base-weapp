@@ -1,6 +1,6 @@
 {
   "libVersion": "2.24.7",
-  "projectname": "examination-weapp",
+  "projectname": "base-taro",
   "setting": {
     "urlCheck": false,
     "coverView": false,
@@ -16,7 +16,8 @@
     "compileHotReLoad": true,
     "checkInvalidKey": true,
     "ignoreDevUnusedFiles": true,
-    "bigPackageSizeSupport": false
+    "bigPackageSizeSupport": false,
+    "useGlassEaselForWxml": false
   },
   "condition": {}
 }

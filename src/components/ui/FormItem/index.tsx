@@ -44,23 +44,32 @@ export function FormItem({
 		return (
 			<View
 				className={cn(
-					'flex flex-col justify-center min-h-12 py-2.5',
-					border && 'border-b border-gray-100/80',
+					'flex flex-col justify-center min-h-12 py-2',
+					border && 'border-b border-gray-400',
 					className,
 				)}
 				onClick={onClick}
 				{...props}
 			>
 				<View
-					className={cn('flex w-full', isColumn ? 'flex-col gap-2' : 'flex-row justify-between items-center')}
+					className={cn('flex w-full', isColumn ? 'flex-col gap-3' : 'flex-row justify-between items-center')}
 				>
-					<FormLabel required={required}>{label}</FormLabel>
+					{isColumn ? (
+						<View className="flex items-center justify-between gap-2 w-full">
+							<FormLabel required={required}>{label}</FormLabel>
+							{!error && helper ? (
+								<FormDescription className="mt-0 shrink-0">{helper}</FormDescription>
+							) : null}
+						</View>
+					) : (
+						<FormLabel required={required}>{label}</FormLabel>
+					)}
 					<FormControl className={cn(!isColumn && 'text-right flex justify-end')}>{children}</FormControl>
 				</View>
 
 				{error ? (
 					<FormMessage>{error}</FormMessage>
-				) : helper ? (
+				) : !isColumn && helper ? (
 					<FormDescription>{helper}</FormDescription>
 				) : null}
 			</View>
@@ -95,11 +104,11 @@ export interface FormLabelProps extends ViewProps {
 export function FormLabel({ required = false, className, children, ...props }: FormLabelProps) {
 	return (
 		<View
-			className={cn('flex items-center shrink-0 mr-4 text-sm text-text-title font-medium', className)}
+			className={cn('flex items-center gap-1 shrink-0 mr-4 text-sm text-text-title font-medium', className)}
 			{...props}
 		>
-			{required && <Text className="text-red-500 mr-1 mt-0.5 font-bold">*</Text>}
 			{typeof children === 'string' ? <Text>{children}</Text> : children}
+			{required && <Text className="text-red-500 mr-1 mt-0.5">*</Text>}
 		</View>
 	);
 }

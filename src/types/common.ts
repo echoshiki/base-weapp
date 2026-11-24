@@ -1,8 +1,31 @@
-/** 统一响应结构 */
-export interface BaseResponse<T> {
-	code: number;
+/** 统一响应基础结构（平铺结构） */
+export interface BaseResponse<T = any> {
+	code?: number;
+	msg?: string;
 	data?: T;
-	msg: string;
+}
+
+/** 详情/操作类统一响应结构（data 包裹） */
+export interface DataResponse<T = any> {
+	code?: number;
+	msg?: string;
+	data: T;
+}
+
+/** 通用分页查询参数 */
+export interface PageQuery {
+	/** 页码，从 1 开始 */
+	pageNum?: number;
+	/** 每页条数 */
+	pageSize?: number;
+}
+
+/** 通用分页响应结构（{ code, msg, rows, total }） */
+export interface TableDataInfo<T> {
+	code?: number;
+	msg?: string;
+	rows: T[];
+	total: number;
 }
 
 /** 基础分页结构 */
@@ -105,4 +128,34 @@ export interface UploadFileItem {
 	filePath: string;
 	fileSize: number;
 	fileType: string;
+}
+
+/** 页面信息展示块内容 */
+export interface SjcsPageInfoItem {
+	/** 图片路径列表 */
+	imagePath?: string[];
+	/** 描述文字 */
+	detail?: string;
+	/** 单个视频路径 */
+	videoPath?: string;
+}
+
+/** 单页独立配置项 */
+export interface SjcsPageConfigItem {
+	/** 页面路径 */
+	pagePath: string;
+	/** 是否显示顶部用户头部 */
+	showHeader: boolean;
+	/** 是否显示信息展示区块 */
+	showInfo: boolean;
+	/** 信息展示区块内容列表 */
+	info?: SjcsPageInfoItem[];
+}
+
+/** 内页展示与导航配置 (GET /enterprise/sjcs) */
+export interface SjcsConfigData {
+	/** 无数据动图参数 */
+	emptyPath?: string;
+	/** 各页面独立配置列表 */
+	pages?: SjcsPageConfigItem[];
 }
