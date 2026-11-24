@@ -26,6 +26,24 @@ export default defineAppConfig({
 		'pages/login/register/index',
 		'pages/example/index',
 	],
+	tabBar: {
+		color: '#6c6c6c',
+		selectedColor: '#2c2c2c',
+		list: [
+			{
+				pagePath: 'pages/home/index',
+				text: '首页',
+				iconPath: 'assets/tabbar/home.png',
+				selectedIconPath: 'assets/tabbar/home_fill.png',
+			},
+			{
+				pagePath: 'pages/example/index',
+				text: '组件',
+				iconPath: 'assets/tabbar/component.png',
+				selectedIconPath: 'assets/tabbar/component_fill.png',
+			},
+		],
+	},
 	window: {
 		backgroundTextStyle: 'light',
 		navigationBarBackgroundColor: '#fff',
