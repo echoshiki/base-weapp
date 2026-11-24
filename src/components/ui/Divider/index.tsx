@@ -23,7 +23,7 @@ export const Divider = ({ orientation = 'horizontal', dashed = false, children, 
 			<View
 				className={cn(
 					'inline-block w-px min-h-[1em] mx-2 align-middle self-center shrink-0',
-					dashed ? 'border-l border-dashed border-gray-200 bg-transparent' : 'bg-gray-200',
+					dashed ? 'border-l border-dashed border-zinc-200 bg-transparent' : 'bg-zinc-200',
 					className,
 				)}
 			/>
@@ -35,7 +35,7 @@ export const Divider = ({ orientation = 'horizontal', dashed = false, children, 
 			<View
 				className={cn(
 					'w-full h-px',
-					dashed ? 'border-t border-dashed border-gray-200 bg-transparent' : 'bg-gray-200',
+					dashed ? 'border-t border-dashed border-zinc-200 bg-transparent' : 'bg-zinc-200',
 					className || 'my-3',
 				)}
 			/>
@@ -43,8 +43,8 @@ export const Divider = ({ orientation = 'horizontal', dashed = false, children, 
 	}
 
 	const lineClasses = cn(
-		'flex-1 h-[1px]',
-		dashed ? 'border-t border-dashed border-gray-200 bg-transparent' : 'bg-gray-200',
+		'flex-1 h-px',
+		dashed ? 'border-t border-dashed border-zinc-200 bg-transparent' : 'bg-zinc-200',
 	);
 
 	return (

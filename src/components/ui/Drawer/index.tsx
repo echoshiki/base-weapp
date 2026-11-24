@@ -80,10 +80,10 @@ export function Drawer({
 						)}
 					>
 						{title && (
-							<View className="flex items-center justify-between px-4 h-14 border-b border-gray-100 shrink-0">
+							<View className="flex items-center justify-between px-4 h-14 border-b border-zinc-100 shrink-0">
 								<Text className="text-sm font-semibold text-text-title">{title}</Text>
 								<View
-									className="icon-[ph--x-bold] size-5 text-gray-400 active:text-gray-600 transition-colors p-1"
+									className="icon-[ph--x-bold] size-5 text-zinc-400 active:text-zinc-600 transition-colors p-1"
 									onClick={handleClose}
 								/>
 							</View>
@@ -94,7 +94,7 @@ export function Drawer({
 						</ScrollView>
 
 						{footer && (
-							<View className="shrink-0 p-4 border-t border-gray-100/80 bg-white pb-safe">{footer}</View>
+							<View className="shrink-0 p-4 border-t border-zinc-100/80 bg-white pb-safe">{footer}</View>
 						)}
 					</View>
 				</View>
@@ -188,14 +188,14 @@ export function DrawerHeader({ className, children, ...props }: ViewProps) {
 	return (
 		<View
 			className={cn(
-				'flex items-center justify-between px-4 h-14 border-b border-gray-100/80 shrink-0',
+				'flex items-center justify-between px-4 h-14 border-b border-zinc-100/80 shrink-0',
 				className,
 			)}
 			{...props}
 		>
 			<View className="flex flex-col gap-0.5 flex-1 min-w-0">{children}</View>
 			<View
-				className="icon-[ph--x-bold] size-5 text-gray-400 active:text-gray-600 transition-colors p-1 shrink-0 ml-2"
+				className="icon-[ph--x-bold] size-5 text-zinc-400 active:text-zinc-600 transition-colors p-1 shrink-0 ml-2"
 				onClick={onClose}
 			/>
 		</View>
@@ -231,7 +231,7 @@ export function DrawerFooter({ className, children, ...props }: ViewProps) {
 	return (
 		<View
 			className={cn(
-				'shrink-0 p-4 border-t border-gray-100/80 bg-white pb-safe flex items-center justify-end gap-3',
+				'shrink-0 p-4 border-t border-zinc-100/80 bg-white pb-safe flex items-center justify-end gap-3',
 				className,
 			)}
 			{...props}

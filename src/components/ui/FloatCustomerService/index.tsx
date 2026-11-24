@@ -51,8 +51,8 @@ export function FloatCustomerService({
 					openType="contact"
 					className="w-full h-full rounded-full bg-linear-to-b from-[#252220] via-[#161413] to-[#0a0a0a] border border-primary/50 shadow-xl shadow-black/35 flex flex-col items-center justify-center p-0 m-0 after:border-0 active:scale-95 transition-transform"
 				>
-					<View className="icon-[ph--headset-fill] size-5 text-primary" />
-					<Text className="text-[18rpx] text-primary/95 font-medium leading-none mt-0.5 tracking-wider">
+					<View className="icon-[ph--headset-fill] size-4.5 text-primary" />
+					<Text className="text-xs text-primary/95 font-medium leading-none mt-0.5 tracking-wider">
 						客服
 					</Text>
 				</TaroButton>

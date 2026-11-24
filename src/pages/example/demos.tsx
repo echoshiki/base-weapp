@@ -49,6 +49,26 @@ import {
 	SkeletonText,
 	SkeletonCard,
 	Signature,
+	Heading,
+	Asset,
+	Divider,
+	Icon,
+	Gender,
+	PageContent,
+	ImagePreview,
+	ActionTile,
+	EntryCard,
+	NavBar,
+	FloatCustomerService,
+	Loading,
+	Feedback,
+	FeedbackVariant,
+	AuthMask,
+	Select,
+	RegionChangeResult,
+	FileUploader,
+	UploadedFile,
+	Rate,
 } from '@/components/ui';
 import { MOCK_BANNERS, MOCK_USER, MOCK_CARD_ITEM } from './mock';
 
@@ -85,7 +105,7 @@ export function BadgeDemo() {
 			</Badge>
 			<Badge variant="rose">已驳回</Badge>
 			<Badge variant="blue">VIP 特权</Badge>
-			<Badge variant="slate" pill>
+			<Badge variant="zinc" pill>
 				胶囊 Badge
 			</Badge>
 		</View>
@@ -147,7 +167,7 @@ export function CardDemo() {
 						</CardDescription>
 					</View>
 					<CardFooter>
-						<Badge variant="slate">便民信息</Badge>
+						<Badge variant="zinc">便民信息</Badge>
 						<Text className="text-xs text-text-muted">2026-07-29</Text>
 					</CardFooter>
 				</CardContent>
@@ -182,7 +202,7 @@ export function SkeletonDemo() {
 export function AspectRatioDemo() {
 	return (
 		<View className="flex flex-col gap-3">
-			<AspectRatio ratio={16 / 9} className="rounded-card bg-gray-100">
+			<AspectRatio ratio={16 / 9} className="rounded-card bg-zinc-100">
 				<Image
 					src="https://images.unsplash.com/photo-1519046904884-53103b34b206?w=800&auto=format&fit=crop&q=80"
 					className="size-full rounded-card"
@@ -190,14 +210,14 @@ export function AspectRatioDemo() {
 				/>
 			</AspectRatio>
 			<View className="grid grid-cols-2 gap-3">
-				<AspectRatio ratio={1 / 1} className="rounded-card bg-gray-100">
+				<AspectRatio ratio={1 / 1} className="rounded-card bg-zinc-100">
 					<Image
 						src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&auto=format&fit=crop&q=80"
 						className="size-full rounded-card"
 						mode="aspectFill"
 					/>
 				</AspectRatio>
-				<AspectRatio ratio={4 / 3} className="rounded-card bg-gray-100">
+				<AspectRatio ratio={4 / 3} className="rounded-card bg-zinc-100">
 					<Image
 						src="https://images.unsplash.com/photo-1473116763249-2faaef81ccda?w=400&auto=format&fit=crop&q=80"
 						className="size-full rounded-card"
@@ -248,12 +268,12 @@ export function NavItemDemo() {
 				<NavItem
 					label="更多服务"
 					icon="icon-[ph--dots-three-circle-duotone]"
-					variant="slate"
+					variant="zinc"
 					onClick={() => Taro.showToast({ title: '更多服务', icon: 'none' })}
 				/>
 			</View>
 
-			<View className="bg-white rounded-card overflow-hidden border border-gray-100/80">
+			<View className="bg-white rounded-card overflow-hidden border border-zinc-100/80">
 				<NavItem
 					layout="list"
 					icon="icon-[ph--gear-light]"
@@ -278,7 +298,7 @@ export function TabsDemo() {
 	const [activeTabSub, setActiveTabSub] = useState<string | number>('tab1');
 
 	return (
-		<View className="bg-white rounded-card overflow-hidden border border-gray-100/80">
+		<View className="bg-white rounded-card overflow-hidden border border-zinc-100/80">
 			<Tabs value={activeTabSub} onValueChange={setActiveTabSub}>
 				<TabsList>
 					<TabsTrigger value="tab1">基础视图</TabsTrigger>
@@ -394,7 +414,7 @@ export function DrawerDemo() {
 				<Button size="sm" appearance="outline" onClick={() => setDrawerOpen(true)}>
 					打开右侧筛选抽屉
 				</Button>
-				<Button size="sm" variant="slate" onClick={() => setBottomDrawerOpen(true)}>
+				<Button size="sm" variant="zinc" onClick={() => setBottomDrawerOpen(true)}>
 					打开底部面板抽屉
 				</Button>
 			</View>
@@ -410,8 +430,8 @@ export function DrawerDemo() {
 						<Text className="text-xs text-text-muted block">成色要求</Text>
 						<View className="flex flex-wrap gap-2">
 							<Badge variant="primary">全新未拆</Badge>
-							<Badge variant="slate">95新微瑕</Badge>
-							<Badge variant="slate">90新正常使用</Badge>
+							<Badge variant="zinc">95新微瑕</Badge>
+							<Badge variant="zinc">90新正常使用</Badge>
 						</View>
 					</View>
 					<DrawerFooter>
@@ -525,6 +545,428 @@ export function SignatureDemo() {
 			>
 				体验完整合同签署流程页面 →
 			</Button>
+		</View>
+	);
+}
+
+export function HeadingDemo() {
+	return (
+		<View className="flex flex-col gap-4">
+			<Heading
+				title="今日活动"
+				subtitle="精选 3 场线下沙龙"
+				size="lg"
+				icon="icon-[ph--sparkle-duotone]"
+				extra="查看全部"
+				onExtraClick={() => Taro.showToast({ title: '点击查看全部', icon: 'none' })}
+			/>
+			<Heading
+				title="最新通知"
+				size="md"
+				icon="icon-[ph--bell-duotone]"
+				extra={<Badge variant="primary">3条未读</Badge>}
+			/>
+			<Heading title="小号标题 (sm)" subtitle="辅助说明文案" size="sm" />
+		</View>
+	);
+}
+
+export function AssetDemo() {
+	return (
+		<View className="flex items-center bg-white rounded-card py-3 border border-zinc-100">
+			<Asset label="已发布" value={12} onClick={() => Taro.showToast({ title: '已发布: 12', icon: 'none' })} />
+			<Divider orientation="vertical" />
+			<Asset label="进行中" value={3} valueColor="text-emerald-500" />
+			<Divider orientation="vertical" />
+			<Asset label="待审核" value={1} valueColor="text-amber-500" />
+		</View>
+	);
+}
+
+export function DividerDemo() {
+	return (
+		<View className="flex flex-col gap-2">
+			<Divider />
+			<Divider dashed />
+			<Divider>中间嵌入文字</Divider>
+			<View className="flex items-center justify-center text-xs text-text-body py-1">
+				<Text>左侧项</Text>
+				<Divider orientation="vertical" />
+				<Text>中间项</Text>
+				<Divider orientation="vertical" dashed />
+				<Text>右侧项</Text>
+			</View>
+		</View>
+	);
+}
+
+export function IconDemo() {
+	return (
+		<View className="flex flex-col gap-3">
+			<View className="flex items-center gap-4">
+				<Icon icon="icon-[ph--house-duotone]" size="sm" theme="primary" />
+				<Icon icon="icon-[ph--gear-duotone]" size="md" theme="emerald" />
+				<Icon icon="icon-[ph--star-duotone]" size="lg" theme="amber" />
+				<Icon icon="icon-[ph--heart-duotone]" size={26} theme="rose" />
+			</View>
+			<View className="flex items-center gap-3">
+				<Icon icon="icon-[ph--shield-check-duotone]" shape="square" size="sm" theme="blue" />
+				<Icon icon="icon-[ph--lightning-duotone]" shape="square" size="md" theme="indigo" />
+				<Icon icon="icon-[ph--compass-duotone]" shape="circle" size="md" theme="zinc" />
+				<Icon icon="icon-[ph--crown-duotone]" shape="circle" size="lg" theme="orange" />
+			</View>
+		</View>
+	);
+}
+
+export function GenderDemo() {
+	return (
+		<View className="flex items-center gap-4">
+			<View className="flex items-center gap-1.5">
+				<Gender gender="0" size="xs" />
+				<Text className="text-xs text-text-muted">男 (xs)</Text>
+			</View>
+			<View className="flex items-center gap-1.5">
+				<Gender gender="1" size="sm" />
+				<Text className="text-xs text-text-muted">女 (sm)</Text>
+			</View>
+			<View className="flex items-center gap-1.5">
+				<Gender gender="0" size="md" />
+				<Text className="text-xs text-text-muted">男 (md)</Text>
+			</View>
+		</View>
+	);
+}
+
+export function PageDemo() {
+	return (
+		<View className="flex flex-col gap-2.5">
+			<Text className="text-xs text-text-muted leading-relaxed">
+				当前示例页即由 &lt;Page&gt; 包裹，自动提供全站背景色 (bg-main-bg)、左右边距 (container-x)、页面级 Loading 与悬浮快捷菜单。
+			</Text>
+			<View className="bg-white rounded-card border border-zinc-200/80 overflow-hidden py-2">
+				<PageContent className="bg-zinc-100/80 py-2 rounded">
+					<Text className="text-xs text-zinc-600">PageContent 局部左右安全边距容器</Text>
+				</PageContent>
+			</View>
+		</View>
+	);
+}
+
+export function ImagePreviewDemo() {
+	const [open, setOpen] = useState(false);
+	const urls = MOCK_BANNERS.map((b) => b.pic);
+
+	return (
+		<View className="flex flex-wrap gap-2.5">
+			<Button size="sm" variant="primary" onClick={() => setOpen(true)}>
+				打开自定义预览弹窗
+			</Button>
+			<Button size="sm" variant="zinc" appearance="outline" onClick={() => ImagePreview.show({ urls, current: 0 })}>
+				调用原生 previewImage
+			</Button>
+			<ImagePreview open={open} urls={urls} current={0} onClose={() => setOpen(false)} />
+		</View>
+	);
+}
+
+export function ButtonDemo() {
+	const [loading, setLoading] = useState(false);
+
+	return (
+		<View className="flex flex-col gap-3">
+			<View className="flex flex-wrap items-center gap-2">
+				<Button size="xs" variant="primary">
+					xs 按钮
+				</Button>
+				<Button size="sm" variant="emerald">
+					sm 按钮
+				</Button>
+				<Button size="md" variant="amber">
+					md 按钮
+				</Button>
+			</View>
+			<View className="flex flex-wrap items-center gap-2">
+				<Button size="sm" appearance="solid" variant="primary">
+					Solid
+				</Button>
+				<Button size="sm" appearance="soft" variant="primary">
+					Soft
+				</Button>
+				<Button size="sm" appearance="outline" variant="primary">
+					Outline
+				</Button>
+				<Button size="sm" appearance="ghost" variant="zinc">
+					Ghost
+				</Button>
+			</View>
+			<View className="flex flex-wrap items-center gap-2">
+				<Button
+					size="sm"
+					icon="icon-[ph--paper-plane-tilt-bold]"
+					loading={loading}
+					onClick={() => {
+						setLoading(true);
+						setTimeout(() => setLoading(false), 1200);
+					}}
+				>
+					{loading ? '提交中...' : '点击测试 Loading'}
+				</Button>
+				<Button size="sm" disabled>
+					禁用状态
+				</Button>
+			</View>
+		</View>
+	);
+}
+
+export function ActionTileDemo() {
+	return (
+		<View className="flex flex-col gap-3">
+			<View className="grid grid-cols-2 gap-3 h-32">
+				<ActionTile
+					layout="square"
+					tone="dark"
+					theme="primary"
+					title="政策申报"
+					subTitle="在线快速填报"
+					icon="icon-[ph--file-text-duotone]"
+					onClick={() => Taro.showToast({ title: '点击政策申报', icon: 'none' })}
+				/>
+				<ActionTile
+					layout="square"
+					tone="light"
+					theme="emerald"
+					title="服务大厅"
+					subTitle="一站式办理"
+					icon="icon-[ph--buildings-duotone]"
+					onClick={() => Taro.showToast({ title: '点击服务大厅', icon: 'none' })}
+				/>
+			</View>
+			<View className="grid grid-cols-2 gap-3">
+				<ActionTile
+					layout="compact"
+					theme="amber"
+					title="待处理事项"
+					value={8}
+					unit="条"
+					icon="icon-[ph--bell-ringing-duotone]"
+				/>
+				<ActionTile
+					layout="compact"
+					theme="zinc"
+					title="历史记录"
+					subTitle="查看全部归档"
+					icon="icon-[ph--archive-duotone]"
+				/>
+			</View>
+		</View>
+	);
+}
+
+export function EntryCardDemo() {
+	return (
+		<View className="flex flex-col gap-3">
+			<EntryCard
+				title="企业入驻认证"
+				desc="完成实名与企业资质核验，解锁专属服务"
+				icon="icon-[ph--buildings-duotone]"
+				theme="blue"
+				onClick={() => Taro.showToast({ title: '点击企业入驻', icon: 'none' })}
+			/>
+			<EntryCard
+				title="个人中心通道"
+				desc="审核中状态（当前已禁用点击）"
+				icon="icon-[ph--user-focus-duotone]"
+				theme="zinc"
+				disabled
+			/>
+		</View>
+	);
+}
+
+export function NavBarDemo() {
+	return (
+		<View className="flex flex-col gap-3">
+			<View className="rounded-card overflow-hidden border border-zinc-200/80 bg-white">
+				<NavBar title="浅色导航栏 (dark 文字)" theme="dark" transparent={false} fixed={false} />
+			</View>
+			<View className="rounded-card overflow-hidden bg-primary">
+				<NavBar
+					title="深色导航栏 (light 白字)"
+					theme="light"
+					transparent={false}
+					fixed={false}
+					activeBgClass="bg-primary"
+				/>
+			</View>
+		</View>
+	);
+}
+
+export function FloatWidgetsDemo() {
+	const [showService, setShowService] = useState(false);
+
+	return (
+		<View className="flex flex-col gap-2.5">
+			<Text className="text-xs text-text-muted leading-relaxed">
+				右下角已默认挂载 FloatQuickMenu（可拖拽悬浮快捷菜单）。点击下方按钮可临时开启 FloatCustomerService 在线客服悬浮球。
+			</Text>
+			<Button size="sm" variant={showService ? 'rose' : 'primary'} onClick={() => setShowService((v) => !v)}>
+				{showService ? '隐藏客服悬浮球' : '显示客服悬浮球'}
+			</Button>
+			{showService && <FloatCustomerService bottomOffset={170} />}
+		</View>
+	);
+}
+
+export function LoadingDemo() {
+	return (
+		<View className="flex items-center justify-around py-4 bg-white rounded-card border border-zinc-100">
+			<Loading />
+			<Loading title="数据加载中..." />
+		</View>
+	);
+}
+
+export function FeedbackDemo() {
+	const [variant, setVariant] = useState<FeedbackVariant>('success');
+	const variants: FeedbackVariant[] = ['success', 'error', 'warning', 'info', 'loading'];
+
+	return (
+		<View className="flex flex-col gap-3">
+			<View className="flex flex-wrap gap-1.5">
+				{variants.map((v) => (
+					<Button
+						key={v}
+						size="xs"
+						variant={variant === v ? 'primary' : 'zinc'}
+						appearance={variant === v ? 'solid' : 'outline'}
+						onClick={() => setVariant(v)}
+					>
+						{v}
+					</Button>
+				))}
+			</View>
+			<View className="bg-white rounded-card p-4 border border-zinc-100">
+				<Feedback
+					variant={variant}
+					title={variant === 'loading' ? '正在处理...' : `状态：${variant}`}
+					subtitle="这是一段落地结果反馈页的描述文案"
+					extra={
+						variant !== 'loading' && (
+							<Button size="sm" block onClick={() => Taro.showToast({ title: '点击返回', icon: 'none' })}>
+								返回列表
+							</Button>
+						)
+					}
+				/>
+			</View>
+		</View>
+	);
+}
+
+export function AuthMaskDemo() {
+	const [locked, setLocked] = useState(true);
+
+	return (
+		<View className="flex flex-col gap-3">
+			<View className="flex justify-end">
+				<Button size="xs" appearance="outline" onClick={() => setLocked((v) => !v)}>
+					{locked ? '模拟已登录（解锁）' : '模拟未登录（锁定）'}
+				</Button>
+			</View>
+			<AuthMask
+				locked={locked}
+				title="登录后查看核心数据"
+				subTitle="完成身份认证即可解锁完整列表"
+				onLoginClick={() => setLocked(false)}
+			>
+				<Card>
+					<CardTitle>机密业务报告</CardTitle>
+					<CardDescription className="mt-1">当前已完成身份验证，您正在查看受保护的完整内容。</CardDescription>
+				</Card>
+			</AuthMask>
+		</View>
+	);
+}
+
+export function SelectDemo() {
+	const [industry, setIndustry] = useState<string | number | null>(null);
+	const [dateVal, setDateVal] = useState('');
+	const [timeVal, setTimeVal] = useState('');
+	const [regionVal, setRegionVal] = useState<string[]>([]);
+
+	const options = [
+		{ label: '智能制造', value: 'mfg' },
+		{ label: '数字经济', value: 'digital' },
+		{ label: '生物医药', value: 'bio' },
+	];
+
+	return (
+		<View className="flex flex-col gap-3">
+			<Select
+				mode="selector"
+				options={options}
+				value={industry}
+				placeholder="请选择所属行业 (outlined)"
+				icon="icon-[ph--briefcase]"
+				onChange={(val) => setIndustry(val)}
+			/>
+			<Select
+				mode="date"
+				variant="underline"
+				value={dateVal}
+				placeholder="请选择成立日期 (underline)"
+				icon="icon-[ph--calendar]"
+				onChange={setDateVal}
+			/>
+			<Select
+				mode="time"
+				value={timeVal}
+				placeholder="请选择预约时间"
+				icon="icon-[ph--clock]"
+				onChange={setTimeVal}
+			/>
+			<Select
+				mode="region"
+				value={regionVal}
+				placeholder="请选择省市区"
+				icon="icon-[ph--map-pin]"
+				onChange={(res: RegionChangeResult) => setRegionVal(res.rawNames || [])}
+			/>
+		</View>
+	);
+}
+
+export function FileUploaderDemo() {
+	const [file, setFile] = useState<UploadedFile | null>({
+		filePath: 'https://example.com/demo.pdf',
+		fileName: '企业资质申报材料.pdf',
+		fileType: 'pdf',
+		fileSize: 245760,
+	});
+
+	return (
+		<View className="flex flex-col gap-3">
+			<FileUploader
+				value={file}
+				onChange={setFile}
+				onUpload={async (paths) => paths}
+				label="选择聊天记录中的文件"
+				subLabel="支持 PDF、Word 等格式文档"
+			/>
+		</View>
+	);
+}
+
+export function RateDemo() {
+	const [score, setScore] = useState(4);
+
+	return (
+		<View className="flex flex-col gap-3 bg-white rounded-card p-4 border border-zinc-100">
+			<Rate label="服务评价" value={score} onChange={setScore} />
+			<Rate label="综合评分" value={5} readonly size={5} />
 		</View>
 	);
 }

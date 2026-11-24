@@ -11,10 +11,10 @@ const VARIANT_MAP: Record<
 	{ bgClass: string; borderClass: string; iconClass: string; textClass: string; defaultIcon: string }
 > = {
 	default: {
-		bgClass: 'bg-gray-50/90',
-		borderClass: 'border-gray-200/80',
-		iconClass: 'text-gray-600',
-		textClass: 'text-gray-900',
+		bgClass: 'bg-zinc-50/90',
+		borderClass: 'border-zinc-200/80',
+		iconClass: 'text-zinc-600',
+		textClass: 'text-zinc-900',
 		defaultIcon: 'icon-[ph--bell-duotone]',
 	},
 	info: {

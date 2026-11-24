@@ -18,66 +18,66 @@ interface ThemePalette {
 const THEME_MAP: Record<ActionTileTheme, ThemePalette> = {
 	primary: {
 		darkBg: 'bg-linear-to-br from-primary via-blue-600 to-indigo-700 shadow-md shadow-blue-500/20',
-		lightBg: 'bg-linear-to-br from-white via-blue-50/90 to-blue-100/90 border border-slate-100 shadow-xs',
+		lightBg: 'bg-linear-to-br from-white via-blue-50/90 to-blue-100/90 border border-zinc-100 shadow-xs',
 		lightIconWrap: 'bg-primary/10',
 		lightIconColor: 'text-primary',
 		lightUnitColor: 'text-primary',
 	},
 	blue: {
 		darkBg: 'bg-linear-to-br from-blue-500 via-blue-600 to-indigo-700 shadow-md shadow-blue-500/20',
-		lightBg: 'bg-linear-to-br from-white via-sky-50/90 to-sky-100/90 border border-slate-100 shadow-xs',
+		lightBg: 'bg-linear-to-br from-white via-sky-50/90 to-sky-100/90 border border-zinc-100 shadow-xs',
 		lightIconWrap: 'bg-blue-100',
 		lightIconColor: 'text-blue-600',
 		lightUnitColor: 'text-blue-500',
 	},
 	sky: {
 		darkBg: 'bg-linear-to-br from-sky-400 via-sky-500 to-blue-600 shadow-md shadow-sky-500/20',
-		lightBg: 'bg-linear-to-br from-white via-sky-50/90 to-sky-100/90 border border-slate-100 shadow-xs',
+		lightBg: 'bg-linear-to-br from-white via-sky-50/90 to-sky-100/90 border border-zinc-100 shadow-xs',
 		lightIconWrap: 'bg-sky-100',
 		lightIconColor: 'text-sky-600',
 		lightUnitColor: 'text-sky-500',
 	},
 	indigo: {
 		darkBg: 'bg-linear-to-br from-indigo-500 via-indigo-600 to-purple-700 shadow-md shadow-indigo-500/20',
-		lightBg: 'bg-linear-to-br from-white via-indigo-50/90 to-indigo-100/90 border border-slate-100 shadow-xs',
+		lightBg: 'bg-linear-to-br from-white via-indigo-50/90 to-indigo-100/90 border border-zinc-100 shadow-xs',
 		lightIconWrap: 'bg-indigo-100',
 		lightIconColor: 'text-indigo-600',
 		lightUnitColor: 'text-indigo-500',
 	},
 	emerald: {
 		darkBg: 'bg-linear-to-br from-emerald-500 via-emerald-600 to-teal-700 shadow-md shadow-emerald-500/20',
-		lightBg: 'bg-linear-to-br from-white via-emerald-50/90 to-emerald-100/90 border border-slate-100 shadow-xs',
+		lightBg: 'bg-linear-to-br from-white via-emerald-50/90 to-emerald-100/90 border border-zinc-100 shadow-xs',
 		lightIconWrap: 'bg-emerald-100',
 		lightIconColor: 'text-emerald-600',
 		lightUnitColor: 'text-emerald-600',
 	},
 	amber: {
 		darkBg: 'bg-linear-to-br from-amber-400 via-amber-500 to-orange-600 shadow-md shadow-amber-500/20',
-		lightBg: 'bg-linear-to-br from-white via-amber-50/90 to-amber-100/90 border border-slate-100 shadow-xs',
+		lightBg: 'bg-linear-to-br from-white via-amber-50/90 to-amber-100/90 border border-zinc-100 shadow-xs',
 		lightIconWrap: 'bg-amber-100',
 		lightIconColor: 'text-amber-600',
 		lightUnitColor: 'text-amber-600',
 	},
 	orange: {
 		darkBg: 'bg-linear-to-br from-orange-400 via-orange-500 to-amber-600 shadow-md shadow-orange-500/20',
-		lightBg: 'bg-linear-to-br from-white via-orange-50/90 to-orange-100/90 border border-slate-100 shadow-xs',
+		lightBg: 'bg-linear-to-br from-white via-orange-50/90 to-orange-100/90 border border-zinc-100 shadow-xs',
 		lightIconWrap: 'bg-orange-100',
 		lightIconColor: 'text-orange-500',
 		lightUnitColor: 'text-orange-500',
 	},
 	rose: {
 		darkBg: 'bg-linear-to-br from-rose-500 via-rose-600 to-pink-700 shadow-md shadow-rose-500/20',
-		lightBg: 'bg-linear-to-br from-white via-rose-50/90 to-rose-100/90 border border-slate-100 shadow-xs',
+		lightBg: 'bg-linear-to-br from-white via-rose-50/90 to-rose-100/90 border border-zinc-100 shadow-xs',
 		lightIconWrap: 'bg-rose-100',
 		lightIconColor: 'text-rose-500',
 		lightUnitColor: 'text-rose-500',
 	},
-	slate: {
-		darkBg: 'bg-linear-to-br from-slate-600 via-slate-700 to-slate-800 shadow-md shadow-slate-500/20',
-		lightBg: 'bg-linear-to-br from-white via-slate-50/90 to-slate-100/90 border border-slate-200/80 shadow-xs',
-		lightIconWrap: 'bg-slate-200/80',
-		lightIconColor: 'text-slate-600',
-		lightUnitColor: 'text-slate-600',
+	zinc: {
+		darkBg: 'bg-linear-to-br from-zinc-600 via-zinc-700 to-zinc-800 shadow-md shadow-zinc-500/20',
+		lightBg: 'bg-linear-to-br from-white via-zinc-50/90 to-zinc-100/90 border border-zinc-200/80 shadow-xs',
+		lightIconWrap: 'bg-zinc-200/80',
+		lightIconColor: 'text-zinc-600',
+		lightUnitColor: 'text-zinc-600',
 	},
 };
 
@@ -154,7 +154,7 @@ export function ActionTile({
 				<Text
 					className={cn(
 						'text-sm font-medium relative z-10',
-						isDark ? 'text-white/90' : 'text-slate-600',
+						isDark ? 'text-white/90' : 'text-zinc-600',
 					)}
 				>
 					{title}
@@ -162,7 +162,7 @@ export function ActionTile({
 
 				{value !== undefined ? (
 					<View className="flex items-baseline gap-1 relative z-10">
-						<Text className={cn('text-xl font-bold font-mono', isDark ? 'text-white' : 'text-slate-900')}>
+						<Text className={cn('text-xl font-bold font-mono', isDark ? 'text-white' : 'text-zinc-900')}>
 							{value}
 						</Text>
 						{unit && (
@@ -177,7 +177,7 @@ export function ActionTile({
 						)}
 					</View>
 				) : subTitle ? (
-					<Text className={cn('text-xs relative z-10 truncate', isDark ? 'text-white/75' : 'text-slate-400')}>
+					<Text className={cn('text-xs relative z-10 truncate', isDark ? 'text-white/75' : 'text-zinc-400')}>
 						{subTitle}
 					</Text>
 				) : null}
@@ -214,13 +214,13 @@ export function ActionTile({
 			<View
 				className={cn(
 					'absolute -right-4 -top-4 size-24 rounded-2xl rotate-12 pointer-events-none',
-					isDark ? 'bg-white/10' : 'bg-slate-900/5',
+					isDark ? 'bg-white/10' : 'bg-zinc-900/5',
 				)}
 			/>
 			<View
 				className={cn(
 					'absolute right-6 top-6 size-14 rounded-xl -rotate-12 pointer-events-none',
-					isDark ? 'bg-white/10' : 'bg-slate-900/5',
+					isDark ? 'bg-white/10' : 'bg-zinc-900/5',
 				)}
 			/>
 
@@ -249,11 +249,11 @@ export function ActionTile({
 					isDark ? 'bg-white/15 backdrop-blur-xs' : 'bg-white/70 backdrop-blur-xs',
 				)}
 			>
-				<Text className={cn('text-base font-bold leading-tight', isDark ? 'text-white' : 'text-slate-900')}>
+				<Text className={cn('text-base font-bold leading-tight', isDark ? 'text-white' : 'text-zinc-900')}>
 					{title}
 				</Text>
 				{subTitle && (
-					<Text className={cn('text-xs truncate', isDark ? 'text-white/80' : 'text-slate-500')}>
+					<Text className={cn('text-xs truncate', isDark ? 'text-white/80' : 'text-zinc-500')}>
 						{subTitle}
 					</Text>
 				)}

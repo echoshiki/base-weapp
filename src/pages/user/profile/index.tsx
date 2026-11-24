@@ -74,7 +74,7 @@ export default function UserProfilePage() {
 							{SEX_OPTIONS.map((opt) => (
 								<Badge
 									key={opt.value}
-									variant={opt.value === form.sex ? 'primary' : 'slate'}
+									variant={opt.value === form.sex ? 'primary' : 'zinc'}
 									onClick={() => updateField('sex', opt.value)}
 								>
 									{opt.label}

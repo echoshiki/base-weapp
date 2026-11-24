@@ -28,8 +28,8 @@ export interface SearchBarProps extends Omit<InputProps, 'onInput' | 'onConfirm'
 }
 
 const VARIANT_MAP: Record<SearchBarVariant, string> = {
-	filled: 'bg-gray-100/80 border-transparent',
-	outline: 'bg-white border-gray-200/90 shadow-2xs',
+	filled: 'bg-zinc-100/80 border-transparent',
+	outline: 'bg-white border-zinc-200/90 shadow-xs',
 };
 
 /**
@@ -67,7 +67,7 @@ export function SearchBar({
 					pill ? 'rounded-full' : 'rounded-card',
 					VARIANT_MAP[variant] || VARIANT_MAP.filled,
 					readonly && 'active:opacity-80 cursor-pointer',
-					disabled && 'opacity-50 pointer-events-none bg-gray-50'
+					disabled && 'opacity-50 pointer-events-none bg-zinc-50'
 				)}
 				onClick={() => readonly && onClick?.()}
 			>
@@ -92,7 +92,7 @@ export function SearchBar({
 						/>
 						{value && !disabled && (
 							<View
-								className="icon-[ph--x-circle-fill] size-4 text-gray-300 active:text-gray-500 ml-1.5 shrink-0 p-0.5 cursor-pointer"
+								className="icon-[ph--x-circle-fill] size-4 text-zinc-300 active:text-zinc-500 ml-1.5 shrink-0 p-0.5 cursor-pointer"
 								onClick={handleClear}
 							/>
 						)}

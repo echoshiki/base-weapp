@@ -35,7 +35,7 @@ export function Card({
 		<CardContext.Provider value={{ layout }}>
 			<View
 				className={cn(
-					'bg-white overflow-hidden transition-all border border-gray-100/80 shadow-xs',
+					'bg-white overflow-hidden transition-all border border-zinc-100/80 shadow-xs',
 					layout === 'horizontal' ? 'flex items-start gap-3.5' : 'flex flex-col',
 					rounded ? 'rounded-card' : 'rounded-none',
 					noPadding ? 'p-0' : 'px-4 py-5',
@@ -67,7 +67,7 @@ export function CardImage({ src, mode = 'aspectFill', className, ...props }: Car
 			src={src}
 			mode={mode}
 			className={cn(
-				'bg-gray-100 shrink-0 overflow-hidden',
+				'bg-zinc-100 shrink-0 overflow-hidden',
 				layout === 'horizontal' ? 'size-24 rounded shadow-xs' : 'w-full h-40 rounded-t-card',
 				className,
 			)}
@@ -81,7 +81,7 @@ export function CardImage({ src, mode = 'aspectFill', className, ...props }: Car
  */
 export function CardHeader({ className, children, ...props }: ViewProps) {
 	return (
-		<View className={cn('flex flex-col gap-1 mb-1.5 pb-3 border-b border-gray-100', className)} {...props}>
+		<View className={cn('flex flex-col gap-1 mb-1.5 pb-3 border-b border-zinc-100', className)} {...props}>
 			{children}
 		</View>
 	);
@@ -139,7 +139,7 @@ export function CardFooter({ className, children, ...props }: ViewProps) {
 		<View
 			className={cn(
 				'flex items-center justify-between text-xs text-text-muted',
-				layout === 'horizontal' ? 'pt-0 mt-0 border-none' : 'pt-3 mt-3 border-t border-gray-100/80',
+				layout === 'horizontal' ? 'pt-0 mt-0 border-none' : 'pt-3 mt-3 border-t border-zinc-100/80',
 				className,
 			)}
 			{...props}

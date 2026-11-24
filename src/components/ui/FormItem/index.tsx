@@ -45,7 +45,7 @@ export function FormItem({
 			<View
 				className={cn(
 					'flex flex-col justify-center min-h-12 py-2',
-					border && 'border-b border-gray-400',
+					border && 'border-b border-zinc-400',
 					className,
 				)}
 				onClick={onClick}
@@ -81,7 +81,7 @@ export function FormItem({
 		<View
 			className={cn(
 				'flex flex-col justify-center min-h-12 py-2.5 gap-2',
-				border && 'border-b border-gray-100/80',
+				border && 'border-b border-zinc-100/80',
 				className,
 			)}
 			onClick={onClick}

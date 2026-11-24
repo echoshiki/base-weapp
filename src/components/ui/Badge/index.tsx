@@ -46,15 +46,15 @@ const VARIANT_MAP: Record<BadgeVariant, { bgClass: string; textClass: string; do
 		textClass: 'text-rose-600',
 		dotClass: 'bg-rose-500',
 	},
-	slate: {
-		bgClass: 'bg-slate-600/10 border-slate-200',
-		textClass: 'text-slate-600',
-		dotClass: 'bg-slate-400',
+	zinc: {
+		bgClass: 'bg-zinc-600/10 border-zinc-200',
+		textClass: 'text-zinc-600',
+		dotClass: 'bg-zinc-400',
 	},
 };
 
 export interface BadgeProps extends ViewProps {
-	/** 颜色主题，默认 slate */
+	/** 颜色主题，默认 zinc */
 	variant?: BadgeVariant;
 	/** 是否为胶囊形状（全圆角），默认 false */
 	pill?: boolean;
@@ -71,7 +71,7 @@ export interface BadgeProps extends ViewProps {
  */
 export function Badge({
 	children,
-	variant = 'slate',
+	variant = 'zinc',
 	pill = false,
 	dot = false,
 	icon,
@@ -79,7 +79,7 @@ export function Badge({
 	onClick,
 	...props
 }: BadgeProps) {
-	const config = VARIANT_MAP[variant] || VARIANT_MAP.slate;
+	const config = VARIANT_MAP[variant] || VARIANT_MAP.zinc;
 
 	const renderIcon = () => {
 		if (dot) {

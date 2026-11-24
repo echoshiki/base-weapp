@@ -121,7 +121,7 @@ export function AvatarFallback({
 	return (
 		<View
 			className={cn(
-				'w-full h-full flex items-center justify-center bg-gray-200 text-gray-700 font-bold',
+				'w-full h-full flex items-center justify-center bg-zinc-200 text-zinc-700 font-bold',
 				className
 			)}
 		>
@@ -134,7 +134,7 @@ export type AvatarBadgeStatus = 'online' | 'offline' | 'busy' | 'away';
 
 const BADGE_STATUS_MAP: Record<AvatarBadgeStatus, string> = {
 	online: 'bg-emerald-500',
-	offline: 'bg-gray-400',
+	offline: 'bg-zinc-400',
 	busy: 'bg-rose-500',
 	away: 'bg-amber-500',
 };

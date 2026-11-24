@@ -14,7 +14,7 @@ const ICON_THEMES: Record<UiColor, { box: string; text: string }> = {
 	amber: { box: 'bg-amber-50 text-amber-600', text: 'text-amber-600' },
 	orange: { box: 'bg-orange-50 text-orange-600', text: 'text-orange-600' },
 	rose: { box: 'bg-rose-50 text-rose-600', text: 'text-rose-600' },
-	slate: { box: 'bg-slate-100 text-slate-700', text: 'text-slate-700' },
+	zinc: { box: 'bg-zinc-100 text-zinc-700', text: 'text-zinc-700' },
 };
 
 const ICON_SIZES = {

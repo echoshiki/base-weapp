@@ -120,8 +120,8 @@ export function EmptyIcon({
 	}
 
 	return (
-		<View className={cn('rounded-full bg-gray-100 p-4 flex items-center justify-center', className)}>
-			{children ? children : <View className={cn('w-10 h-10 text-gray-400', icon)} />}
+		<View className={cn('rounded-full bg-zinc-100 p-4 flex items-center justify-center', className)}>
+			{children ? children : <View className={cn('w-10 h-10 text-zinc-400', icon)} />}
 		</View>
 	);
 }

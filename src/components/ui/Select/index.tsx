@@ -116,8 +116,8 @@ export type SelectProps<T = any> = SelectorModeProps<T> | DateModeProps | Region
 
 // 变体样式映射
 const VARIANT_CLASS: Record<SelectVariant, string> = {
-	outlined: 'px-4 py-3.5 rounded-card border border-gray-200/80 bg-gray-50/70 active:bg-gray-100 transition-colors',
-	underline: 'px-0 py-3 border-b border-gray-200 bg-transparent rounded-none active:opacity-70 transition-opacity',
+	outlined: 'px-4 py-3.5 rounded-card border border-zinc-200/80 bg-zinc-50/70 active:bg-zinc-100 transition-colors',
+	underline: 'px-0 py-3 border-b border-zinc-200 bg-transparent rounded-none active:opacity-70 transition-opacity',
 	ghost: 'px-0 py-1 bg-transparent active:opacity-70 transition-opacity',
 };
 

@@ -14,7 +14,7 @@ const VARIANT_MAP: Record<Exclude<NavIconVariant, 'none'>, string> = {
 	amber: 'bg-amber-500/10 text-amber-600',
 	orange: 'bg-orange-500/10 text-orange-600',
 	rose: 'bg-rose-500/10 text-rose-600',
-	slate: 'bg-slate-500/10 text-slate-600',
+	zinc: 'bg-zinc-500/10 text-zinc-600',
 	ghost: 'bg-transparent text-text-title',
 };
 
@@ -73,8 +73,8 @@ export function NavItem({
 				'm-0 p-0 bg-transparent text-left after:border-0 leading-normal overflow-visible min-h-0 min-w-0 font-normal',
 				isList
 					? cn(
-							'flex items-center gap-3 px-3 py-3.5 transition-colors active:bg-gray-50/80 w-full',
-							border && 'border-b border-gray-100/80',
+							'flex items-center gap-3 px-3 py-3.5 transition-colors active:bg-zinc-50/80 w-full',
+							border && 'border-b border-zinc-100/80',
 						)
 					: 'flex flex-col items-center gap-1.5 active:scale-95 transition-transform',
 				className,

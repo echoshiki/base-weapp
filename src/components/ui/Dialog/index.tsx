@@ -69,7 +69,7 @@ export function DialogContent({
 			{/* 居中卡片容器 */}
 			<View
 				className={cn(
-					'relative z-10 w-full max-w-sm rounded-2xl bg-white p-5 shadow-2xl transition-all border border-gray-100 flex flex-col gap-4 animate-scale-in',
+					'relative z-10 w-full max-w-sm rounded-2xl bg-white p-5 shadow-2xl transition-all border border-zinc-100 flex flex-col gap-4 animate-scale-in',
 					className
 				)}
 				{...props}
@@ -127,7 +127,7 @@ export function DialogDescription({ className, children, ...props }: ViewProps) 
 export function DialogFooter({ className, children, ...props }: ViewProps) {
 	return (
 		<View
-			className={cn('flex flex-row items-center justify-end gap-2 pt-2 border-t border-gray-100/60', className)}
+			className={cn('flex flex-row items-center justify-end gap-2 pt-2 border-t border-zinc-100/60', className)}
 			{...props}
 		>
 			{children}

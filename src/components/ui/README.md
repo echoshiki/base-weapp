@@ -159,7 +159,7 @@ import { Page, Card, Button, FormItem, Badge, Avatar, Drawer, Tabs } from '@/com
 
 | Prop      | 类型                                                                                                      | 说明                       |
 | --------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
-| `variant` | `UiColor` (`'primary' \| 'blue' \| 'sky' \| 'indigo' \| 'emerald' \| 'amber' \| 'orange' \| 'rose' \| 'slate'`) | 颜色主题，默认 `slate` |
+| `variant` | `UiColor` (`'primary' \| 'blue' \| 'sky' \| 'indigo' \| 'emerald' \| 'amber' \| 'orange' \| 'rose' \| 'zinc'`) | 颜色主题，默认 `zinc` |
 | `size`    | `'sm' \| 'md' \| 'lg'`                                                                                         | 尺寸，默认 `sm`        |
 | `pill`    | `boolean`                                                                                                      | 是否胶囊圆角           |
 | `dot`     | `boolean`                                                                                                      | 文字左侧是否显示状态点 |

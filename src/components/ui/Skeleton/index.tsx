@@ -12,7 +12,7 @@ export interface SkeletonProps extends ViewProps {
 export function Skeleton({ className, ...props }: SkeletonProps) {
 	return (
 		<View
-			className={cn('animate-pulse bg-gray-200/80 rounded-md shrink-0', className)}
+			className={cn('animate-pulse bg-zinc-200/80 rounded-md shrink-0', className)}
 			{...props}
 		/>
 	);
@@ -65,7 +65,7 @@ export function SkeletonCard({ className, ...props }: ViewProps) {
 	return (
 		<View
 			className={cn(
-				'w-full p-4 rounded-card border border-gray-100 bg-white flex flex-col gap-3 shadow-xs',
+				'w-full p-4 rounded-card border border-zinc-100 bg-white flex flex-col gap-3 shadow-xs',
 				className
 			)}
 			{...props}

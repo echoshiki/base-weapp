@@ -20,6 +20,24 @@ import {
 	FormItemDemo,
 	ImageUploaderDemo,
 	SignatureDemo,
+	HeadingDemo,
+	AssetDemo,
+	DividerDemo,
+	IconDemo,
+	GenderDemo,
+	PageDemo,
+	ImagePreviewDemo,
+	ButtonDemo,
+	ActionTileDemo,
+	EntryCardDemo,
+	NavBarDemo,
+	FloatWidgetsDemo,
+	LoadingDemo,
+	FeedbackDemo,
+	AuthMaskDemo,
+	SelectDemo,
+	FileUploaderDemo,
+	RateDemo,
 } from './demos';
 
 interface ExampleItem {
@@ -68,11 +86,47 @@ const EXAMPLE_GROUPS: ExampleGroup[] = [
 				desc: '基础波浪骨架与全套卡片预加载占位',
 				render: () => <SkeletonDemo />,
 			},
+			{
+				key: 'heading',
+				name: 'Heading 区块标题',
+				desc: '支持尺寸、前缀图标、副标题与右侧扩展槽位',
+				render: () => <HeadingDemo />,
+			},
+			{
+				key: 'asset',
+				name: 'Asset 资产数值',
+				desc: '上下结构数据指标展示，常用于个人中心头部',
+				render: () => <AssetDemo />,
+			},
+			{
+				key: 'divider',
+				name: 'Divider 分割线',
+				desc: '水平/垂直、实线/虚线与中间文本嵌入',
+				render: () => <DividerDemo />,
+			},
+			{
+				key: 'icon',
+				name: 'Icon 图标容器',
+				desc: '纯图标、方形/圆形衬底与多主题色预设',
+				render: () => <IconDemo />,
+			},
+			{
+				key: 'gender',
+				name: 'Gender 性别徽标',
+				desc: '自动区分男/女样式与多档尺寸预设',
+				render: () => <GenderDemo />,
+			},
 		],
 	},
 	{
 		title: '布局与媒体',
 		items: [
+			{
+				key: 'page',
+				name: 'Page 页面容器',
+				desc: '全站统一背景、container-x 边距与 PageContent',
+				render: () => <PageDemo />,
+			},
 			{
 				key: 'aspect-ratio',
 				name: 'AspectRatio 宽高比容器',
@@ -85,11 +139,41 @@ const EXAMPLE_GROUPS: ExampleGroup[] = [
 				desc: '支持自动播放与无缝循环的轮播容器',
 				render: () => <CarouselDemo />,
 			},
+			{
+				key: 'image-preview',
+				name: 'ImagePreview 图片预览',
+				desc: '全屏自定义多图预览弹窗与原生 previewImage',
+				render: () => <ImagePreviewDemo />,
+			},
 		],
 	},
 	{
-		title: '导航与搜索',
+		title: '导航与交互',
 		items: [
+			{
+				key: 'button',
+				name: 'Button 按钮',
+				desc: 'Solid/Soft/Outline/Ghost 四种形态与多尺寸主题',
+				render: () => <ButtonDemo />,
+			},
+			{
+				key: 'action-tile',
+				name: 'ActionTile 快捷磁贴',
+				desc: 'Square/Compact 双形态与 Light/Dark 双色调',
+				render: () => <ActionTileDemo />,
+			},
+			{
+				key: 'entry-card',
+				name: 'EntryCard 玄关入口卡',
+				desc: '渐变主题背景卡片，支持禁用置灰态',
+				render: () => <EntryCardDemo />,
+			},
+			{
+				key: 'nav-bar',
+				name: 'NavBar 顶部导航栏',
+				desc: '适配胶囊高度、透明渐变吸顶与深浅主题',
+				render: () => <NavBarDemo />,
+			},
 			{
 				key: 'nav-item',
 				name: 'NavItem 导航项',
@@ -108,6 +192,12 @@ const EXAMPLE_GROUPS: ExampleGroup[] = [
 				desc: 'Filled 胶囊、Outline 线框与只读跳转模式',
 				render: () => <SearchBarDemo />,
 			},
+			{
+				key: 'float-widgets',
+				name: 'FloatQuickMenu & FloatCustomerService',
+				desc: '可拖拽悬浮快捷菜单与在线客服悬浮球',
+				render: () => <FloatWidgetsDemo />,
+			},
 		],
 	},
 	{
@@ -120,10 +210,28 @@ const EXAMPLE_GROUPS: ExampleGroup[] = [
 				render: () => <AlertDemo />,
 			},
 			{
+				key: 'loading',
+				name: 'Loading 加载占位',
+				desc: '通用旋转加载指示器与说明文案',
+				render: () => <LoadingDemo />,
+			},
+			{
 				key: 'empty',
 				name: 'Empty 空状态',
 				desc: '暂无数据占位与底部引导操作按钮',
 				render: () => <EmptyDemo />,
+			},
+			{
+				key: 'feedback',
+				name: 'Feedback 落地反馈',
+				desc: '成功、错误、警告、信息与加载大版式结果页',
+				render: () => <FeedbackDemo />,
+			},
+			{
+				key: 'auth-mask',
+				name: 'AuthMask 登录遮罩',
+				desc: '未登录局部高斯模糊遮挡与一键登录引导',
+				render: () => <AuthMaskDemo />,
 			},
 			{
 				key: 'dialog',
@@ -149,10 +257,28 @@ const EXAMPLE_GROUPS: ExampleGroup[] = [
 				render: () => <FormItemDemo />,
 			},
 			{
+				key: 'select',
+				name: 'Select 全能选择器',
+				desc: '单选、日期、时间与本地省市区级联选择',
+				render: () => <SelectDemo />,
+			},
+			{
 				key: 'image-uploader',
 				name: 'ImageUploader 图片上传',
 				desc: '单图/多图上传模式与只读大图预览',
 				render: () => <ImageUploaderDemo />,
+			},
+			{
+				key: 'file-uploader',
+				name: 'FileUploader 文档上传',
+				desc: '聊天文件选择上传与 PDF/Word 文件预览卡片',
+				render: () => <FileUploaderDemo />,
+			},
+			{
+				key: 'rate',
+				name: 'Rate 评分',
+				desc: '星级评分交互与只读模式展示',
+				render: () => <RateDemo />,
 			},
 			{
 				key: 'signature',
@@ -194,10 +320,10 @@ export default function Index() {
 								const isExpanded = !!expandedKeys[item.key];
 
 								return (
-									<View key={item.key} className={cn(!isLast && 'border-b border-gray-100/80')}>
+									<View key={item.key} className={cn(!isLast && 'border-b border-zinc-100/80')}>
 										<View
 											onClick={() => toggleItem(item.key)}
-											className="flex items-center justify-between gap-3 px-4 py-3.5 transition-colors active:bg-gray-50/80"
+											className="flex items-center justify-between gap-3 px-4 py-3.5 transition-colors active:bg-zinc-50/80"
 										>
 											<View className="flex-1 min-w-0 flex flex-col gap-0.5">
 												<Text className="text-sm font-medium text-text-title truncate">
@@ -214,7 +340,7 @@ export default function Index() {
 										</View>
 
 										{isExpanded && (
-											<View className="px-4 py-3.5 bg-gray-50/60 border-t border-gray-100/80">
+											<View className="px-4 py-3.5 bg-zinc-50/60 border-t border-zinc-100/80">
 												{item.render()}
 											</View>
 										)}

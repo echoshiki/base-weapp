@@ -95,7 +95,7 @@ export function NavBar({
 						<Text
 							className={cn(
 								'text-base font-bold truncate transition-colors leading-none duration-200',
-								isLight ? 'text-white drop-shadow-sm' : 'text-gray-900',
+								isLight ? 'text-white drop-shadow-sm' : 'text-zinc-900',
 							)}
 						>
 							{title}

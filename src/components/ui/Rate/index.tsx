@@ -43,7 +43,7 @@ export const Rate = ({
 						key={num}
 						onClick={() => handleToggle(num)}
 						className={`icon-[ph--star-fill] w-${size} h-${size} transition-all duration-200 ${
-							num <= value ? 'text-primary' : 'text-gray-200'
+							num <= value ? 'text-primary' : 'text-zinc-200'
 						}`}
 					/>
 				))}

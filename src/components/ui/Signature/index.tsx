@@ -143,7 +143,7 @@ export function Signature({
 			{/* Canvas 签名画板容器 */}
 			<View
 				className={cn(
-					'relative w-full rounded-card border border-dashed border-gray-300 bg-gray-50/80 overflow-hidden transition-all',
+					'relative w-full rounded-card border border-dashed border-zinc-300 bg-zinc-50/80 overflow-hidden transition-all',
 					disabled && 'opacity-60 pointer-events-none',
 				)}
 				style={{ height: `${height}px` }}

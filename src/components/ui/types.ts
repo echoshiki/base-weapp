@@ -11,4 +11,4 @@ export type UiColor =
 	| 'amber'
 	| 'orange'
 	| 'rose'
-	| 'slate';
+	| 'zinc';

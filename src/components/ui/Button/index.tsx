@@ -29,7 +29,7 @@ const APPEARANCE_MAP: Record<ButtonAppearance, Record<ColorVariant, string>> = {
 		amber: 'bg-amber-500 text-white active:bg-amber-600',
 		orange: 'bg-orange-500 text-white active:bg-orange-600',
 		rose: 'bg-rose-500 text-white active:bg-rose-600',
-		slate: 'bg-slate-100 text-slate-700 active:bg-slate-200',
+		zinc: 'bg-zinc-100 text-zinc-700 active:bg-zinc-200',
 	},
 	soft: {
 		primary: 'bg-primary/15 text-primary active:opacity-80',
@@ -40,7 +40,7 @@ const APPEARANCE_MAP: Record<ButtonAppearance, Record<ColorVariant, string>> = {
 		amber: 'bg-amber-500/15 text-amber-600 active:opacity-80',
 		orange: 'bg-orange-500/15 text-orange-600 active:opacity-80',
 		rose: 'bg-rose-500/15 text-rose-600 active:opacity-80',
-		slate: 'bg-slate-100 text-slate-700 active:bg-slate-200',
+		zinc: 'bg-zinc-100 text-zinc-700 active:bg-zinc-200',
 	},
 	outline: {
 		primary: 'bg-transparent text-primary border border-primary/40 active:bg-primary/5',
@@ -51,7 +51,7 @@ const APPEARANCE_MAP: Record<ButtonAppearance, Record<ColorVariant, string>> = {
 		amber: 'bg-transparent text-amber-600 border border-amber-500/40 active:bg-amber-500/5',
 		orange: 'bg-transparent text-orange-600 border border-orange-500/40 active:bg-orange-500/5',
 		rose: 'bg-transparent text-rose-600 border border-rose-500/40 active:bg-rose-500/5',
-		slate: 'bg-transparent text-slate-700 border border-slate-300 active:bg-slate-100',
+		zinc: 'bg-transparent text-zinc-700 border border-zinc-300 active:bg-zinc-100',
 	},
 	ghost: {
 		primary: 'bg-transparent text-primary active:bg-primary/10',
@@ -62,7 +62,7 @@ const APPEARANCE_MAP: Record<ButtonAppearance, Record<ColorVariant, string>> = {
 		amber: 'bg-transparent text-amber-600 active:bg-amber-500/10',
 		orange: 'bg-transparent text-orange-600 active:bg-orange-500/10',
 		rose: 'bg-transparent text-rose-600 active:bg-rose-500/10',
-		slate: 'bg-transparent text-slate-600 active:bg-slate-100',
+		zinc: 'bg-transparent text-zinc-600 active:bg-zinc-100',
 	},
 };
 

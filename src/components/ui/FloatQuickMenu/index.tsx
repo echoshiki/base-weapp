@@ -127,7 +127,7 @@ export function FloatQuickMenu({ rightOffset = 16, bottomOffset = 96, className 
 				{expanded && (
 					<View
 						className={cn(
-							'absolute right-0 w-20 rounded-2xl bg-white/95 backdrop-blur-md border border-slate-200/80 shadow-xl py-1.5 flex flex-col gap-1 z-50',
+							'absolute right-0 w-20 rounded-2xl bg-white/95 backdrop-blur-md border border-zinc-200/80 shadow-xl py-1.5 flex flex-col gap-1 z-50',
 							expandDown ? 'top-13' : 'bottom-13',
 						)}
 					>
@@ -135,10 +135,10 @@ export function FloatQuickMenu({ rightOffset = 16, bottomOffset = 96, className 
 							<View
 								key={item.key}
 								onClick={item.onClick}
-								className="flex flex-col items-center justify-center py-1.5 px-1 rounded-xl active:bg-slate-100 cursor-pointer"
+								className="flex flex-col items-center justify-center py-1.5 px-1 rounded-xl active:bg-zinc-100 cursor-pointer"
 							>
-								<View className={cn(item.icon, 'size-6 text-slate-700')} />
-								<Text className="text-xs text-slate-800 font-medium mt-0.5">{item.label}</Text>
+								<View className={cn(item.icon, 'size-6 text-zinc-700')} />
+								<Text className="text-xs text-zinc-800 font-medium mt-0.5">{item.label}</Text>
 							</View>
 						))}
 					</View>
@@ -151,7 +151,7 @@ export function FloatQuickMenu({ rightOffset = 16, bottomOffset = 96, className 
 						'size-12 rounded-full flex items-center justify-center shadow-lg border transition-all cursor-pointer active:scale-95',
 						expanded
 							? 'bg-primary border-primary text-white shadow-blue-500/30'
-							: 'bg-white/95 backdrop-blur-md border-slate-200/80 text-slate-800 shadow-slate-900/15',
+							: 'bg-white/95 backdrop-blur-md border-zinc-200/80 text-zinc-800 shadow-zinc-900/15',
 					)}
 				>
 					<View className={cn(expanded ? 'icon-[ph--x-bold]' : 'icon-[ph--dots-nine-bold]', 'size-6')} />

@@ -55,7 +55,7 @@ export function Tabs({
 	if (tabs) {
 		const containerClassName = cn(
 			sticky && 'sticky top-0 z-10',
-			hasBackground && 'bg-white border-b border-gray-100/80',
+			hasBackground && 'bg-white border-b border-zinc-100/80',
 			!scrollable && 'flex w-full',
 			className
 		);
@@ -122,7 +122,7 @@ export function Tabs({
  */
 export function TabsList({ className, children, ...props }: ViewProps) {
 	return (
-		<View className={cn('flex items-center w-full bg-white border-b border-gray-100/80', className)} {...props}>
+		<View className={cn('flex items-center w-full bg-white border-b border-zinc-100/80', className)} {...props}>
 			{children}
 		</View>
 	);

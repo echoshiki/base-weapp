@@ -59,12 +59,12 @@ export function AuthMask({
 					{[1, 2].map((idx) => (
 						<View
 							key={idx}
-							className="p-4 rounded-2xl bg-white border border-slate-100 flex flex-col gap-2.5"
+							className="p-4 rounded-2xl bg-white border border-zinc-100 flex flex-col gap-2.5"
 						>
-							<View className="h-4 w-4/5 rounded bg-slate-200/80" />
+							<View className="h-4 w-4/5 rounded bg-zinc-200/80" />
 							<View className="flex items-center justify-between">
-								<View className="h-3.5 w-20 rounded-full bg-slate-100" />
-								<View className="h-3.5 w-16 rounded bg-slate-100" />
+								<View className="h-3.5 w-20 rounded-full bg-zinc-100" />
+								<View className="h-3.5 w-16 rounded bg-zinc-100" />
 							</View>
 						</View>
 					))}
@@ -80,8 +80,8 @@ export function AuthMask({
 					<View className={cn(icon, 'size-6 text-blue-600')} />
 				</View>
 
-				<Text className="text-sm font-bold text-slate-900">{title}</Text>
-				{subTitle && <Text className="text-xs text-slate-500 mt-1 leading-relaxed">{subTitle}</Text>}
+				<Text className="text-sm font-bold text-zinc-900">{title}</Text>
+				{subTitle && <Text className="text-xs text-zinc-500 mt-1 leading-relaxed">{subTitle}</Text>}
 
 				<Button size="sm" className="mt-3 text-white">
 					{buttonText}

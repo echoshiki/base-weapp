@@ -56,11 +56,11 @@ const THEME_MAP: Record<
 		arrowBg: 'bg-rose-100/50 text-rose-600',
 		decorText: 'text-rose-600',
 	},
-	slate: {
-		bg: 'bg-linear-to-br from-slate-100 via-white to-white border-slate-200',
-		iconBg: 'bg-slate-100 text-slate-600',
-		arrowBg: 'bg-slate-100/60 text-slate-600',
-		decorText: 'text-slate-600',
+	zinc: {
+		bg: 'bg-linear-to-br from-zinc-100 via-white to-white border-zinc-200',
+		iconBg: 'bg-zinc-100 text-zinc-600',
+		arrowBg: 'bg-zinc-100/60 text-zinc-600',
+		decorText: 'text-zinc-600',
 	},
 };
 

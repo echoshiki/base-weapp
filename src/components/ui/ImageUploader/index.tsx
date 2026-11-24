@@ -116,16 +116,16 @@ export function ImageUploader({
 			<View
 				className={cn(
 					'relative flex-1 aspect-video rounded-card overflow-hidden border-2 transition-colors',
-					hasImage ? 'border-transparent' : 'border-dashed border-gray-200 bg-gray-50/80',
+					hasImage ? 'border-transparent' : 'border-dashed border-zinc-200 bg-zinc-50/80',
 					!hasImage && !isReadonly && 'active:border-primary/50 cursor-pointer',
-					isReadonly && !hasImage && 'opacity-60 bg-gray-100',
+					isReadonly && !hasImage && 'opacity-60 bg-zinc-100',
 					className,
 				)}
 				onClick={hasImage ? () => handlePreviewImage(0) : handleChooseMedia}
 				{...props}
 			>
 				{isUploading ? (
-					<View className="absolute inset-0 flex items-center justify-center bg-gray-50/90">
+					<View className="absolute inset-0 flex items-center justify-center bg-zinc-50/90">
 						<Loading showTitle={false} />
 					</View>
 				) : hasImage ? (
@@ -147,8 +147,8 @@ export function ImageUploader({
 					</View>
 				) : (
 					<View className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 p-3">
-						{renderIcon('size-7 text-gray-300')}
-						<Text className="text-xs text-gray-400 text-center">{isReadonly ? '暂无图片' : label}</Text>
+						{renderIcon('size-7 text-zinc-300')}
+						<Text className="text-xs text-zinc-400 text-center">{isReadonly ? '暂无图片' : label}</Text>
 					</View>
 				)}
 			</View>
@@ -161,7 +161,7 @@ export function ImageUploader({
 			{value.map((url, index) => (
 				<View
 					key={`${url}-${index}`}
-					className="relative size-24 rounded-card overflow-hidden border border-gray-100/80 bg-gray-50 shadow-xs cursor-pointer"
+					className="relative size-24 rounded-card overflow-hidden border border-zinc-100/80 bg-zinc-50 shadow-xs cursor-pointer"
 					onClick={() => handlePreviewImage(index)}
 				>
 					<Image src={url} className="size-full" mode="aspectFill" />
@@ -171,15 +171,15 @@ export function ImageUploader({
 
 			{canUpload && (
 				<View
-					className="size-24 border-2 border-dashed border-gray-200 bg-gray-50/80 rounded-card flex flex-col items-center justify-center gap-1 active:border-primary/50 transition-colors cursor-pointer"
+					className="size-24 border-2 border-dashed border-zinc-200 bg-zinc-50/80 rounded-card flex flex-col items-center justify-center gap-1 active:border-primary/50 transition-colors cursor-pointer"
 					onClick={handleChooseMedia}
 				>
 					{isUploading ? (
 						<Loading showTitle={false} />
 					) : (
 						<>
-							{renderIcon('size-6 text-gray-300')}
-							<Text className="text-xs text-gray-400">{label}</Text>
+							{renderIcon('size-6 text-zinc-300')}
+							<Text className="text-xs text-zinc-400">{label}</Text>
 						</>
 					)}
 				</View>

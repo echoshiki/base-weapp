@@ -94,7 +94,7 @@ export default function EnterpriseDetailPage() {
 						<View className="flex flex-wrap items-center gap-1.5">
 							{detail.industryName && <Badge variant="primary">{detail.industryName}</Badge>}
 							{detail.scaleName && <Badge variant="rose">{detail.scaleName}</Badge>}
-							{detail.natureName && <Badge variant="slate">{detail.natureName}</Badge>}
+							{detail.natureName && <Badge variant="zinc">{detail.natureName}</Badge>}
 						</View>
 					)}
 

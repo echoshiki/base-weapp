@@ -88,8 +88,8 @@ export const FileUploader = ({
 	return (
 		<View
 			className={`relative w-full aspect-video rounded-card overflow-hidden border-2 border-dashed flex flex-col items-center justify-center transition-colors
-                ${hasFile ? 'border-transparent bg-gray-50' : 'border-gray-200 bg-gray-50'} 
-                ${!hasFile && !readonly ? 'active:bg-gray-100 cursor-pointer' : ''} ${className}`}
+                ${hasFile ? 'border-transparent bg-zinc-50' : 'border-zinc-200 bg-zinc-50'} 
+                ${!hasFile && !readonly ? 'active:bg-zinc-100 cursor-pointer' : ''} ${className}`}
 			onClick={!hasFile ? handleUpload : undefined}
 		>
 			{isUploading && <Loading showTitle={false} />}
@@ -129,7 +129,7 @@ export const FileUploader = ({
 				</View>
 			) : (
 				<View className="flex flex-col items-center justify-center gap-2 px-4 text-center">
-					<View className={`${icon} size-9 text-gray-300`} />
+					<View className={`${icon} size-9 text-zinc-300`} />
 					<Text className="text-sm font-bold text-text-title">{label}</Text>
 					{subLabel && <Text className="text-xs text-text-muted">{subLabel}</Text>}
 				</View>
