@@ -375,21 +375,35 @@ return isLoading ? <Loading title="加载中..." /> : <List />;
 
 ### FormItem
 
-表单项组件族（支持单标签模式与 shadcn 复合模式）。导出 `<FormItem>`, `<FormLabel>`, `<FormControl>`, `<FormDescription>`, `<FormMessage>`。
+表单项容器组件，专注于字段标签 (`label`)、必填标识 (`required`)、辅助说明 (`helper`)、错误提示 (`error`) 与 `row` / `column` 排版。`border` 默认在 `row` 模式下开启、`column` 模式下关闭。
 
 ```tsx
-// 1. 单标签简易模式
+// 1. row 模式（左右排版，搭配 ghost Input）
 <FormItem label="微信真实姓名" required helper="用于核对估价协议与转账卡号">
-  <Input className="text-right text-sm" value={form.name} onInput={(e) => setField('name', e.detail.value)} />
+  <Input variant="ghost" inputClassName="text-right" value={form.name} onChange={(v) => setField('name', v)} />
 </FormItem>
 
-// 2. 带有校验错误提示 (FormMessage) 的模式
-<FormItem border={false} error={form.bankCard ? '' : '银行卡号不能为空'}>
-  <FormLabel required>提现银行卡号</FormLabel>
-  <FormControl>
-    <Input className="text-right text-sm" placeholder="请输入卡号" />
-  </FormControl>
+// 2. column 模式（上下排版，搭配 filled Input 与错误提示）
+<FormItem layout="column" label="提现银行卡号" required error={form.bankCard ? '' : '银行卡号不能为空'}>
+  <Input variant="filled" placeholder="请输入卡号" value={form.bankCard} onChange={(v) => setField('bankCard', v)} clearable />
 </FormItem>
+```
+
+### Input
+
+单行输入框组件，支持 `filled`（淡灰框）/ `underline`（下划线）/ `ghost`（无边框）三种变体，以及前后缀插槽 (`prefix`/`suffix`)、一键清空 (`clearable`) 和错误态 (`error`)。
+
+```tsx
+<Input variant="filled" prefix="icon-[ph--user]" placeholder="请输入账号" value={val} onChange={setVal} clearable />
+<Input variant="underline" placeholder="请输入手机号" value={phone} onChange={setPhone} />
+```
+
+### Textarea
+
+多行文本域组件，支持 `filled` / `outlined` / `ghost` 三种变体、右下角字数统计 (`showCount`) 与错误态 (`error`)。
+
+```tsx
+<Textarea variant="filled" placeholder="请输入详细描述..." value={desc} onChange={setDesc} maxlength={200} showCount />
 ```
 
 ### Select

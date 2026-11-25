@@ -18,6 +18,8 @@ import {
 	DialogDemo,
 	DrawerDemo,
 	FormItemDemo,
+	InputDemo,
+	TextareaDemo,
 	ImageUploaderDemo,
 	SignatureDemo,
 	HeadingDemo,
@@ -253,8 +255,20 @@ const EXAMPLE_GROUPS: ExampleGroup[] = [
 			{
 				key: 'form-item',
 				name: 'FormItem 表单项',
-				desc: '输入框表单布局、必填标识与校验错误提示',
+				desc: 'row/column 表单布局、必填标识与辅助/错误提示',
 				render: () => <FormItemDemo />,
+			},
+			{
+				key: 'input',
+				name: 'Input 输入框',
+				desc: 'filled/underline/ghost 风格、前后缀与一键清空',
+				render: () => <InputDemo />,
+			},
+			{
+				key: 'textarea',
+				name: 'Textarea 文本域',
+				desc: 'filled/outlined/ghost 风格与右下角字数统计',
+				render: () => <TextareaDemo />,
 			},
 			{
 				key: 'select',

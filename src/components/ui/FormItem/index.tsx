@@ -3,32 +3,31 @@ import { ReactNode } from 'react';
 import { cn } from '@/utils/common';
 
 export interface FormItemProps extends ViewProps {
-	/** 左侧标签文字 (简易模式使用) */
-	label?: string;
-	/** 右侧表单内容 */
+	/** 标签内容（支持纯文本或自定义 ReactNode） */
+	label?: ReactNode;
+	/** 表单控件内容 */
 	children?: ReactNode;
-	/** 是否显示底部边框，默认 true */
+	/** 是否显示底部分隔线（默认 row 布局开启、column 布局关闭） */
 	border?: boolean;
-	/** 点击事件 */
-	onClick?: () => void;
-	/** 底部辅助说明文字 */
-	helper?: string | ReactNode;
-	/** 错误校验提示信息 */
-	error?: string | ReactNode;
+	/** 底部或标题旁辅助说明文字 */
+	helper?: ReactNode;
+	/** 错误校验提示信息（优先级高于 helper） */
+	error?: ReactNode;
 	/** 是否必填（展示红星） */
 	required?: boolean;
-	/** 布局方式，默认为 row */
+	/** 布局方式：row (左右排版, 默认) | column (上下排版) */
 	layout?: 'row' | 'column';
 	className?: string;
 }
 
 /**
- * FormItem 表单项根组件
+ * FormItem 表单项容器组件
+ * 专注于字段标签、必填标识、辅助/错误提示与控件排版，不包含输入框自身视觉样式
  */
 export function FormItem({
 	label,
 	children,
-	border = true,
+	border,
 	onClick,
 	helper,
 	error,
@@ -38,116 +37,63 @@ export function FormItem({
 	...props
 }: FormItemProps) {
 	const isColumn = layout === 'column';
+	const showBorder = border ?? !isColumn;
 
-	// 简易模式 (直接传 label)
-	if (label !== undefined) {
+	const renderLabel = () => {
+		if (label === undefined || label === null) return null;
 		return (
-			<View
-				className={cn(
-					'flex flex-col justify-center min-h-12 py-2',
-					border && 'border-b border-zinc-400',
-					className,
-				)}
-				onClick={onClick}
-				{...props}
-			>
-				<View
-					className={cn('flex w-full', isColumn ? 'flex-col gap-3' : 'flex-row justify-between items-center')}
-				>
-					{isColumn ? (
-						<View className="flex items-center justify-between gap-2 w-full">
-							<FormLabel required={required}>{label}</FormLabel>
-							{!error && helper ? (
-								<FormDescription className="mt-0 shrink-0">{helper}</FormDescription>
-							) : null}
-						</View>
-					) : (
-						<FormLabel required={required}>{label}</FormLabel>
-					)}
-					<FormControl className={cn(!isColumn && 'text-right flex justify-end')}>{children}</FormControl>
-				</View>
-
-				{error ? (
-					<FormMessage>{error}</FormMessage>
-				) : !isColumn && helper ? (
-					<FormDescription>{helper}</FormDescription>
-				) : null}
+			<View className="flex items-center gap-1 shrink-0 mr-4 text-sm text-text-title font-medium">
+				{typeof label === 'string' || typeof label === 'number' ? <Text>{label}</Text> : label}
+				{required && <Text className="text-rose-500 mt-0.5">*</Text>}
 			</View>
 		);
-	}
+	};
 
-	// 复合模式
+	const renderHelper = (extraClass?: string) => {
+		if (!helper) return null;
+		return (
+			<View className={cn('mt-1 text-xs text-text-muted leading-normal', extraClass)}>
+				{typeof helper === 'string' || typeof helper === 'number' ? <Text>{helper}</Text> : helper}
+			</View>
+		);
+	};
+
+	const renderError = () => {
+		if (!error) return null;
+		return (
+			<View className="mt-1.5 text-xs text-rose-500 font-medium leading-normal flex items-center gap-1">
+				<View className="icon-[ph--warning-circle-fill] size-3.5 shrink-0" />
+				{typeof error === 'string' || typeof error === 'number' ? <Text>{error}</Text> : error}
+			</View>
+		);
+	};
+
 	return (
 		<View
 			className={cn(
-				'flex flex-col justify-center min-h-12 py-2.5 gap-2',
-				border && 'border-b border-zinc-100/80',
+				'flex flex-col justify-center min-h-12 py-2.5',
+				showBorder && 'border-b border-zinc-100/80',
 				className,
 			)}
 			onClick={onClick}
 			{...props}
 		>
-			{children}
-		</View>
-	);
-}
+			<View className={cn('flex w-full', isColumn ? 'flex-col gap-2.5' : 'flex-row justify-between items-center')}>
+				{isColumn ? (
+					(label !== undefined || (!error && helper)) && (
+						<View className="flex items-center justify-between gap-2 w-full">
+							{renderLabel()}
+							{!error && renderHelper('mt-0 shrink-0')}
+						</View>
+					)
+				) : (
+					renderLabel()
+				)}
 
-export interface FormLabelProps extends ViewProps {
-	required?: boolean;
-	className?: string;
-	children?: ReactNode;
-}
+				<View className={cn('flex-1 min-w-0', !isColumn && 'text-right flex justify-end')}>{children}</View>
+			</View>
 
-/**
- * FormLabel - 表单标签
- */
-export function FormLabel({ required = false, className, children, ...props }: FormLabelProps) {
-	return (
-		<View
-			className={cn('flex items-center gap-1 shrink-0 mr-4 text-sm text-text-title font-medium', className)}
-			{...props}
-		>
-			{typeof children === 'string' ? <Text>{children}</Text> : children}
-			{required && <Text className="text-red-500 mr-1 mt-0.5">*</Text>}
-		</View>
-	);
-}
-
-/**
- * FormControl - 表单输入控件包裹层
- */
-export function FormControl({ className, children, ...props }: ViewProps) {
-	return (
-		<View className={cn('flex-1 min-w-0', className)} {...props}>
-			{children}
-		</View>
-	);
-}
-
-/**
- * FormDescription - 辅助说明文案
- */
-export function FormDescription({ className, children, ...props }: ViewProps) {
-	return (
-		<View className={cn('mt-1 text-xs text-text-muted leading-normal', className)} {...props}>
-			{typeof children === 'string' ? <Text>{children}</Text> : children}
-		</View>
-	);
-}
-
-/**
- * FormMessage - 表单校验错误提示 (红色醒目文本)
- */
-export function FormMessage({ className, children, ...props }: ViewProps) {
-	if (!children) return null;
-
-	return (
-		<View
-			className={cn('mt-1 text-xs text-rose-500 font-medium leading-normal flex items-center gap-1', className)}
-			{...props}
-		>
-			<View className="icon-[ph--warning-circle-fill] size-3.5 shrink-0" />
-			{typeof children === 'string' ? <Text>{children}</Text> : children}
+			{error ? renderError() : !isColumn ? renderHelper() : null}
 		</View>
 	);
 }

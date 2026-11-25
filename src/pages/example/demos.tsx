@@ -1,4 +1,4 @@
-import { View, Text, Image, Input } from '@tarojs/components';
+import { View, Text, Image } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import { useState } from 'react';
 import {
@@ -27,8 +27,8 @@ import {
 	Description,
 	DescriptionList,
 	FormItem,
-	FormLabel,
-	FormControl,
+	Input,
+	Textarea,
 	ImageUploader,
 	NavItem,
 	AspectRatio,
@@ -457,24 +457,113 @@ export function DrawerDemo() {
 
 export function FormItemDemo() {
 	const [userName, setUserName] = useState('');
+	const [bankCard, setBankCard] = useState('');
+	const [remark, setRemark] = useState('');
 
 	return (
-		<View className="flex flex-col gap-3">
+		<View className="flex flex-col gap-3 bg-white rounded-card px-4 py-2 border border-zinc-100">
+			{/* row 模式：默认带底部分隔线，搭配 ghost Input */}
 			<FormItem label="微信真实姓名" required helper="用于核对估价协议与转账卡号">
 				<Input
-					className="text-right text-sm"
+					variant="ghost"
+					inputClassName="text-right"
 					placeholder="请输入真实姓名"
 					value={userName}
-					onInput={(e) => setUserName(e.detail.value)}
+					onChange={setUserName}
 				/>
 			</FormItem>
 
-			<FormItem border={false} error={userName ? '' : '真实姓名不能为空，请如实填写'}>
-				<FormLabel required>提现银行卡号</FormLabel>
-				<FormControl>
-					<Input className="text-sm" placeholder="请输入卡号" />
-				</FormControl>
+			{/* column 模式：默认无底部分隔线，搭配 filled Input + 错误提示 */}
+			<FormItem
+				layout="column"
+				label="提现银行卡号"
+				required
+				error={bankCard ? '' : '银行卡号不能为空，请如实填写'}
+			>
+				<Input
+					variant="filled"
+					placeholder="请输入卡号"
+					value={bankCard}
+					onChange={setBankCard}
+					clearable
+					error={!bankCard}
+				/>
 			</FormItem>
+
+			{/* column 模式搭配 Textarea */}
+			<FormItem layout="column" label="备注说明" helper="选填，最多 100 字">
+				<Textarea
+					variant="filled"
+					placeholder="请输入补充说明..."
+					value={remark}
+					onChange={setRemark}
+					maxlength={100}
+					showCount
+				/>
+			</FormItem>
+		</View>
+	);
+}
+
+export function InputDemo() {
+	const [account, setAccount] = useState('');
+	const [phone, setPhone] = useState('13800138000');
+	const [amount, setAmount] = useState('');
+
+	return (
+		<View className="flex flex-col gap-3">
+			<Input
+				variant="filled"
+				prefix="icon-[ph--user]"
+				placeholder="filled 淡灰框（带前缀与清空）"
+				value={account}
+				onChange={setAccount}
+				clearable
+			/>
+			<Input
+				variant="underline"
+				prefix="icon-[ph--device-mobile]"
+				placeholder="underline 下划线风格"
+				value={phone}
+				onChange={setPhone}
+				clearable
+			/>
+			<Input
+				variant="filled"
+				type="digit"
+				placeholder="带右侧后缀单位"
+				value={amount}
+				onChange={setAmount}
+				suffix={<Text className="text-xs text-zinc-500">万元</Text>}
+			/>
+			<Input variant="filled" error placeholder="校验错误状态 (error)" />
+			<Input variant="filled" disabled value="禁用状态不可编辑" />
+		</View>
+	);
+}
+
+export function TextareaDemo() {
+	const [filledVal, setFilledVal] = useState('');
+	const [outlinedVal, setOutlinedVal] = useState('');
+
+	return (
+		<View className="flex flex-col gap-3">
+			<Textarea
+				variant="filled"
+				placeholder="filled 淡灰底多行文本域（带字数统计）..."
+				value={filledVal}
+				onChange={setFilledVal}
+				maxlength={200}
+				showCount
+			/>
+			<Textarea
+				variant="outlined"
+				placeholder="outlined 白底描边风格..."
+				value={outlinedVal}
+				onChange={setOutlinedVal}
+				textareaClassName="h-20"
+			/>
+			<Textarea variant="filled" error placeholder="校验错误状态 (error)" textareaClassName="h-16" />
 		</View>
 	);
 }

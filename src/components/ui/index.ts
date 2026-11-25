@@ -17,6 +17,8 @@ export * from './Alert';
 export * from './Description';
 export * from './ImageUploader';
 export * from './FormItem';
+export * from './Input';
+export * from './Textarea';
 export * from './EntryCard';
 export * from './Drawer';
 export * from './Tabs';

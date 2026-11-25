@@ -44,12 +44,33 @@ button::after {
 	border: none !important;
 }
 
-/* 让 Taro H5 端 Textarea 内部原生节点继承外层 className 的字号、行高、颜色并撑满高度 */
+/* 让 Taro H5 端 Input 内部原生节点垂直居中、透明背景并继承外层文本样式 */
+taro-input-core {
+	display: flex;
+	align-items: center;
+}
+taro-input-core .weui-input,
+taro-input-core input {
+	width: 100%;
+	height: 100%;
+	background-color: transparent;
+	font-size: inherit;
+	line-height: inherit;
+	color: inherit;
+	text-align: inherit;
+}
+
+/* 让 Taro H5 端 Textarea 内部原生节点继承外层 className 的字号、行高、颜色、透明背景并撑满高度 */
+taro-textarea-core,
+taro-textarea-core .taro-textarea {
+	background-color: transparent;
+}
 taro-textarea-core .taro-textarea {
 	font-size: inherit;
 	line-height: inherit;
 	color: inherit;
 	height: 100%;
+	resize: none;
 }
 
 /* 约束 Taro H5 端 Video 内部视频节点尺寸，防止按原分辨率撑爆容器 */

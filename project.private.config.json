@@ -19,5 +19,17 @@
     "bigPackageSizeSupport": false,
     "useGlassEaselForWxml": false
   },
-  "condition": {}
+  "condition": {
+    "miniprogram": {
+      "list": [
+        {
+          "name": "组件页",
+          "pathName": "pages/example/index",
+          "query": "",
+          "scene": null,
+          "launchMode": "default"
+        }
+      ]
+    }
+  }
 }
