@@ -417,9 +417,9 @@ export function DrawerDemo() {
 					</>
 				}
 			>
-				<View className="p-4 space-y-4">
+				<View>
 					<Text className="text-xs opacity-60 block">成色要求</Text>
-					<View className="flex flex-wrap gap-2">
+					<View className="flex flex-wrap gap-2 mt-2">
 						<Badge variant="primary">全新未拆</Badge>
 						<Badge variant="zinc">95新微瑕</Badge>
 						<Badge variant="zinc">90新正常使用</Badge>
@@ -439,7 +439,7 @@ export function DrawerDemo() {
 					</Button>
 				}
 			>
-				<View className="p-6 flex flex-col items-center gap-3">
+				<View className="flex flex-col items-center gap-3">
 					<Avatar src={MOCK_USER.avatar} name={MOCK_USER.name} size="lg" />
 					<Text className="font-bold text-base">
 						{MOCK_USER.name} ({MOCK_USER.role})

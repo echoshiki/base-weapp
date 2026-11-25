@@ -1,6 +1,7 @@
 import { View, Text, ViewProps } from '@tarojs/components';
 import { ReactNode } from 'react';
 import { cn } from '@/utils/common';
+import { renderPortal } from '../portal';
 
 export interface DialogProps extends Omit<ViewProps, 'title'> {
 	/** 控制显隐 */
@@ -51,8 +52,8 @@ export function Dialog({
 		onClose?.();
 	};
 
-	return (
-		<View className="fixed inset-0 z-50 flex items-center justify-center p-6">
+	const content = (
+		<View className="fixed inset-0 z-[600] flex items-center justify-center p-6">
 			{/* 遮罩背景 */}
 			<View
 				className="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity animate-fade-in"
@@ -103,4 +104,6 @@ export function Dialog({
 			</View>
 		</View>
 	);
+
+	return renderPortal(content);
 }

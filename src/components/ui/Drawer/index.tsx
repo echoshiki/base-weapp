@@ -1,6 +1,7 @@
 import { View, Text, ScrollView, ViewProps } from '@tarojs/components';
 import { ReactNode } from 'react';
 import { cn } from '@/utils/common';
+import { renderPortal } from '../portal';
 
 export type DrawerPosition = 'right' | 'bottom' | 'left' | 'top';
 
@@ -88,10 +89,10 @@ export function Drawer({
 		}
 	};
 
-	return (
+	const content = (
 		<View
 			className={cn(
-				'fixed inset-0 z-50 transition-opacity duration-300 ease-in-out',
+				'fixed inset-0 z-600 transition-opacity duration-300 ease-in-out',
 				activeOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none',
 			)}
 			{...props}
@@ -106,14 +107,14 @@ export function Drawer({
 			{/* 抽屉主体面板 */}
 			<View
 				className={cn(
-					'absolute bg-white flex flex-col shadow-2xl transition-transform duration-300 ease-out transform overflow-hidden',
+					'absolute bg-white flex flex-col transition-transform duration-300 ease-out transform overflow-hidden',
 					getPositionClasses(),
 					className,
 				)}
 			>
 				{/* 头部区域 */}
 				{(title || description) && (
-					<View className="flex items-center justify-between px-4 py-3.5 border-b border-zinc-100/80 shrink-0">
+					<View className="flex items-center justify-between px-4 py-3.5 border-b border-zinc-200 shrink-0">
 						<View className="flex flex-col gap-0.5 flex-1 min-w-0">
 							{title && (
 								<View className="font-bold text-base leading-tight">
@@ -135,11 +136,11 @@ export function Drawer({
 
 				{/* 内容区域 */}
 				{scrollable ? (
-					<ScrollView scrollY className="flex-1 w-full min-h-0 overflow-hidden relative">
+					<ScrollView scrollY className="flex-1 w-full min-h-0 overflow-hidden relative p-4">
 						{children}
 					</ScrollView>
 				) : (
-					<View className="flex-1 w-full min-h-0 flex flex-col overflow-hidden">{children}</View>
+					<View className="p-4 flex-1 w-full min-h-0 flex flex-col overflow-hidden">{children}</View>
 				)}
 
 				{/* 吸底操作栏 */}
@@ -151,4 +152,6 @@ export function Drawer({
 			</View>
 		</View>
 	);
+
+	return renderPortal(content);
 }

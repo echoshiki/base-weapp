@@ -2,6 +2,7 @@ import { View, Image, Text, Swiper, SwiperItem } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import { useState, useEffect, ReactNode } from 'react';
 import { cn } from '@/utils/common';
+import { renderPortal } from '../portal';
 
 export interface ImagePreviewProps {
 	/** 控制显隐 */
@@ -48,11 +49,11 @@ export function ImagePreview({
 
 	if (!activeVisible) return null;
 
-	return (
+	const content = (
 		<View
 			className={cn(
-				'fixed inset-0 bg-black/95 z-50 flex flex-col justify-between items-center px-4 py-8 animate-fade-in',
-				className
+				'fixed inset-0 bg-black/95 z-600 flex flex-col justify-between items-center px-4 py-8 animate-fade-in',
+				className,
 			)}
 		>
 			{/* 顶部指示器与关闭按钮 */}
@@ -92,30 +93,24 @@ export function ImagePreview({
 
 			{/* 底部扩展动作区 */}
 			<View className="w-full px-4 flex flex-col gap-3 pb-safe z-10">
-				{actions ? (
-					actions
-				) : (
-					showMenuByLongpress && (
-						<Text className="text-center text-xs text-white/40 tracking-wide">
-							长按图片可进行转发、保存或识别
-						</Text>
-					)
-				)}
+				{actions
+					? actions
+					: showMenuByLongpress && (
+							<Text className="text-center text-xs text-white/40 tracking-wide">
+								长按图片可进行转发、保存或识别
+							</Text>
+						)}
 			</View>
 		</View>
 	);
+
+	return renderPortal(content);
 }
 
 /**
  * 静态辅助函数：直接调起微信原生全屏图片预览
  */
-ImagePreview.show = ({
-	urls,
-	current = 0,
-}: {
-	urls: string[];
-	current?: number | string;
-}) => {
+ImagePreview.show = ({ urls, current = 0 }: { urls: string[]; current?: number | string }) => {
 	if (!urls || !urls.length) return;
 	const currentUrl = typeof current === 'number' ? urls[current] || urls[0] : current;
 

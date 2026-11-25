@@ -11,6 +11,11 @@ declare module '*.scss';
 declare module '*.sass';
 declare module '*.styl';
 
+declare module 'react-dom' {
+  import type { ReactNode, ReactPortal } from 'react';
+  export function createPortal(children: ReactNode, container: Element | DocumentFragment, key?: string | null): ReactPortal;
+}
+
 declare namespace NodeJS {
   interface ProcessEnv {
     /** NODE 内置环境变量, 会影响到最终构建生成产物 */
