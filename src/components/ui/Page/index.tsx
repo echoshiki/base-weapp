@@ -27,7 +27,7 @@ export function Page({
 	hasTabBar = false,
 	paddingX = true,
 	loading = false,
-	showQuickMenu = true,
+	showQuickMenu = false,
 	header,
 	className,
 	children,
@@ -36,7 +36,7 @@ export function Page({
 	const pbClass = hasTabBar ? 'pb-24' : 'pb-safe';
 
 	return (
-		<View className={cn('min-h-screen bg-main-bg flex flex-col relative', pbClass, className)} {...props}>
+		<View className={cn('min-h-screen bg-zinc-200 flex flex-col relative', pbClass, className)} {...props}>
 			{header}
 
 			{/* 主内容区 */}

@@ -1,5 +1,0 @@
-export default definePageConfig({
-	navigationBarTitleText: '帮助中心',
-	enablePullDownRefresh: true,
-	backgroundTextStyle: 'dark',
-});

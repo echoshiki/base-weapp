@@ -37,7 +37,7 @@ import { Page, Card, Button, FormItem, Badge, Avatar, Drawer, Tabs } from '@/com
 
 ### Page
 
-页面级 Layout 顶级容器组件。自动收归全站背景色 (`bg-main-bg`)、左右边距 (`paddingX`/`container-x`)、页面级 Loading 居中占位与底部 TabBar/安全区留白 (`hasTabBar`/`pb-safe`)。
+页面级 Layout 顶级容器组件。自动收归全站背景色、左右边距 (`paddingX`/`container-x`)、页面级 Loading 居中占位与底部 TabBar/安全区留白 (`hasTabBar`/`pb-safe`)。
 
 | Prop        | 类型        | 说明                                                   |
 | ----------- | ----------- | ------------------------------------------------------ |
@@ -83,12 +83,12 @@ import { Page, Card, Button, FormItem, Badge, Avatar, Drawer, Tabs } from '@/com
 
 卡片容器组件，提供统一的背景、圆角、边框、阴影、内边距控制，支持纵向 (`vertical`) 与横向 (`horizontal`) 布局。
 
-| Prop | 类型 | 说明 |
-| ---- | ---- | ---- |
-| `layout` | `'vertical' \| 'horizontal'` | 布局方向，默认 `'vertical'` |
-| `noPadding` | `boolean` | 取消内边距（适合顶部通栏大图卡片），默认 `false` |
-| `rounded` | `boolean` | 是否启用圆角，默认 `true` |
-| `clickable` | `boolean` | 点击缩放反馈（传入 `onClick` 时默认开启） |
+| Prop        | 类型                         | 说明                                             |
+| ----------- | ---------------------------- | ------------------------------------------------ |
+| `layout`    | `'vertical' \| 'horizontal'` | 布局方向，默认 `'vertical'`                      |
+| `noPadding` | `boolean`                    | 取消内边距（适合顶部通栏大图卡片），默认 `false` |
+| `rounded`   | `boolean`                    | 是否启用圆角，默认 `true`                        |
+| `clickable` | `boolean`                    | 点击缩放反馈（传入 `onClick` 时默认开启）        |
 
 ```tsx
 // 1. 基础卡片
@@ -146,9 +146,9 @@ import { Page, Card, Button, FormItem, Badge, Avatar, Drawer, Tabs } from '@/com
 
 徽章/标签组件，提供标准化 CVA 语义变体，支持 `dot` 状态点与前缀图标。
 
-| Prop      | 类型                                                                                                      | 说明                       |
-| --------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
-| `variant` | `UiColor` (`'primary' \| 'blue' \| 'sky' \| 'indigo' \| 'emerald' \| 'amber' \| 'orange' \| 'rose' \| 'zinc'`) | 颜色主题，默认 `zinc` |
+| Prop      | 类型                                                                                                           | 说明                   |
+| --------- | -------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| `variant` | `UiColor` (`'primary' \| 'blue' \| 'sky' \| 'indigo' \| 'emerald' \| 'amber' \| 'orange' \| 'rose' \| 'zinc'`) | 颜色主题，默认 `zinc`  |
 | `size`    | `'sm' \| 'md' \| 'lg'`                                                                                         | 尺寸，默认 `sm`        |
 | `pill`    | `boolean`                                                                                                      | 是否胶囊圆角           |
 | `dot`     | `boolean`                                                                                                      | 文字左侧是否显示状态点 |
@@ -271,9 +271,12 @@ return isLoading ? <Loading title="加载中..." /> : <List />;
 
 ```tsx
 <Tabs
-  tabs={[{ label: '全部', value: 'all' }, { label: '进行中', value: 'serving' }]}
-  value={tab}
-  onChange={(val) => setTab(val)}
+	tabs={[
+		{ label: '全部', value: 'all' },
+		{ label: '进行中', value: 'serving' },
+	]}
+	value={tab}
+	onChange={(val) => setTab(val)}
 />
 ```
 
@@ -312,11 +315,7 @@ return isLoading ? <Loading title="加载中..." /> : <List />;
 轮播图组件，支持数据驱动 (`list` + 可选 `renderItem`) 及高度/圆角配置。
 
 ```tsx
-<Carousel
-  list={bannerList}
-  heightClass="h-44"
-  onItemClick={(item) => item.url && Taro.navigateTo({ url: item.url })}
-/>
+<Carousel list={bannerList} heightClass="h-44" onItemClick={(item) => item.url && Taro.navigateTo({ url: item.url })} />
 ```
 
 ### SearchBar

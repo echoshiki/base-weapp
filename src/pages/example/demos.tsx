@@ -712,7 +712,7 @@ export function PageDemo() {
 	return (
 		<View className="flex flex-col gap-2">
 			<Text className="text-xs opacity-60 leading-relaxed">
-				当前示例页即由 &lt;Page&gt; 包裹，自动提供全站背景色 (bg-main-bg)、左右边距 (container-x)、页面级
+				当前示例页即由 &lt;Page&gt; 包裹，自动提供全站背景色、左右边距 (container-x)、页面级
 				Loading、底部安全区留白与悬浮快捷菜单。
 			</Text>
 		</View>
