@@ -2,13 +2,15 @@ import { useQuery } from '@tanstack/react-query';
 import { getAppConfigAPI } from '@/services/config';
 
 /**
- * 获取小程序全局配置 Hook
- * 包含：banners 轮播图、客服联系方式、用户协议与隐私条款等
+ * 获取应用全局配置 Hook
  */
 export const useAppConfig = () => {
 	return useQuery({
 		queryKey: ['appConfig'],
-		queryFn: getAppConfigAPI,
+		queryFn: async () => {
+			const res = await getAppConfigAPI();
+			return res.data;
+		},
 		staleTime: 1000 * 60 * 10, // 10 分钟缓存
 	});
 };

@@ -1,7 +1,7 @@
 import { View, Text } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import { useEffect, useRef, useState } from 'react';
-import { Page, Card, Tabs, Input, Button } from '@/components/ui';
+import { Page, Card, Tabs, Input, Button, Alert, Divider } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
 import { mapsTo, cn } from '@/utils/common';
 
@@ -9,17 +9,23 @@ type LoginTab = 'phone' | 'account';
 
 const PHONE_REGEX = /^1\d{10}$/;
 const COUNTDOWN_SECONDS = 60;
+const IS_WEAPP = process.env.TARO_ENV !== 'h5';
 
 /**
- * 统一登录页（支持手机号验证码登录 / 账号密码登录切换，附带注册入口）
+ * 统一登录页
+ * - 小程序端：优先展示「微信一键登录」（自动衔接老用户直通 / 新用户授权手机号绑定两步流），并保留账号/手机号兜底入口
+ * - H5 端：直接展示「手机号验证码登录 / 账号密码登录」切换与注册入口
  */
 export default function LoginPage() {
-	const { onAccountLogin, onPhoneLogin, onSendSmsCode } = useAuth();
+	const { isNeedBindPhone, onAccountLogin, onPhoneLogin, onSendSmsCode, onWxLogin, onWxBindPhone } = useAuth();
 
 	const instance = Taro.getCurrentInstance();
 	const initialPhone = instance.router?.params?.phone ? decodeURIComponent(instance.router.params.phone) : '';
-	const initialTab = (instance.router?.params?.tab as LoginTab) === 'account' ? 'account' : 'phone';
+	const initialTabParam = instance.router?.params?.tab as LoginTab | undefined;
+	const initialTab: LoginTab = initialTabParam === 'account' ? 'account' : 'phone';
 
+	// 小程序端默认显示微信登录视图（若路由显式传了 tab 或 phone 参数，则直接展开表单）
+	const [showFormLogin, setShowFormLogin] = useState(!IS_WEAPP || Boolean(initialTabParam || initialPhone));
 	const [activeTab, setActiveTab] = useState<LoginTab>(initialTab);
 
 	// 手机号登录表单
@@ -34,6 +40,7 @@ export default function LoginPage() {
 	const [showPassword, setShowPassword] = useState(false);
 
 	const [loading, setLoading] = useState(false);
+	const [wxLoading, setWxLoading] = useState(false);
 	const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
 	useEffect(() => {
@@ -80,6 +87,43 @@ export default function LoginPage() {
 		}, 1000);
 	};
 
+	/** 微信小程序一键登录 */
+	const handleWxLogin = async () => {
+		if (wxLoading) return;
+		setWxLoading(true);
+		try {
+			const res = await onWxLogin();
+			if (res.success && res.status === 'logged_in') {
+				setTimeout(() => handleNavigationBack(), 400);
+			}
+		} finally {
+			setWxLoading(false);
+		}
+	};
+
+	/** 微信小程序授权手机号回调 */
+	const handleGetPhoneNumber = async (e: any) => {
+		const detail = e?.detail;
+		if (!detail?.code) {
+			if (detail?.errMsg?.includes('deny')) {
+				Taro.showToast({ title: '您已取消手机号授权', icon: 'none' });
+			} else {
+				Taro.showToast({ title: '获取手机号失败，请重试', icon: 'none' });
+			}
+			return;
+		}
+
+		setWxLoading(true);
+		try {
+			const res = await onWxBindPhone(detail.code);
+			if (res.success) {
+				setTimeout(() => handleNavigationBack(), 400);
+			}
+		} finally {
+			setWxLoading(false);
+		}
+	};
+
 	/** 获取短信验证码 */
 	const handleGetCode = async () => {
 		if (countdown > 0 || sendingCode) return;
@@ -97,7 +141,7 @@ export default function LoginPage() {
 		}
 	};
 
-	/** 提交登录 */
+	/** 提交表单登录（手机号验证码 / 账号密码） */
 	const handleSubmit = async () => {
 		if (activeTab === 'phone') {
 			const trimmedPhone = phone.trim();
@@ -165,111 +209,176 @@ export default function LoginPage() {
 						<View className="icon-[ph--cube-duotone] size-8" />
 					</View>
 					<Text className="text-xl font-bold tracking-tight">欢迎登录</Text>
-					<Text className="text-xs opacity-60 mt-1">支持手机号验证码或账号密码快捷登录</Text>
+					<Text className="text-xs opacity-60 mt-1">
+						{IS_WEAPP && !showFormLogin
+							? '推荐使用微信一键快捷登录'
+							: '支持手机号验证码或账号密码快捷登录'}
+					</Text>
 				</View>
 
-				{/* 登录卡片 */}
-				<Card noPadding className="overflow-hidden">
-					<Tabs
-						tabs={[
-							{ label: '手机号登录', value: 'phone' },
-							{ label: '账号密码登录', value: 'account' },
-						]}
-						value={activeTab}
-						onChange={setActiveTab}
-					/>
-
-					<View className="p-5 flex flex-col gap-4">
-						{activeTab === 'phone' ? (
+				{/* 小程序端：微信快捷登录主卡片 */}
+				{IS_WEAPP && !showFormLogin ? (
+					<Card className="gap-4">
+						{isNeedBindPhone ? (
 							<>
-								<Input
-									type="number"
-									maxlength={11}
-									prefix="icon-[ph--device-mobile]"
-									placeholder="请输入11位手机号"
-									value={phone}
-									onChange={setPhone}
-									clearable
-								/>
-
-								<View className="flex items-center gap-2.5">
-									<Input
-										type="number"
-										maxlength={6}
-										prefix="icon-[ph--shield-check]"
-										placeholder="请输入短信验证码"
-										value={smsCode}
-										onChange={setSmsCode}
-										className="flex-1"
-									/>
-									<Button
-										size="md"
-										variant={canSendCode ? 'primary' : 'zinc'}
-										appearance={canSendCode ? 'soft' : 'solid'}
-										rounded={false}
-										disabled={!canSendCode}
-										className="h-11 px-3.5 shrink-0 text-xs"
-										onClick={handleGetCode}
-									>
-										{sendingCode ? '发送中...' : countdown > 0 ? `${countdown}s` : '获取验证码'}
-									</Button>
-								</View>
+								<Alert variant="info" title="还差一步即可完成登录">
+									检测到您是首次使用微信登录，请授权微信绑定手机号以同步您的账号数据。
+								</Alert>
+								<Button
+									size="lg"
+									block
+									variant="emerald"
+									icon="icon-[ph--device-mobile-fill]"
+									openType="getPhoneNumber"
+									loading={wxLoading}
+									onGetPhoneNumber={handleGetPhoneNumber}
+								>
+									授权微信手机号完成登录
+								</Button>
 							</>
 						) : (
-							<>
-								<Input
-									maxlength={30}
-									prefix="icon-[ph--user]"
-									placeholder="请输入账号"
-									value={username}
-									onChange={setUsername}
-									clearable
-								/>
-
-								<Input
-									maxlength={20}
-									password={!showPassword}
-									prefix="icon-[ph--lock-key]"
-									placeholder="请输入登录密码"
-									value={password}
-									onChange={setPassword}
-									suffix={
-										<View
-											onClick={() => setShowPassword((v) => !v)}
-											className={cn(
-												'size-4.5 text-zinc-400 cursor-pointer',
-												showPassword ? 'icon-[ph--eye-bold]' : 'icon-[ph--eye-slash-bold]',
-											)}
-										/>
-									}
-								/>
-							</>
+							<Button
+								size="lg"
+								block
+								variant="emerald"
+								icon="icon-[ph--wechat-logo-fill]"
+								loading={wxLoading}
+								onClick={handleWxLogin}
+							>
+								微信一键登录
+							</Button>
 						)}
 
-						<Button
-							size="lg"
-							block
-							variant="primary"
-							loading={loading}
-							onClick={handleSubmit}
-							className="mt-1"
-						>
-							立即登录
-						</Button>
+						<Divider className="my-1">其他登录方式</Divider>
 
-						{/* 底部注册入口 */}
-						<View className="flex items-center justify-between pt-3 border-t border-zinc-100">
-							<Text className="text-xs opacity-60">还没有账号？</Text>
-							<View
-								onClick={handleGoRegister}
-								className="flex items-center gap-1 cursor-pointer active:opacity-70"
+						<Button
+							size="md"
+							block
+							variant="zinc"
+							appearance="outline"
+							onClick={() => setShowFormLogin(true)}
+						>
+							使用手机号 / 账号密码登录
+						</Button>
+					</Card>
+				) : (
+					/* H5 端或小程序切换后的账号/手机号表单卡片 */
+					<Card noPadding className="overflow-hidden">
+						<Tabs
+							tabs={[
+								{ label: '手机号登录', value: 'phone' },
+								{ label: '账号密码登录', value: 'account' },
+							]}
+							value={activeTab}
+							onChange={setActiveTab}
+						/>
+
+						<View className="p-5 flex flex-col gap-4">
+							{activeTab === 'phone' ? (
+								<>
+									<Input
+										type="number"
+										maxlength={11}
+										prefix="icon-[ph--device-mobile]"
+										placeholder="请输入11位手机号"
+										value={phone}
+										onChange={setPhone}
+										clearable
+									/>
+
+									<View className="flex items-center gap-2.5">
+										<Input
+											type="number"
+											maxlength={6}
+											prefix="icon-[ph--shield-check]"
+											placeholder="请输入短信验证码"
+											value={smsCode}
+											onChange={setSmsCode}
+											className="flex-1"
+										/>
+										<Button
+											size="md"
+											variant={canSendCode ? 'primary' : 'zinc'}
+											appearance={canSendCode ? 'soft' : 'solid'}
+											rounded={false}
+											disabled={!canSendCode}
+											className="h-11 px-3.5 shrink-0 text-xs"
+											onClick={handleGetCode}
+										>
+											{sendingCode ? '发送中...' : countdown > 0 ? `${countdown}s` : '获取验证码'}
+										</Button>
+									</View>
+								</>
+							) : (
+								<>
+									<Input
+										maxlength={30}
+										prefix="icon-[ph--user]"
+										placeholder="请输入账号"
+										value={username}
+										onChange={setUsername}
+										clearable
+									/>
+
+									<Input
+										maxlength={20}
+										password={!showPassword}
+										prefix="icon-[ph--lock-key]"
+										placeholder="请输入登录密码"
+										value={password}
+										onChange={setPassword}
+										suffix={
+											<View
+												onClick={() => setShowPassword((v) => !v)}
+												className={cn(
+													'size-4.5 text-zinc-400 cursor-pointer',
+													showPassword ? 'icon-[ph--eye-bold]' : 'icon-[ph--eye-slash-bold]',
+												)}
+											/>
+										}
+									/>
+								</>
+							)}
+
+							<Button
+								size="lg"
+								block
+								variant="primary"
+								loading={loading}
+								onClick={handleSubmit}
+								className="mt-1"
 							>
-								<Text className="text-xs font-semibold text-primary">立即注册</Text>
-								<View className="icon-[ph--arrow-right] size-3.5 text-primary" />
+								立即登录
+							</Button>
+
+							{/* 底部注册入口 */}
+							<View className="flex items-center justify-between pt-3 border-t border-zinc-100">
+								<Text className="text-xs opacity-60">还没有账号？</Text>
+								<View
+									onClick={handleGoRegister}
+									className="flex items-center gap-1 cursor-pointer active:opacity-70"
+								>
+									<Text className="text-xs font-semibold text-primary">立即注册</Text>
+									<View className="icon-[ph--arrow-right] size-3.5 text-primary" />
+								</View>
 							</View>
+
+							{/* 小程序端允许切回微信一键登录 */}
+							{IS_WEAPP && (
+								<Button
+									size="sm"
+									block
+									variant="emerald"
+									appearance="soft"
+									icon="icon-[ph--wechat-logo-fill]"
+									onClick={() => setShowFormLogin(false)}
+								>
+									返回微信一键登录
+								</Button>
+							)}
 						</View>
-					</View>
-				</Card>
+					</Card>
+				)}
 
 				{/* 暂不登录返回首页 */}
 				<View className="flex justify-center mt-6">

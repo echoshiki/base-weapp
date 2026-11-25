@@ -1,53 +1,29 @@
-/** 统一响应基础结构（平铺结构） */
-export interface BaseResponse<T = any> {
-	code?: number;
-	msg?: string;
-	data?: T;
-}
-
-/** 详情/操作类统一响应结构（data 包裹） */
-export interface DataResponse<T = any> {
-	code?: number;
-	msg?: string;
+/** 统一接口响应信封结构 */
+export interface BaseResponse<T = null> {
+	code: number;
+	msg: string;
 	data: T;
 }
 
 /** 通用分页查询参数 */
 export interface PageQuery {
 	/** 页码，从 1 开始 */
-	pageNum?: number;
+	page?: number;
 	/** 每页条数 */
 	pageSize?: number;
 }
 
-/** 通用分页响应结构（{ code, msg, rows, total }） */
-export interface TableDataInfo<T> {
-	code?: number;
-	msg?: string;
-	rows: T[];
-	total: number;
-}
-
-/** 基础分页结构 */
-export interface PageRes<T> {
+/** 通用分页数据体（统一包裹在 BaseResponse<PageData<T>> 的 data 中） */
+export interface PageData<T> {
 	list: T[];
+	total: number;
 	page: number;
-	limit: number;
-	total: number;
-	totalPage: number;
-}
-
-/** 基础列表结构 */
-export interface ListRes<T> {
-	list: T[];
+	pageSize: number;
+	hasMore?: boolean;
 }
 
 /**
  * 推广分享配置
- * @param title 分享标题
- * @param path 分享路径（小程序内路径，必须以 / 开头）
- * @param imageUrl 分享图片 URL
- * @param params 额外的参数对象，会被序列化到 path 中
  */
 export interface ShareConfig {
 	title?: string;
@@ -56,35 +32,11 @@ export interface ShareConfig {
 	params?: Record<string, any>;
 }
 
-/** 通用审核状态 */
-export type AuditStatus = 'pending' | 'approved' | 'rejected' | 'completed';
-
-/** 通用主题变体 */
-export type ThemeVariant = 'primary' | 'success' | 'secondary' | 'warning' | 'danger' | 'info';
-
-/** 通用尺寸变体 */
-export type SizeVariant = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-
 /**
  * 性别标识
  * '0': 男 | '1': 女 | '2': 未知
  */
 export type Gender = '0' | '1' | '2';
-
-/** 后端省市区类型 */
-export interface RegionItem {
-	areaCode: string;
-	name: string;
-	parentCode: string;
-}
-
-/** 自定义区域项 */
-export interface TenantItem {
-	id: number;
-	name: string;
-	longitude: number;
-	latitude: number;
-}
 
 /**
  * 全局系统配置
@@ -98,64 +50,20 @@ export interface WeappConfig {
 	appDescription?: string;
 	/** 全局客服热线 */
 	servicePhone?: string;
-	/** 全局客服热线 */
+	/** 全局客服邮箱 */
 	serviceEmail?: string;
-	/** 用户协议 URL */
-	agreementUrl?: string;
-	/** 用户协议摘要 */
-	agreementExpert?: string;
-	/** 隐私条款 URL */
-	policyUrl?: string;
-	/** 隐私条款摘要 */
-	policyExpert?: string;
 	/** 版权信息 */
 	copyright?: string;
 	/** 备案号 */
 	icp?: string;
-	/** 订阅模板 */
-	templateIds?: {
-		demandChange?: string;
-		demandSelected?: string;
-	};
-	/** 是否审核 */
-	review: boolean;
 	/** 轮播图列表 */
 	banners?: string[];
 }
 
+/** 文件上传返回元数据 */
 export interface UploadFileItem {
 	fileName: string;
 	filePath: string;
 	fileSize: number;
 	fileType: string;
-}
-
-/** 页面信息展示块内容 */
-export interface SjcsPageInfoItem {
-	/** 图片路径列表 */
-	imagePath?: string[];
-	/** 描述文字 */
-	detail?: string;
-	/** 单个视频路径 */
-	videoPath?: string;
-}
-
-/** 单页独立配置项 */
-export interface SjcsPageConfigItem {
-	/** 页面路径 */
-	pagePath: string;
-	/** 是否显示顶部用户头部 */
-	showHeader: boolean;
-	/** 是否显示信息展示区块 */
-	showInfo: boolean;
-	/** 信息展示区块内容列表 */
-	info?: SjcsPageInfoItem[];
-}
-
-/** 内页展示与导航配置 (GET /enterprise/sjcs) */
-export interface SjcsConfigData {
-	/** 无数据动图参数 */
-	emptyPath?: string;
-	/** 各页面独立配置列表 */
-	pages?: SjcsPageConfigItem[];
 }

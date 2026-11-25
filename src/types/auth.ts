@@ -1,5 +1,3 @@
-import { BaseResponse } from './common';
-
 /** 账号密码登录请求 (POST /login) */
 export interface AccountLoginRequest {
 	/** 账号（<= 30 字符） */
@@ -20,8 +18,8 @@ export interface PhoneLoginRequest {
 	code: string;
 }
 
-/** 通用登录响应 */
-export interface LoginResponse extends BaseResponse {
+/** 通用登录返回数据体（包裹在 BaseResponse<LoginData> 中） */
+export interface LoginData {
 	/** 访问令牌 */
 	token: string;
 }
@@ -41,4 +39,38 @@ export interface RegisterRequest {
 	password: string;
 	/** 昵称（可选） */
 	nickName?: string;
+}
+
+// ---------------------------------------------------------
+// 微信小程序登录（统一前端模型 + 后端原始响应定义）
+// ---------------------------------------------------------
+
+/**
+ * 微信登录前端标准结果模型（所有页面与 Hook 仅依赖此类型，与后端字段解耦）
+ */
+export type WxLoginResult =
+	| { status: 'logged_in'; token: string }
+	| { status: 'need_bind_phone'; tempToken: string };
+
+/** 后端 POST /auth/wx-login 原始响应 data */
+export interface WxLoginRawData {
+	/** 是否需要绑定手机号（false=老用户直通，true=新用户待绑手机） */
+	needBindPhone: boolean;
+	/** 老用户直通时返回的正式 token */
+	token?: string | null;
+	/** 新用户待绑手机时返回的临时凭证 */
+	tempToken?: string | null;
+}
+
+/** 后端 POST /auth/wx-bind-phone 请求参数 */
+export interface WxBindPhoneRequest {
+	/** 微信 getPhoneNumber 回调返回的 e.detail.code */
+	phoneCode: string;
+	/** /auth/wx-login 返回的临时凭证 */
+	tempToken: string;
+}
+
+/** 后端 POST /auth/wx-bind-phone 原始响应 data */
+export interface WxBindPhoneRawData {
+	token: string;
 }

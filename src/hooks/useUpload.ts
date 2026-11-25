@@ -25,8 +25,8 @@ export const useUpload = () => {
 				const path = filePaths[i];
 				const fallback = fallbackMetas?.[i];
 				const res = await uploadImageAPI(path, fallback?.fileName);
-				const item = res.data?.list?.[0];
-				if (item) {
+				const item = res.data;
+				if (item?.filePath) {
 					const rawName = item.fileName || fallback?.fileName || path.split('/').pop() || 'file';
 					const ext = item.fileType || fallback?.fileType || rawName.split('.').pop() || '';
 					uploadedItems.push({
@@ -47,9 +47,7 @@ export const useUpload = () => {
 		}
 	};
 
-	/**
-	 * 兼容旧版：仅返回远程路径数组
-	 */
+	/** 批量上传并仅返回远程路径数组 */
 	const triggerUpload = async (filePaths: string[]): Promise<string[]> => {
 		const items = await triggerUploadFiles(filePaths);
 		return items.map((item) => item.filePath);

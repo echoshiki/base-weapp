@@ -1,9 +1,7 @@
-import { BaseResponse } from './common';
-
 /** 性别：0 男，1 女 */
 export type UserSex = '0' | '1';
 
-/** 用户信息（GET /getInfo 返回的 user 对象） */
+/** 用户信息 */
 export interface UserInfo {
 	/** 用户主键 */
 	userId?: number;
@@ -19,23 +17,23 @@ export interface UserInfo {
 	maskedPhone?: string;
 	/** 性别：0 男，1 女 */
 	sex?: UserSex;
-	/** 头像相对路径 */
+	/** 头像路径 */
 	avatar?: string;
 	/** 创建时间 */
 	createTime?: string;
 }
 
-/** 获取当前用户信息响应（GET /getInfo） */
-export interface GetInfoResponse extends BaseResponse {
+/** 获取当前用户信息数据体（包裹在 BaseResponse<UserProfileData> 中） */
+export interface UserProfileData {
 	/** 当前用户信息 */
-	user?: UserInfo;
+	user: UserInfo;
 	/** 角色标识 */
 	roles?: string[];
 	/** 权限标识 */
 	permissions?: string[];
 }
 
-/** 修改个人信息请求（PUT /system/user/profile/app） */
+/** 修改个人信息请求 */
 export interface UpdateUserProfileRequest {
 	/** 用户昵称 */
 	nickName: string;
@@ -45,12 +43,12 @@ export interface UpdateUserProfileRequest {
 	email: string;
 	/** 性别：0 男，1 女 */
 	sex?: UserSex;
-	/** 头像相对路径 */
+	/** 头像路径 */
 	avatar?: string;
 }
 
-/** 修改登录密码参数（PUT /system/user/profile/updatePwd） */
-export interface UpdateUserPwdParams {
+/** 修改登录密码请求 */
+export interface UpdateUserPwdRequest {
 	/** 旧密码 */
 	oldPassword: string;
 	/** 新密码（6-20 字符） */

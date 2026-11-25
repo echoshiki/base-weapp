@@ -16,13 +16,13 @@ export const useUser = () => {
 		queryKey: ['user', 'profile'],
 		queryFn: async () => {
 			const res = await getUserInfoAPI();
-			const rawUser = res.user;
+			const rawUser = res.data?.user;
 			if (!rawUser) return null;
 			const data: UserInfo = {
 				...rawUser,
 				maskedPhone: maskPhone(rawUser.phonenumber),
 			};
-			updateUserInfo(data, res.roles || [], res.permissions || []);
+			updateUserInfo(data, res.data?.roles || [], res.data?.permissions || []);
 			return data;
 		},
 		enabled: isLoggedIn,
@@ -53,8 +53,8 @@ export const useUpdateUser = () => {
 		Taro.showLoading({ title: '上传中...', mask: true });
 		try {
 			const res = await uploadImageAPI(avatarUrl);
-			if (res.data?.list && res.data.list.length > 0) {
-				setForm((prev) => ({ ...prev, avatar: res.data.list[0].filePath }));
+			if (res.data?.filePath) {
+				setForm((prev) => ({ ...prev, avatar: res.data.filePath }));
 				Taro.showToast({ title: '头像获取成功', icon: 'success' });
 			}
 		} catch (error) {
