@@ -42,6 +42,7 @@ import {
 	FileUploader,
 	UploadedFile,
 	Rate,
+	FloatQuickMenu,
 } from '@/components/ui';
 import { MOCK_BANNERS, MOCK_USER, MOCK_CARD_ITEM } from './mock';
 
@@ -875,18 +876,19 @@ export function NavBarDemo() {
 }
 
 export function FloatWidgetsDemo() {
+	const [showMenu, setShowMenu] = useState(false);
 	const [showService, setShowService] = useState(false);
 
 	return (
-		<View className="flex flex-col gap-2.5">
-			<Text className="text-xs opacity-60 leading-relaxed">
-				右下角已默认挂载 FloatQuickMenu（可拖拽悬浮快捷菜单）。点击下方按钮可临时开启 FloatCustomerService
-				在线客服悬浮球。
-			</Text>
+		<View className="flex gap-2.5">
 			<Button size="sm" variant={showService ? 'rose' : 'primary'} onClick={() => setShowService((v) => !v)}>
 				{showService ? '隐藏客服悬浮球' : '显示客服悬浮球'}
 			</Button>
-			{showService && <FloatCustomerService bottomOffset={170} />}
+			<Button size="sm" variant={showMenu ? 'rose' : 'primary'} onClick={() => setShowMenu((v) => !v)}>
+				{showMenu ? '隐藏快捷菜单' : '显示快捷菜单'}
+			</Button>
+			{showService && <FloatCustomerService bottomOffset={120} />}
+			{showMenu && <FloatQuickMenu bottomOffset={120} />}
 		</View>
 	);
 }

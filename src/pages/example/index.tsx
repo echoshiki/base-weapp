@@ -315,7 +315,7 @@ export default function Index() {
 	};
 
 	return (
-		<Page>
+		<Page showQuickMenu={false}>
 			<View className="flex flex-col gap-4 py-3">
 				<Card>
 					<Heading
@@ -340,9 +340,7 @@ export default function Index() {
 											className="flex items-center justify-between gap-3 px-4 py-3.5 transition-colors active:bg-zinc-50/80"
 										>
 											<View className="flex-1 min-w-0 flex flex-col gap-0.5">
-												<Text className="text-sm font-medium truncate">
-													{item.name}
-												</Text>
+												<Text className="text-sm font-medium truncate">{item.name}</Text>
 												<Text className="text-xs opacity-60 truncate">{item.desc}</Text>
 											</View>
 											<View
