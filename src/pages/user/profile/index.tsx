@@ -1,5 +1,5 @@
-import { View, Text } from '@tarojs/components';
-import { Page, Avatar, Badge, FormItem, Input, Button, Card } from '@/components/ui';
+import { View, Text, Button as TaroButton } from '@tarojs/components';
+import { Page, Avatar, FormItem, Input, Button, Card, Gender } from '@/components/ui';
 import { useUpdateUser } from '@/hooks/useUser';
 import { UserSex } from '@/types/user';
 
@@ -14,28 +14,27 @@ export default function UserProfilePage() {
 	return (
 		<Page>
 			<View className="py-4 flex flex-col gap-4">
-				{/* 头像区 */}
-				<Card>
-					<View className="flex flex-col items-center py-4">
-						<Button
-							openType="chooseAvatar"
-							onChooseAvatar={onChooseAvatar}
-							appearance="ghost"
-							className="size-24 p-0"
-						>
-							<View className="relative">
-								<Avatar src={form.avatar} size="xl" name={form.nickName} />
-								<View className="absolute bottom-0 right-0 size-6 rounded-full p-1 bg-primary flex justify-center items-center">
-									<View className="icon-[ph--camera] size-3.5 text-white" />
-								</View>
+				{/* 头像区：通透居中主视觉 + 白环阴影 + 白边相机徽标 */}
+				<View className="flex flex-col items-center pt-4 pb-2">
+					<TaroButton
+						openType="chooseAvatar"
+						onChooseAvatar={onChooseAvatar}
+						className="m-0 p-0 bg-transparent after:border-0 overflow-visible leading-none active:scale-95 transition-transform"
+					>
+						<View className="relative p-1 rounded-full bg-white shadow-sm ring-1 ring-zinc-200/70">
+							<Avatar src={form.avatar} size="xl" name={form.nickName} className="border-0 shadow-none" />
+							<View className="absolute right-0.5 bottom-0.5 size-7 rounded-full bg-zinc-900 border-2 border-white shadow-sm flex items-center justify-center">
+								<View className="icon-[ph--camera-fill] size-3.5 text-white" />
 							</View>
-						</Button>
-						<Text className="text-xs opacity-60 mt-3">点击更换头像</Text>
-					</View>
-				</Card>
+						</View>
+					</TaroButton>
+
+					<Text className="text-base font-semibold mt-3">{form.nickName || '未设置昵称'}</Text>
+					<Text className="text-xs text-zinc-400 mt-0.5">点击头像更换</Text>
+				</View>
 
 				{/* 基本信息表单 */}
-				<Card className="py-2">
+				<Card>
 					<FormItem label="昵称">
 						<Input
 							variant="ghost"
@@ -71,16 +70,22 @@ export default function UserProfilePage() {
 					</FormItem>
 
 					<FormItem label="性别" border={false}>
-						<View className="flex gap-2">
-							{SEX_OPTIONS.map((opt) => (
-								<Badge
-									key={opt.value}
-									variant={opt.value === form.sex ? 'primary' : 'zinc'}
-									onClick={() => updateField('sex', opt.value)}
-								>
-									{opt.label}
-								</Badge>
-							))}
+						<View className="flex items-center gap-1">
+							{SEX_OPTIONS.map((opt) => {
+								const active = opt.value === form.sex;
+								return (
+									<Button
+										key={opt.value}
+										size="sm"
+										appearance={active ? 'soft' : 'ghost'}
+										variant={active ? (opt.value === '0' ? 'sky' : 'rose') : 'zinc'}
+										icon={<Gender gender={opt.value} size="sm" />}
+										onClick={() => updateField('sex', opt.value)}
+									>
+										{opt.label}
+									</Button>
+								);
+							})}
 						</View>
 					</FormItem>
 				</Card>

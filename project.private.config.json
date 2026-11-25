@@ -23,11 +23,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "组件页",
-          "pathName": "pages/example/index",
+          "name": "资料页",
+          "pathName": "pages/user/profile/index",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "组件页",
+          "pathName": "pages/example/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         }
       ]
     }

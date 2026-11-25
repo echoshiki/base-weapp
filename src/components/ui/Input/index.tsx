@@ -98,7 +98,7 @@ export function Input({
 				disabled={disabled}
 				placeholderClass={placeholderClass}
 				className={cn(
-					'flex-1 min-w-0 h-full flex items-center bg-transparent text-sm text-zinc-900',
+					'flex-1 min-w-0 w-full h-full bg-transparent text-sm text-zinc-900',
 					inputClassName,
 				)}
 				onInput={(e) => {
