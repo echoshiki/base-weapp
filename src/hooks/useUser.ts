@@ -1,7 +1,5 @@
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { getUserInfoAPI, updateUserProfileAPI } from '@/services/user';
-import { getEnterpriseUserInfoAPI } from '@/services/auth';
-import { extractEnterpriseInfo, mapEnterpriseToUserInfo } from '@/hooks/useAuth';
 import { useAuthStore } from '@/store/auth';
 import Taro from '@tarojs/taro';
 import { useState } from 'react';
@@ -9,34 +7,21 @@ import { uploadImageAPI } from '@/services/upload';
 import { delayBack, maskPhone } from '@/utils/common';
 import { UpdateUserProfileRequest, UserInfo } from '@/types/user';
 
-/** Query - 获取用户信息（自动按登录角色调用管理员或企业端接口） */
+/** Query - 获取用户信息 */
 export const useUser = () => {
-	const { updateUserInfo, updateEnterpriseInfo, authStage, loginType } = useAuthStore();
+	const { updateUserInfo, authStage } = useAuthStore();
 	const isLoggedIn = authStage === 'LOGGED_IN';
 
 	return useQuery({
-		queryKey: ['user', 'profile', loginType],
+		queryKey: ['user', 'profile'],
 		queryFn: async () => {
-			const currentLoginType = useAuthStore.getState().loginType;
-			if (currentLoginType === 'enterprise') {
-				const res = await getEnterpriseUserInfoAPI();
-				const entData = extractEnterpriseInfo(res);
-				if (!entData) return null;
-				updateEnterpriseInfo(entData);
-				const data = mapEnterpriseToUserInfo(entData);
-				updateUserInfo(data, entData.roles?.length ? entData.roles : ['enterpriseUser'], []);
-				return data;
-			}
-
 			const res = await getUserInfoAPI();
 			const rawUser = res.user;
 			if (!rawUser) return null;
-			// 格式化数据：保留原始 phonenumber，生成安全展示用的 maskedPhone
 			const data: UserInfo = {
 				...rawUser,
 				maskedPhone: maskPhone(rawUser.phonenumber),
 			};
-			updateEnterpriseInfo(null);
 			updateUserInfo(data, res.roles || [], res.permissions || []);
 			return data;
 		},
@@ -50,7 +35,6 @@ export const useUpdateUser = () => {
 	const queryClient = useQueryClient();
 	const { userInfo, updateUserInfo } = useAuthStore();
 
-	// 状态：表单数据，从全量用户资料里提取出表单字段数据
 	const [form, setForm] = useState<UpdateUserProfileRequest>({
 		nickName: userInfo?.nickName ?? userInfo?.userName ?? '',
 		phonenumber: userInfo?.phonenumber ?? '',
@@ -59,12 +43,10 @@ export const useUpdateUser = () => {
 		avatar: userInfo?.avatar ?? '',
 	});
 
-	// 执行：统一更新表单字段状态
 	const updateField = <K extends keyof UpdateUserProfileRequest>(field: K, value: UpdateUserProfileRequest[K]) => {
 		setForm((prev) => ({ ...prev, [field]: value }));
 	};
 
-	// 执行：获取头像并上传
 	const onChooseAvatar = async (e: any) => {
 		const { avatarUrl } = e.detail;
 		if (!avatarUrl) return;

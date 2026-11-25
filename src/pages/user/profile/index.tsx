@@ -1,8 +1,7 @@
-import { Avatar, Badge, FormItem, Button, Card } from '@/components/ui';
-import { BizPage } from '@/components/biz';
+import { View, Text } from '@tarojs/components';
+import { Page, Avatar, Badge, FormItem, Input, Button, Card } from '@/components/ui';
 import { useUpdateUser } from '@/hooks/useUser';
 import { UserSex } from '@/types/user';
-import { View, Text, Input } from '@tarojs/components';
 
 const SEX_OPTIONS: { label: string; value: UserSex }[] = [
 	{ label: '男', value: '0' },
@@ -13,64 +12,66 @@ export default function UserProfilePage() {
 	const { form, updateField, onChooseAvatar, handleSave, isSaving } = useUpdateUser();
 
 	return (
-		<BizPage paddingX={false} defaultShowHeader className="pb-10">
-			<View className="container-x pt-4 flex flex-col gap-4">
+		<Page>
+			<View className="py-4 flex flex-col gap-4">
 				{/* 头像区 */}
 				<Card>
-					<View className="flex flex-col items-center py-6">
+					<View className="flex flex-col items-center py-4">
 						<Button
 							openType="chooseAvatar"
 							onChooseAvatar={onChooseAvatar}
 							appearance="ghost"
-							className="w-24 h-24"
+							className="size-24 p-0"
 						>
 							<View className="relative">
 								<Avatar src={form.avatar} size="xl" name={form.nickName} />
 								<View className="absolute bottom-0 right-0 size-6 rounded-full p-1 bg-primary flex justify-center items-center">
-									<View className="icon-[ph--camera] size-4 text-white" />
+									<View className="icon-[ph--camera] size-3.5 text-white" />
 								</View>
 							</View>
 						</Button>
-						<Text className="text-sm text-text-body mt-5">点击更换头像</Text>
+						<Text className="text-xs opacity-60 mt-3">点击更换头像</Text>
 					</View>
 				</Card>
 
-				<Card>
-					{/* 昵称 */}
+				{/* 基本信息表单 */}
+				<Card className="py-2">
 					<FormItem label="昵称">
 						<Input
+							variant="ghost"
 							type="nickname"
-							className="text-right text-sm text-text-title h-full"
+							inputClassName="text-right"
 							placeholder="请输入昵称"
 							value={form.nickName}
-							onInput={(e) => updateField('nickName', e.detail.value)}
+							onChange={(val) => updateField('nickName', val)}
 							onBlur={(e) => updateField('nickName', e.detail.value)}
 						/>
 					</FormItem>
 
-					{/* 手机号 */}
 					<FormItem label="手机号">
 						<Input
-							className="text-right text-sm text-text-title h-full"
+							variant="ghost"
+							type="number"
+							maxlength={11}
+							inputClassName="text-right"
 							placeholder="请输入手机号"
 							value={form.phonenumber}
-							onInput={(e) => updateField('phonenumber', e.detail.value)}
+							onChange={(val) => updateField('phonenumber', val)}
 						/>
 					</FormItem>
 
-					{/* 邮箱 */}
 					<FormItem label="邮箱">
 						<Input
-							className="text-right text-sm text-text-title h-full"
+							variant="ghost"
+							inputClassName="text-right"
 							placeholder="请输入邮箱"
 							value={form.email}
-							onInput={(e) => updateField('email', e.detail.value)}
+							onChange={(val) => updateField('email', val)}
 						/>
 					</FormItem>
 
-					{/* 性别 */}
 					<FormItem label="性别" border={false}>
-						<View className="flex gap-3">
+						<View className="flex gap-2">
 							{SEX_OPTIONS.map((opt) => (
 								<Badge
 									key={opt.value}
@@ -84,11 +85,10 @@ export default function UserProfilePage() {
 					</FormItem>
 				</Card>
 
-				{/* 保存 */}
-				<Button size="xl" block variant="primary" loading={isSaving} disabled={isSaving} onClick={handleSave}>
+				<Button size="lg" block variant="primary" loading={isSaving} disabled={isSaving} onClick={handleSave}>
 					保存资料
 				</Button>
 			</View>
-		</BizPage>
+		</Page>
 	);
 }
