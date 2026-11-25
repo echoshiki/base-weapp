@@ -327,7 +327,7 @@ export default function Index() {
 
 				{EXAMPLE_GROUPS.map((group) => (
 					<View key={group.title} className="flex flex-col gap-2">
-						<Text className="px-1 text-xs font-medium text-text-muted">{group.title}</Text>
+						<Text className="px-1 text-xs font-medium opacity-60">{group.title}</Text>
 						<Card noPadding className="overflow-hidden">
 							{group.items.map((item, idx) => {
 								const isLast = idx === group.items.length - 1;
@@ -340,14 +340,14 @@ export default function Index() {
 											className="flex items-center justify-between gap-3 px-4 py-3.5 transition-colors active:bg-zinc-50/80"
 										>
 											<View className="flex-1 min-w-0 flex flex-col gap-0.5">
-												<Text className="text-sm font-medium text-text-title truncate">
+												<Text className="text-sm font-medium truncate">
 													{item.name}
 												</Text>
-												<Text className="text-xs text-text-muted truncate">{item.desc}</Text>
+												<Text className="text-xs opacity-60 truncate">{item.desc}</Text>
 											</View>
 											<View
 												className={cn(
-													'icon-[ph--caret-right-thin] size-4 text-text-muted/70 shrink-0 transition-transform duration-200',
+													'icon-[ph--caret-right-thin] size-4 text-zinc-400 shrink-0 transition-transform duration-200',
 													isExpanded && 'rotate-90 text-primary',
 												)}
 											/>

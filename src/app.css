@@ -13,11 +13,8 @@
 	/* 核心色彩 */
 	--color-primary: #155dfc;
 
-	/* 点缀色/辅助色*/
+	/* 点缀色/辅助色 */
 	--color-main-bg: #fafafa;
-	--color-text-title: #09090b;
-	--color-text-body: #27272a;
-	--color-text-muted: #71717a;
 
 	/* 圆角 */
 	--radius-card: 12rpx;
@@ -34,9 +31,13 @@
 	padding-right: var(--container-p-x);
 }
 
+page,
+body {
+	color: #18181b;
+}
+
 * {
 	font-family: var(--font-sans);
-	color: var(--font-body);
 }
 
 /* 清除微信小程序原生 button::after 默认边框，防止黑边/重影锯齿 */

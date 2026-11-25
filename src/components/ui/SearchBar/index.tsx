@@ -73,15 +73,15 @@ export function SearchBar({
 			>
 				{/* 前缀图标 */}
 				{prefixIcon || (
-					<View className="icon-[ph--magnifying-glass-bold] size-4 text-text-muted shrink-0" />
+					<View className="icon-[ph--magnifying-glass-bold] size-4 text-zinc-400 shrink-0" />
 				)}
 
 				{readonly ? (
-					<Text className="ml-2 text-sm text-text-muted/60 flex-1 truncate">{placeholder}</Text>
+					<Text className="ml-2 text-sm text-zinc-400 flex-1 truncate">{placeholder}</Text>
 				) : (
 					<View className="flex-1 flex items-center ml-2 min-w-0">
 						<Input
-							className="flex-1 h-full text-sm text-text-title"
+							className="flex-1 h-full text-sm text-zinc-900"
 							placeholder={placeholder}
 							value={value}
 							focus={focus}

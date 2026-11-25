@@ -1047,7 +1047,7 @@ export function RateDemo() {
 
 	return (
 		<View className="flex flex-col gap-3 bg-white rounded-card p-4 border border-zinc-100">
-			<Rate label="服务评价" value={score} onChange={setScore} />
+			<Rate label="服务评价" value={score} onChange={setScore} size={5} />
 			<Rate label="综合评分" value={5} readonly size={5} />
 		</View>
 	);

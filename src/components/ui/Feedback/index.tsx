@@ -86,7 +86,7 @@ export const Feedback = ({
 			{/* 标题区 */}
 			{title && (
 				<Text
-					className={`font-bold text-text-title mb-2 ${isLoading ? 'text-base' : 'text-2xl'}`}
+					className={`font-bold mb-2 ${isLoading ? 'text-base' : 'text-2xl'}`}
 				>
 					{title}
 				</Text>
@@ -95,7 +95,7 @@ export const Feedback = ({
 			{/* 副标题/描述区 */}
 			{subtitle && (
 				<Text
-					className={`text-sm text-text-muted text-center leading-relaxed px-4 ${children ? 'mb-6' : 'mb-10'}`}
+					className={`text-sm opacity-60 text-center leading-relaxed px-4 ${children ? 'mb-6' : 'mb-10'}`}
 				>
 					{subtitle}
 				</Text>

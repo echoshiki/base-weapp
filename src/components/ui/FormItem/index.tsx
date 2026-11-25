@@ -42,7 +42,7 @@ export function FormItem({
 	const renderLabel = () => {
 		if (label === undefined || label === null) return null;
 		return (
-			<View className="flex items-center gap-1 shrink-0 mr-4 text-sm text-text-title font-medium">
+			<View className="flex items-center gap-1 shrink-0 mr-4 text-sm font-medium">
 				{typeof label === 'string' || typeof label === 'number' ? <Text>{label}</Text> : label}
 				{required && <Text className="text-rose-500 mt-0.5">*</Text>}
 			</View>
@@ -52,7 +52,7 @@ export function FormItem({
 	const renderHelper = (extraClass?: string) => {
 		if (!helper) return null;
 		return (
-			<View className={cn('mt-1 text-xs text-text-muted leading-normal', extraClass)}>
+			<View className={cn('mt-1 text-xs text-zinc-500 leading-normal', extraClass)}>
 				{typeof helper === 'string' || typeof helper === 'number' ? <Text>{helper}</Text> : helper}
 			</View>
 		);

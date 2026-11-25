@@ -108,8 +108,8 @@ export const EntryCard = ({ title, desc, icon, url, onClick, theme = 'blue', dis
 				</View>
 
 				<View className="flex flex-col gap-1">
-					<Text className="text-lg font-bold text-text-title tracking-wide">{title}</Text>
-					<Text className="text-xs text-text-body leading-relaxed">{desc}</Text>
+					<Text className="text-lg font-bold tracking-wide">{title}</Text>
+					<Text className="text-xs opacity-70 leading-relaxed">{desc}</Text>
 				</View>
 			</View>
 

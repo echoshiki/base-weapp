@@ -131,7 +131,7 @@ export function EmptyIcon({
  */
 export function EmptyTitle({ className, children, ...props }: ViewProps) {
 	return (
-		<View className={cn('text-base font-bold text-text-title text-center', className)} {...props}>
+		<View className={cn('text-base font-bold text-center', className)} {...props}>
 			{typeof children === 'string' ? <Text>{children}</Text> : children}
 		</View>
 	);
@@ -142,7 +142,7 @@ export function EmptyTitle({ className, children, ...props }: ViewProps) {
  */
 export function EmptyDescription({ className, children, ...props }: ViewProps) {
 	return (
-		<View className={cn('text-xs text-text-muted text-center px-6 leading-relaxed', className)} {...props}>
+		<View className={cn('text-xs opacity-60 text-center px-6 leading-relaxed', className)} {...props}>
 			{typeof children === 'string' ? <Text>{children}</Text> : children}
 		</View>
 	);

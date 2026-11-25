@@ -77,7 +77,7 @@ export function DialogContent({
 				{/* 右上角关闭 cross */}
 				{showClose && (
 					<View
-						className="absolute top-4 right-4 icon-[ph--x] size-4 text-text-muted/70 active:text-text-title transition-colors p-1 cursor-pointer"
+						className="absolute top-4 right-4 icon-[ph--x] size-4 text-zinc-400 active:text-zinc-900 transition-colors p-1 cursor-pointer"
 						onClick={() => onOpenChange?.(false)}
 					/>
 				)}
@@ -104,7 +104,7 @@ export function DialogHeader({ className, children, ...props }: ViewProps) {
  */
 export function DialogTitle({ className, children, ...props }: ViewProps) {
 	return (
-		<Text className={cn('text-base font-bold text-text-title leading-none', className)} {...props}>
+		<Text className={cn('text-base font-bold leading-none', className)} {...props}>
 			{children}
 		</Text>
 	);
@@ -115,7 +115,7 @@ export function DialogTitle({ className, children, ...props }: ViewProps) {
  */
 export function DialogDescription({ className, children, ...props }: ViewProps) {
 	return (
-		<Text className={cn('text-xs text-text-muted leading-relaxed', className)} {...props}>
+		<Text className={cn('text-xs opacity-60 leading-relaxed', className)} {...props}>
 			{children}
 		</Text>
 	);

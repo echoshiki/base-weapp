@@ -150,7 +150,7 @@ export function Signature({
 			>
 				{/* 背景引导水印 */}
 				{!hasDrawn && (
-					<View className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-text-muted/40 gap-1.5">
+					<View className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-zinc-400 gap-1.5">
 						<View className="icon-[ph--pencil-line-duotone] size-6" />
 						<Text className="text-xs tracking-wider">{placeholder}</Text>
 					</View>

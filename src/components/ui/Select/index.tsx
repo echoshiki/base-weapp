@@ -157,12 +157,12 @@ export function Select<T extends Record<string, any>>(props: SelectProps<T>) {
 			>
 				<View className="flex items-center gap-2 min-w-0 flex-1">
 					{renderIcon()}
-					<Text className={cn('text-sm truncate', displayLabel ? 'text-text-title' : 'text-text-muted')}>
+					<Text className={cn('text-sm truncate', displayLabel ? 'text-zinc-900' : 'text-zinc-400')}>
 						{displayLabel || placeholder || defaultPlaceholder}
 					</Text>
 				</View>
 
-				<View className="flex items-center gap-1 text-text-muted/70 shrink-0 ml-2">
+				<View className="flex items-center gap-1 text-zinc-400 shrink-0 ml-2">
 					<Text className="text-xs">{displayLabel ? '切换' : '选择'}</Text>
 					<View className="icon-[ph--caret-down-bold] size-3.5" />
 				</View>

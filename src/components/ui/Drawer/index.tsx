@@ -81,7 +81,7 @@ export function Drawer({
 					>
 						{title && (
 							<View className="flex items-center justify-between px-4 h-14 border-b border-zinc-100 shrink-0">
-								<Text className="text-sm font-semibold text-text-title">{title}</Text>
+								<Text className="text-sm font-semibold">{title}</Text>
 								<View
 									className="icon-[ph--x-bold] size-5 text-zinc-400 active:text-zinc-600 transition-colors p-1"
 									onClick={handleClose}
@@ -218,7 +218,7 @@ export function DrawerTitle({ className, children, ...props }: ViewProps) {
  */
 export function DrawerDescription({ className, children, ...props }: ViewProps) {
 	return (
-		<View className={cn('text-xs text-text-muted leading-relaxed', className)} {...props}>
+		<View className={cn('text-xs opacity-60 leading-relaxed', className)} {...props}>
 			{typeof children === 'string' ? <Text>{children}</Text> : children}
 		</View>
 	);

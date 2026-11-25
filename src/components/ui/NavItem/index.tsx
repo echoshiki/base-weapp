@@ -15,7 +15,7 @@ const VARIANT_MAP: Record<Exclude<NavIconVariant, 'none'>, string> = {
 	orange: 'bg-orange-500/10 text-orange-600',
 	rose: 'bg-rose-500/10 text-rose-600',
 	zinc: 'bg-zinc-500/10 text-zinc-600',
-	ghost: 'bg-transparent text-text-title',
+	ghost: 'bg-transparent text-zinc-900',
 };
 
 export interface NavItemProps {
@@ -100,13 +100,13 @@ export function NavItem({
 			)}
 
 			{/* 标题区 */}
-			<Text className={cn('text-text-title truncate', isList ? 'flex-1 text-sm' : 'text-xs')}>{label}</Text>
+			<Text className={cn('text-zinc-900 truncate', isList ? 'flex-1 text-sm' : 'text-xs')}>{label}</Text>
 
 			{/* 列表模式右侧扩展区与箭头 */}
 			{isList && (
 				<View className="flex items-center gap-1 shrink-0">
-					{extra && <View className="text-xs text-text-muted">{extra}</View>}
-					<View className="icon-[ph--caret-right-thin] size-4 text-text-muted/70" />
+					{extra && <View className="text-xs text-zinc-500">{extra}</View>}
+					<View className="icon-[ph--caret-right-thin] size-4 text-zinc-400" />
 				</View>
 			)}
 		</TaroButton>

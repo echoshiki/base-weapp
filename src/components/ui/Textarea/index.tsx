@@ -75,7 +75,7 @@ export function Textarea({
 				autoHeight={autoHeight}
 				placeholderClass={placeholderClass}
 				className={cn(
-					'w-full bg-transparent text-sm text-text-title leading-relaxed',
+					'w-full bg-transparent text-sm text-zinc-900 leading-relaxed',
 					!autoHeight && 'h-24',
 					textareaClassName,
 				)}

@@ -94,15 +94,15 @@ import { Page, Card, Button, FormItem, Badge, Avatar, Drawer, Tabs } from '@/com
 // 1. 基础卡片
 <Card className="gap-2" onClick={goDetail}>
   <Heading title="奢品鉴定服务" subtitle="发布时间：2026-07-29" />
-  <Text className="text-xs text-text-body">内容摘要描述...</Text>
+  <Text className="text-xs opacity-80">内容摘要描述...</Text>
 </Card>
 
 // 2. 通栏大图卡片
 <Card noPadding onClick={goDetail}>
   <Image src="https://.../cover.jpg" mode="aspectFill" className="w-full h-36" />
   <View className="p-4 flex flex-col gap-2">
-    <Text className="font-medium text-text-title">Rolex 劳力士预估服务</Text>
-    <Text className="text-xs text-text-muted">包含机芯检测与行情参考</Text>
+    <Text className="font-medium">Rolex 劳力士预估服务</Text>
+    <Text className="text-xs opacity-60">包含机芯检测与行情参考</Text>
   </View>
 </Card>
 
@@ -110,8 +110,8 @@ import { Page, Card, Button, FormItem, Badge, Avatar, Drawer, Tabs } from '@/com
 <Card layout="horizontal" onClick={goDetail}>
   <Image src="https://.../thumb.jpg" mode="aspectFill" className="w-24 h-20 rounded shrink-0" />
   <View className="flex-1 min-w-0 flex flex-col justify-between">
-    <Text className="font-medium text-sm text-text-title line-clamp-2">最新便民社区服务指南</Text>
-    <Text className="text-xs text-text-muted">2026-07-29</Text>
+    <Text className="font-medium text-sm line-clamp-2">最新便民社区服务指南</Text>
+    <Text className="text-xs opacity-60">2026-07-29</Text>
   </View>
 </Card>
 ```

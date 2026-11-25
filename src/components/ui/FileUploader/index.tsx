@@ -96,7 +96,7 @@ export const FileUploader = ({
 
 			{hasFile ? (
 				<View className="absolute inset-0 p-6 flex flex-col items-center justify-between bg-linear-to-b from-blue-50/30 to-white">
-					<View className="flex flex-col items-center justify-center">
+					<View className="flex flex-col items-center justify-center gap-0.5">
 						<View
 							className={`size-12 shrink-0 ${
 								value.fileType.toLowerCase().includes('pdf')
@@ -104,11 +104,9 @@ export const FileUploader = ({
 									: 'icon-[ph--file-doc-duotone] text-primary'
 							}`}
 						/>
-						<Text className="text-sm font-bold text-text-title truncate block">
-							{value.fileName}
-						</Text>
+						<Text className="text-sm font-medium truncate block">{value.fileName}</Text>
 						{value.fileSize && (
-							<Text className="text-xs text-text-muted font-num mt-1 block">
+							<Text className="text-xs opacity-60 font-num block">
 								{(value.fileSize / 1024).toFixed(1)} KB
 							</Text>
 						)}
@@ -118,10 +116,10 @@ export const FileUploader = ({
 					{!readonly && (
 						<View className="flex justify-end">
 							<View
-								className="text-xs font-bold text-red-500 px-4 py-1.5 bg-red-50 active:bg-red-100 rounded-full transition-colors flex items-center gap-1 cursor-pointer"
+								className="text-xs font-medium text-red-500 px-4 py-1.5 bg-red-50 active:bg-red-100 rounded-full transition-colors flex items-center gap-1 cursor-pointer"
 								onClick={handleDelete}
 							>
-								<View className="icon-[ph--trash-bold] size-3.5" />
+								<View className="icon-[ph--trash] size-3.5" />
 								移除并更换
 							</View>
 						</View>
@@ -130,8 +128,8 @@ export const FileUploader = ({
 			) : (
 				<View className="flex flex-col items-center justify-center gap-2 px-4 text-center">
 					<View className={`${icon} size-9 text-zinc-300`} />
-					<Text className="text-sm font-bold text-text-title">{label}</Text>
-					{subLabel && <Text className="text-xs text-text-muted">{subLabel}</Text>}
+					<Text className="text-sm font-bold">{label}</Text>
+					{subLabel && <Text className="text-xs opacity-60">{subLabel}</Text>}
 				</View>
 			)}
 		</View>

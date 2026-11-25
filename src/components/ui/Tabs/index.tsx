@@ -75,7 +75,7 @@ export function Tabs({
 					<Text
 						className={cn(
 							'text-sm font-medium whitespace-nowrap transition-colors',
-							isActive ? 'text-primary font-semibold' : 'text-text-title'
+							isActive ? 'text-primary font-semibold' : 'text-zinc-900'
 						)}
 					>
 						{label}
@@ -153,7 +153,7 @@ export function TabsTrigger({ value, className, children, ...props }: TabsTrigge
 			<Text
 				className={cn(
 					'text-sm whitespace-nowrap transition-colors',
-					isActive ? 'text-primary font-semibold' : 'text-text-title font-medium'
+					isActive ? 'text-primary font-semibold' : 'text-zinc-900 font-medium'
 				)}
 			>
 				{typeof children === 'string' ? <Text>{children}</Text> : children}

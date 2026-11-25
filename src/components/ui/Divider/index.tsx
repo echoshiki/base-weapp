@@ -50,7 +50,7 @@ export const Divider = ({ orientation = 'horizontal', dashed = false, children, 
 	return (
 		<View className={cn('flex items-center w-full', className || 'my-4')}>
 			<View className={lineClasses} />
-			<View className="px-4 text-xs text-text-muted font-sans shrink-0">{children}</View>
+			<View className="px-4 text-xs opacity-60 font-sans shrink-0">{children}</View>
 			<View className={lineClasses} />
 		</View>
 	);
