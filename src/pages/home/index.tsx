@@ -14,10 +14,16 @@ export default function Home() {
 				{/* 顶部基座欢迎卡片 */}
 				<Card className="gap-3">
 					<View className="flex items-center justify-between gap-2">
-						<Heading title="Base Taro 应用基座" subtitle="Taro 4 · React 18 · Tailwind CSS v4" size="lg" />
-						<Badge variant={isLoggedIn ? 'emerald' : 'zinc'} dot>
-							{isLoggedIn ? '已登录' : '未登录'}
-						</Badge>
+						<Heading
+							title="Base Taro 应用基座"
+							subtitle="Taro 4 · React 18 · Tailwind CSS v4"
+							size="lg"
+							extra={
+								<Badge variant={isLoggedIn ? 'emerald' : 'zinc'} dot>
+									{isLoggedIn ? '已登录' : '未登录'}
+								</Badge>
+							}
+						/>
 					</View>
 					<Text className="text-xs opacity-60 leading-relaxed">
 						{isLoggedIn && userInfo
