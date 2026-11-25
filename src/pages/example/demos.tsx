@@ -321,7 +321,12 @@ export function AlertDemo() {
 				variant="warning"
 				title="实名认证提示"
 				extra={
-					<Button size="xs" variant="amber" appearance="soft" onClick={() => Taro.showToast({ title: '去认证', icon: 'none' })}>
+					<Button
+						size="xs"
+						variant="amber"
+						appearance="soft"
+						onClick={() => Taro.showToast({ title: '去认证', icon: 'none' })}
+					>
 						去认证
 					</Button>
 				}
@@ -439,9 +444,7 @@ export function DrawerDemo() {
 					<Text className="font-bold text-base">
 						{MOCK_USER.name} ({MOCK_USER.role})
 					</Text>
-					<Text className="text-xs opacity-60 text-center">
-						确认使用 138****8888 预约上门成色评估服务？
-					</Text>
+					<Text className="text-xs opacity-60 text-center">确认使用 138****8888 预约上门成色评估服务？</Text>
 				</View>
 			</Drawer>
 		</View>
@@ -950,7 +953,7 @@ export function AuthMaskDemo() {
 				subTitle="完成身份认证即可解锁完整列表"
 				onLoginClick={() => setLocked(false)}
 			>
-				<Card>
+				<Card className="h-36">
 					<Text className="font-medium text-sm">机密业务报告</Text>
 					<Text className="text-xs opacity-60 mt-1 leading-relaxed">
 						当前已完成身份验证，您正在查看受保护的完整内容。

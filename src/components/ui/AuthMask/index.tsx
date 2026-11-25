@@ -74,16 +74,12 @@ export function AuthMask({
 			{/* 高斯模糊遮罩层 + 水平垂直居中锁图标与引导 */}
 			<View
 				onClick={handleLogin}
-				className="absolute inset-0 z-10 backdrop-blur-sm bg-white/10 flex flex-col items-center justify-center px-6 text-center cursor-pointer"
+				className="absolute inset-0 z-10 backdrop-blur-sm bg-white/10 flex flex-col gap-1 items-center justify-center px-6 text-center cursor-pointer"
 			>
-				<View className="size-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center shadow-xs mb-3">
-					<View className={cn(icon, 'size-6 text-blue-600')} />
-				</View>
-
-				<Text className="text-sm font-bold text-zinc-900">{title}</Text>
-				{subTitle && <Text className="text-xs text-zinc-500 mt-1 leading-relaxed">{subTitle}</Text>}
-
-				<Button size="sm" className="mt-3 text-white">
+				<View className={cn(icon, 'size-6 text-primary')} />
+				<Text className="text-sm font-medium">{title}</Text>
+				{subTitle && <Text className="text-xs opacity-60 leading-relaxed">{subTitle}</Text>}
+				<Button size="xs" className="mt-1">
 					{buttonText}
 				</Button>
 			</View>
