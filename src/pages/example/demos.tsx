@@ -263,7 +263,7 @@ export function NavItemDemo() {
 }
 
 export function TabsDemo() {
-	const [activeTab, setActiveTab] = useState<string | number>('tab1');
+	const [activeTab, setActiveTab] = useState<'tab1' | 'tab2'>('tab1');
 
 	return (
 		<View className="bg-white rounded-card overflow-hidden border border-zinc-100/80">
@@ -273,7 +273,7 @@ export function TabsDemo() {
 					{ label: '高级数据', value: 'tab2' },
 				]}
 				value={activeTab}
-				onChange={(val) => setActiveTab(val)}
+				onChange={setActiveTab}
 			/>
 			<View className="p-3">
 				<Text className="text-xs">
