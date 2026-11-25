@@ -15,13 +15,13 @@ import {
  * 账号密码登录
  * POST /login
  */
-export const accountLoginAPI = (data: AccountLoginRequest) => http.post<BaseResponse<LoginData>>('/login', data);
+export const accountLoginAPI = (data: AccountLoginRequest) => http.post<BaseResponse<LoginData>>('/auth/login', data);
 
 /**
  * 手机号验证码登录
  * POST /login/phone
  */
-export const phoneLoginAPI = (data: PhoneLoginRequest) => http.post<BaseResponse<LoginData>>('/login/phone', data);
+export const phoneLoginAPI = (data: PhoneLoginRequest) => http.post<BaseResponse<LoginData>>('/auth/login/phone', data);
 
 /**
  * 发送短信验证码
@@ -33,13 +33,13 @@ export const sendSmsCodeAPI = (phone: string) => http.post<BaseResponse<SendSmsC
  * 用户注册
  * POST /register
  */
-export const registerAPI = (data: RegisterRequest) => http.post<BaseResponse<null>>('/register', data);
+export const registerAPI = (data: RegisterRequest) => http.post<BaseResponse<null>>('/auth/register', data);
 
 /**
  * 退出登录
  * POST /logout
  */
-export const logoutAPI = () => http.post<BaseResponse<null>>('/logout');
+export const logoutAPI = () => http.post<BaseResponse<null>>('/auth/logout');
 
 /**
  * 微信 code 登录

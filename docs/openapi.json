@@ -1,0 +1,626 @@
+{
+	"openapi": "3.0.3",
+	"info": {
+		"title": "Base Taro 应用基座接口",
+		"version": "1.0.0",
+		"description": "根据 src/services 导出的标准 OpenAPI 3.0 文档，支持直接导入 Apifox 并开启云端 Mock 跑通登录、微信登录、注册、用户资料编辑、上传与登出完整闭环。"
+	},
+	"tags": [
+		{ "name": "认证授权", "description": "账号/手机号/微信登录、短信验证码、注册与退出" },
+		{ "name": "用户中心", "description": "获取与修改当前登录用户资料及密码" },
+		{ "name": "文件上传", "description": "图片/文档通用单文件上传" },
+		{ "name": "系统配置", "description": "应用全局基础配置" }
+	],
+	"components": {
+		"securitySchemes": {
+			"bearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		},
+		"schemas": {
+			"EmptyResponse": {
+				"type": "object",
+				"required": ["code", "msg", "data"],
+				"properties": {
+					"code": { "type": "integer", "enum": [200], "example": 200, "description": "业务状态码，200 表示成功" },
+					"msg": { "type": "string", "example": "操作成功" },
+					"data": { "type": "object", "nullable": true, "example": null }
+				}
+			},
+			"LoginData": {
+				"type": "object",
+				"required": ["token"],
+				"properties": {
+					"token": { "type": "string", "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.base_taro_mock_token" }
+				}
+			},
+			"UserInfo": {
+				"type": "object",
+				"properties": {
+					"userId": { "type": "integer", "example": 10001 },
+					"userName": { "type": "string", "example": "demo_user" },
+					"nickName": { "type": "string", "example": "测试用户" },
+					"email": { "type": "string", "example": "demo@example.com" },
+					"phonenumber": { "type": "string", "example": "13800138000" },
+					"sex": { "type": "string", "enum": ["0", "1"], "example": "0", "description": "0 男，1 女" },
+					"avatar": {
+						"type": "string",
+						"example": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&auto=format&fit=crop&q=80"
+					},
+					"createTime": { "type": "string", "example": "2026-01-01 10:00:00" }
+				}
+			},
+			"UploadFileItem": {
+				"type": "object",
+				"required": ["fileName", "filePath", "fileSize", "fileType"],
+				"properties": {
+					"fileName": { "type": "string", "example": "avatar_mock.jpg" },
+					"filePath": {
+						"type": "string",
+						"example": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&auto=format&fit=crop&q=80"
+					},
+					"fileSize": { "type": "integer", "example": 48210 },
+					"fileType": { "type": "string", "example": "jpg" }
+				}
+			},
+			"WeappConfig": {
+				"type": "object",
+				"required": ["appName"],
+				"properties": {
+					"appName": { "type": "string", "example": "Base Taro" },
+					"appLogo": { "type": "string", "example": "" },
+					"appDescription": { "type": "string", "example": "Taro 4 + React 18 + Tailwind CSS v4 应用基座" },
+					"servicePhone": { "type": "string", "example": "400-800-8888" },
+					"serviceEmail": { "type": "string", "example": "support@example.com" },
+					"copyright": { "type": "string", "example": "© 2026 Base Taro" },
+					"icp": { "type": "string", "example": "苏ICP备2026000001号" },
+					"banners": {
+						"type": "array",
+						"items": { "type": "string" },
+						"example": [
+							"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop&q=80"
+						]
+					}
+				}
+			}
+		}
+	},
+	"paths": {
+		"/login": {
+			"post": {
+				"tags": ["认证授权"],
+				"summary": "账号密码登录",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"required": ["username", "password"],
+								"properties": {
+									"username": { "type": "string", "example": "admin" },
+									"password": { "type": "string", "example": "123456" },
+									"code": { "type": "string", "description": "图形验证码（可选）" },
+									"uuid": { "type": "string", "description": "验证码唯一标识（可选）" }
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "登录成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "example": 200 },
+										"msg": { "type": "string", "example": "登录成功" },
+										"data": { "$ref": "#/components/schemas/LoginData" }
+									}
+								},
+								"example": {
+									"code": 200,
+									"msg": "登录成功",
+									"data": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.mock_account_token"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/login/phone": {
+			"post": {
+				"tags": ["认证授权"],
+				"summary": "手机号验证码登录",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"required": ["phone", "code"],
+								"properties": {
+									"phone": { "type": "string", "example": "13800138000" },
+									"code": { "type": "string", "example": "123456" }
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "登录成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "example": 200 },
+										"msg": { "type": "string", "example": "登录成功" },
+										"data": { "$ref": "#/components/schemas/LoginData" }
+									}
+								},
+								"example": {
+									"code": 200,
+									"msg": "登录成功",
+									"data": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.mock_phone_token"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/sms/code": {
+			"post": {
+				"tags": ["认证授权"],
+				"summary": "发送短信验证码",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"required": ["phone"],
+								"properties": {
+									"phone": { "type": "string", "example": "13800138000" }
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "发送成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "example": 200 },
+										"msg": { "type": "string", "example": "验证码已发送" },
+										"data": {
+											"type": "object",
+											"properties": {
+												"code": { "type": "string", "example": "123456" }
+											}
+										}
+									}
+								},
+								"example": {
+									"code": 200,
+									"msg": "验证码已发送",
+									"data": { "code": "123456" }
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/register": {
+			"post": {
+				"tags": ["认证授权"],
+				"summary": "用户注册",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"required": ["phone", "code", "password"],
+								"properties": {
+									"phone": { "type": "string", "example": "13800138000" },
+									"code": { "type": "string", "example": "123456" },
+									"password": { "type": "string", "example": "123456" },
+									"nickName": { "type": "string", "example": "新用户" }
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "注册成功",
+						"content": {
+							"application/json": {
+								"schema": { "$ref": "#/components/schemas/EmptyResponse" },
+								"example": { "code": 200, "msg": "注册成功", "data": null }
+							}
+						}
+					}
+				}
+			}
+		},
+		"/logout": {
+			"post": {
+				"tags": ["认证授权"],
+				"summary": "退出登录",
+				"security": [{ "bearerAuth": [] }],
+				"responses": {
+					"200": {
+						"description": "退出成功",
+						"content": {
+							"application/json": {
+								"schema": { "$ref": "#/components/schemas/EmptyResponse" },
+								"example": { "code": 200, "msg": "已退出登录", "data": null }
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/wx-login": {
+			"post": {
+				"tags": ["认证授权"],
+				"summary": "微信 code 登录",
+				"description": "支持两种场景：老用户直通返回 token（needBindPhone=false）；新用户返回 tempToken（needBindPhone=true）。可在 Apifox 高级 Mock 中切换期望。",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"required": ["code"],
+								"properties": {
+									"code": { "type": "string", "example": "0a1b2c3d4e5f" }
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "微信登录结果",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "example": 200 },
+										"msg": { "type": "string", "example": "ok" },
+										"data": {
+											"type": "object",
+											"required": ["needBindPhone"],
+											"properties": {
+												"needBindPhone": { "type": "boolean", "example": false },
+												"token": {
+													"type": "string",
+													"nullable": true,
+													"example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.mock_wx_token"
+												},
+												"tempToken": { "type": "string", "nullable": true, "example": null }
+											}
+										}
+									}
+								},
+								"examples": {
+									"oldUser": {
+										"summary": "老用户直通登录",
+										"value": {
+											"code": 200,
+											"msg": "ok",
+											"data": {
+												"needBindPhone": false,
+												"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.mock_wx_token",
+												"tempToken": null
+											}
+										}
+									},
+									"newUser": {
+										"summary": "新用户需绑定手机号",
+										"value": {
+											"code": 200,
+											"msg": "ok",
+											"data": {
+												"needBindPhone": true,
+												"token": null,
+												"tempToken": "mock_temp_uuid_889900"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/wx-bind-phone": {
+			"post": {
+				"tags": ["认证授权"],
+				"summary": "微信手机号授权绑定并登录",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"required": ["phoneCode", "tempToken"],
+								"properties": {
+									"phoneCode": { "type": "string", "example": "wx_phone_code_mock" },
+									"tempToken": { "type": "string", "example": "mock_temp_uuid_889900" }
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "绑定并登录成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "example": 200 },
+										"msg": { "type": "string", "example": "绑定成功" },
+										"data": { "$ref": "#/components/schemas/LoginData" }
+									}
+								},
+								"example": {
+									"code": 200,
+									"msg": "绑定成功",
+									"data": {
+										"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.mock_wx_bound_token"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/user/info": {
+			"get": {
+				"tags": ["用户中心"],
+				"summary": "获取当前登录用户信息",
+				"security": [{ "bearerAuth": [] }],
+				"responses": {
+					"200": {
+						"description": "用户信息",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "example": 200 },
+										"msg": { "type": "string", "example": "ok" },
+										"data": {
+											"type": "object",
+											"required": ["user"],
+											"properties": {
+												"user": { "$ref": "#/components/schemas/UserInfo" },
+												"roles": {
+													"type": "array",
+													"items": { "type": "string" },
+													"example": ["user"]
+												},
+												"permissions": {
+													"type": "array",
+													"items": { "type": "string" },
+													"example": ["*:*:*"]
+												}
+											}
+										}
+									}
+								},
+								"example": {
+									"code": 200,
+									"msg": "ok",
+									"data": {
+										"user": {
+											"userId": 10001,
+											"userName": "demo_user",
+											"nickName": "测试用户",
+											"email": "demo@example.com",
+											"phonenumber": "13800138000",
+											"sex": "0",
+											"avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&auto=format&fit=crop&q=80",
+											"createTime": "2026-01-01 10:00:00"
+										},
+										"roles": ["user"],
+										"permissions": ["*:*:*"]
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/user/profile": {
+			"put": {
+				"tags": ["用户中心"],
+				"summary": "修改个人信息",
+				"security": [{ "bearerAuth": [] }],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"required": ["nickName", "phonenumber", "email"],
+								"properties": {
+									"nickName": { "type": "string", "example": "新昵称" },
+									"phonenumber": { "type": "string", "example": "13800138000" },
+									"email": { "type": "string", "example": "demo@example.com" },
+									"sex": { "type": "string", "enum": ["0", "1"], "example": "0" },
+									"avatar": { "type": "string", "example": "https://example.com/avatar.jpg" }
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "修改成功",
+						"content": {
+							"application/json": {
+								"schema": { "$ref": "#/components/schemas/EmptyResponse" },
+								"example": { "code": 200, "msg": "修改成功", "data": null }
+							}
+						}
+					}
+				}
+			}
+		},
+		"/user/password": {
+			"put": {
+				"tags": ["用户中心"],
+				"summary": "修改登录密码",
+				"security": [{ "bearerAuth": [] }],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"required": ["oldPassword", "newPassword"],
+								"properties": {
+									"oldPassword": { "type": "string", "example": "123456" },
+									"newPassword": { "type": "string", "example": "654321" }
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "修改成功",
+						"content": {
+							"application/json": {
+								"schema": { "$ref": "#/components/schemas/EmptyResponse" },
+								"example": { "code": 200, "msg": "密码修改成功", "data": null }
+							}
+						}
+					}
+				}
+			}
+		},
+		"/file/upload": {
+			"post": {
+				"tags": ["文件上传"],
+				"summary": "上传单个文件",
+				"security": [{ "bearerAuth": [] }],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"required": ["file"],
+								"properties": {
+									"file": { "type": "string", "format": "binary", "description": "待上传文件" }
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "上传成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "example": 200 },
+										"msg": { "type": "string", "example": "上传成功" },
+										"data": { "$ref": "#/components/schemas/UploadFileItem" }
+									}
+								},
+								"example": {
+									"code": 200,
+									"msg": "上传成功",
+									"data": {
+										"fileName": "avatar_mock.jpg",
+										"filePath": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&auto=format&fit=crop&q=80",
+										"fileSize": 48210,
+										"fileType": "jpg"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/app/config": {
+			"get": {
+				"tags": ["系统配置"],
+				"summary": "获取应用全局配置",
+				"responses": {
+					"200": {
+						"description": "应用配置",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "example": 200 },
+										"msg": { "type": "string", "example": "ok" },
+										"data": { "$ref": "#/components/schemas/WeappConfig" }
+									}
+								},
+								"example": {
+									"code": 200,
+									"msg": "ok",
+									"data": {
+										"appName": "Base Taro",
+										"appLogo": "",
+										"appDescription": "Taro 4 + React 18 + Tailwind CSS v4 应用基座",
+										"servicePhone": "400-800-8888",
+										"serviceEmail": "support@example.com",
+										"copyright": "© 2026 Base Taro",
+										"icp": "苏ICP备2026000001号",
+										"banners": [
+											"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop&q=80"
+										]
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
