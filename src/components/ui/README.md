@@ -1,368 +1,255 @@
-# UI 组件库
+# UI 组件库 (`@/components/ui`)
 
-基于 Taro + React + Tailwind CSS 的小程序原子级 UI 组件集合。设计目标：薄封装、可组合、符合 shadcn 范式、可跨项目复制。
+基于 **Taro 4 + React 18 + Tailwind CSS v4 + Iconify (`@iconify-json/ph`)** 的小程序 & H5 双端原子级 UI 组件库。
 
-所有组件统一从 `@/components/ui` 导出：
+**设计理念**：薄封装、单组件优先、无业务耦合、开箱即用。所有组件统一从 `@/components/ui` 导出，并在 `src/pages/example/` 提供完整交互示例。
 
 ```tsx
-import { Page, Card, Button, FormItem, Badge, Avatar, Drawer, Tabs } from '@/components/ui';
+import { Page, Card, Heading, Button, Input, Textarea, FormItem, Badge, Avatar, Tabs, Drawer, Dialog } from '@/components/ui';
 ```
 
 ---
 
-## 目录
+## 统一设计规范
 
-- [前置依赖](#前置依赖)
-- 布局：[`Page`](#page)、[`Card`](#card)、[`Divider`](#divider)
-- 展示：[`Heading`](#heading)、[`Badge`](#badge)、[`Avatar`](#avatar)、[`Description`](#description)、[`Asset`](#asset)、[`Alert`](#alert)、[`Loading`](#loading)、[`Skeleton`](#skeleton)、[`Empty`](#empty)、[`Feedback`](#feedback)
-- 导航：[`Tabs`](#tabs)、[`GridNav`](#gridnav)、[`ColumnNav`](#columnnav)、[`EntryCard`](#entrycard)、[`Carousel`](#carousel)、[`SearchBar`](#searchbar)
-- 表单：[`FormItem`](#formitem)、[`Select`](#select)、[`Signature`](#signature)、[`ImageUploader`](#imageuploader)、[`FileUploader`](#fileuploader)、[`Rate`](#rate)
-- 交互：[`Button`](#button)、[`Dialog`](#dialog)、[`Drawer`](#drawer)、[`ImagePreview`](#imagepreview)
-
----
-
-## 前置依赖
-
-复制到其他项目时，请确认目标项目同样具备以下基础：
-
-| 类别 | 依赖                                                      |
-| ---- | --------------------------------------------------------- |
-| 框架 | `@tarojs/components`、`@tarojs/taro`、`react@18+`         |
-| 样式 | Tailwind CSS（小程序端推荐 `weapp-tailwindcss`）          |
-| 图标 | Iconify 的 class-based 用法（如 `icon-[ph--house-bold]`） |
+- **语义主题色 (`UiColor`)**：`'primary' | 'blue' | 'sky' | 'indigo' | 'emerald' | 'amber' | 'orange' | 'rose' | 'zinc'`
+- **灰色系**：全站统一使用 `zinc` 色阶（禁止混用 `slate` / `gray` / `neutral`）
+- **最小尺寸**：字号、阴影与组件尺寸最小档位为 `xs`（禁止 `text-[10px]` / `text-[11px]` / `text-[18rpx]` / `2xs`）
+- **文本色**：全局默认字色 `#18181b`（`zinc-900`）；自适应弱化文字使用 `opacity-60`，占位符与图标使用 `text-zinc-400` / `text-zinc-500`
+- **双端浮层**：`Drawer`、`Dialog`、`ImagePreview`、`FloatCustomerService` 在 H5 端自动通过 `portal.ts` 挂载到 `document.body`，规避路由层叠上下文与 TabBar 遮挡
 
 ---
 
-## 布局组件
+## 组件总览（共 38 个）
+
+| 分类 | 组件 |
+| --- | --- |
+| **布局与媒体** | `Page`、`Card`、`Divider`、`AspectRatio`、`Carousel`、`ImagePreview` |
+| **基础展示** | `Heading`、`Badge`、`Avatar`、`Gender`、`Icon`、`Asset`、`DescriptionList` / `Description`、`Skeleton` |
+| **导航与入口** | `NavBar`（含 `useNavInfo`）、`NavItem`、`Tabs`、`SearchBar`、`ActionTile`、`EntryCard`、`FloatQuickMenu`、`FloatCustomerService` |
+| **表单与输入** | `FormItem`、`Input`、`Textarea`、`Select`、`ImageUploader`、`FileUploader`、`Rate`、`Signature` |
+| **交互与反馈** | `Button`、`Alert`、`Loading`、`Empty`、`Feedback`、`AuthMask`、`Dialog`、`Drawer` |
+
+---
+
+## 布局与媒体
 
 ### Page
+页面级顶级容器，收归背景色 (`bg-main-bg`)、左右边距 (`container-x`)、页面级 Loading、底部 TabBar/安全区留白与可选悬浮快捷菜单。
 
-页面级 Layout 顶级容器组件。自动收归全站背景色、左右边距 (`paddingX`/`container-x`)、页面级 Loading 居中占位与底部 TabBar/安全区留白 (`hasTabBar`/`pb-safe`)。
-
-| Prop        | 类型        | 说明                                                   |
-| ----------- | ----------- | ------------------------------------------------------ |
-| `hasTabBar` | `boolean`   | 是否包含底部 TabBar（启用 `pb-24` 留白，默认 `false`） |
-| `paddingX`  | `boolean`   | 是否启用全站统一左右边距 (`container-x`)，默认 `true`  |
-| `loading`   | `boolean`   | 页面级统一 Loading 状态，默认 `false`                  |
-| `header`    | `ReactNode` | 页面顶部固定 Header 槽位 (如吸顶搜索栏)                |
-| `footer`    | `ReactNode` | 页面底部 Fixed 吸底操作栏槽位                          |
-
-```tsx
-// 1. 默认统一边距与 TabBar 留白页面
-<Page hasTabBar>
-  <View className="py-4">页面内容自动享受 container-x 左右边距</View>
-</Page>
-
-// 2. 带页面 Loading 状态与吸底按钮槽位
-<Page loading={isLoading} footer={<Button block>提交订单</Button>}>
-  <View>数据加载完成后显示内容...</View>
-</Page>
-```
-
-### AspectRatio
-
-宽高比约束容器组件（shadcn 架构）。将子元素（图片、视频、骨架屏等）强约束在指定的宽高比例容器内，有效防止图片/媒体异步加载时的布局塌陷与页面跳变 (CLS)。
-
-| Prop    | 类型     | 说明                                                              |
-| ------- | -------- | ----------------------------------------------------------------- |
-| `ratio` | `number` | 宽高比例（如 `16 / 9`, `4 / 3`, `1 / 1`, `3 / 4`），默认 `16 / 9` |
+| Prop | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `hasTabBar` | `boolean` | `false` | 是否为 TabBar 页（启用 `pb-24` 留白） |
+| `paddingX` | `boolean` | `true` | 是否启用全站左右边距 `container-x` |
+| `loading` | `boolean` | `false` | 页面级 Loading 状态 |
+| `showQuickMenu` | `boolean` | `true` | 是否挂载右下角 `FloatQuickMenu` |
+| `header` | `ReactNode` | - | 顶部自定义插槽 |
 
 ```tsx
-// 1. 16:9 经典横屏 Banner 比例
-<AspectRatio ratio={16 / 9} className="rounded-card">
-  <Image src="https://.../banner.jpg" className="size-full" mode="aspectFill" />
-</AspectRatio>
-
-// 2. 1:1 方图或 4:3 列表比例
-<AspectRatio ratio={1 / 1} className="rounded-card">
-  <Image src="https://.../thumb.jpg" className="size-full" mode="aspectFill" />
-</AspectRatio>
+<Page hasTabBar showQuickMenu={false}>
+  <View className="py-4">页面内容</View>
+</Page>
 ```
 
 ### Card
+统一卡片容器，支持 `vertical`（纵向）与 `horizontal`（横向）布局。
 
-卡片容器组件，提供统一的背景、圆角、边框、阴影、内边距控制，支持纵向 (`vertical`) 与横向 (`horizontal`) 布局。
-
-| Prop        | 类型                         | 说明                                             |
-| ----------- | ---------------------------- | ------------------------------------------------ |
-| `layout`    | `'vertical' \| 'horizontal'` | 布局方向，默认 `'vertical'`                      |
-| `noPadding` | `boolean`                    | 取消内边距（适合顶部通栏大图卡片），默认 `false` |
-| `rounded`   | `boolean`                    | 是否启用圆角，默认 `true`                        |
-| `clickable` | `boolean`                    | 点击缩放反馈（传入 `onClick` 时默认开启）        |
+| Prop | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `layout` | `'vertical' \| 'horizontal'` | `'vertical'` | 布局方向 |
+| `noPadding` | `boolean` | `false` | 取消默认内边距（适合顶部通栏大图卡片） |
+| `rounded` | `boolean` | `true` | 是否启用 `rounded-card` |
+| `clickable` | `boolean` | `Boolean(onClick)` | 点击缩放反馈 |
 
 ```tsx
-// 1. 基础卡片
 <Card className="gap-2" onClick={goDetail}>
-  <Heading title="奢品鉴定服务" subtitle="发布时间：2026-07-29" />
-  <Text className="text-xs opacity-80">内容摘要描述...</Text>
-</Card>
-
-// 2. 通栏大图卡片
-<Card noPadding onClick={goDetail}>
-  <Image src="https://.../cover.jpg" mode="aspectFill" className="w-full h-36" />
-  <View className="p-4 flex flex-col gap-2">
-    <Text className="font-medium">Rolex 劳力士预估服务</Text>
-    <Text className="text-xs opacity-60">包含机芯检测与行情参考</Text>
-  </View>
-</Card>
-
-// 3. 横向图文卡片
-<Card layout="horizontal" onClick={goDetail}>
-  <Image src="https://.../thumb.jpg" mode="aspectFill" className="w-24 h-20 rounded shrink-0" />
-  <View className="flex-1 min-w-0 flex flex-col justify-between">
-    <Text className="font-medium text-sm line-clamp-2">最新便民社区服务指南</Text>
-    <Text className="text-xs opacity-60">2026-07-29</Text>
-  </View>
+  <Heading title="卡片标题" subtitle="2026-11-25" />
+  <Text className="text-xs opacity-60">摘要内容...</Text>
 </Card>
 ```
 
 ### Divider
-
-分割线，可水平/垂直、可虚线、可在中间嵌入文字。
+水平/垂直分割线，支持虚线与中间嵌入文本。
 
 ```tsx
-<Divider>—— 我是分割线 ——</Divider>
-<Divider dashed className="my-2" />
-<View>左<Divider orientation="vertical" />右</View>
+<Divider />
+<Divider dashed />
+<Divider>中间文字</Divider>
+<View className="flex items-center">左<Divider orientation="vertical" />右</View>
+```
+
+### AspectRatio
+宽高比约束容器，防止媒体异步加载导致的布局跳变。
+
+```tsx
+<AspectRatio ratio={16 / 9} className="rounded-card bg-zinc-100">
+  <Image src={cover} className="size-full rounded-card" mode="aspectFill" />
+</AspectRatio>
+```
+
+### Carousel
+轮播图组件，支持数据驱动 (`list` + 可选 `renderItem`) 及高度/圆角配置。
+
+```tsx
+<Carousel
+  list={banners}
+  heightClass="h-44"
+  onItemClick={(item) => item.url && mapsTo(item.url)}
+/>
+```
+
+### ImagePreview
+全屏图片预览组件（H5 自动 Portal 挂载），同时提供静态方法 `ImagePreview.show({ urls, current })` 调起原生预览。
+
+```tsx
+<ImagePreview open={visible} urls={urls} current={0} onClose={() => setVisible(false)} />
+ImagePreview.show({ urls, current: 0 });
 ```
 
 ---
 
-## 展示组件
+## 基础展示
 
 ### Heading
-
-模块级标题，左侧装饰条/图标 + 标题 + 可选副标题 + 右侧统一 `extra` 扩充与 `onExtraClick` 回调。
+区块标题组件，基于 `currentColor` 自动适配深/浅背景。
 
 ```tsx
-// 1. 快捷字符串 extra (自动渲染文本与右侧箭头)
-<Heading title="今日活动" subtitle="精选 3 场" extra="查看全部" onExtraClick={goActivity} />
-
-// 2. 自定义 ReactNode extra (如微型按钮或 Badge)
-<Heading title="最新通知" extra={<Badge variant="primary" size="xs">3条未读</Badge>} />
+<Heading title="最新动态" subtitle="共 12 条" size="md" icon="icon-[ph--sparkle-duotone]" extra="查看全部" onExtraClick={goMore} />
 ```
 
 ### Badge
-
-徽章/标签组件，提供标准化 CVA 语义变体，支持 `dot` 状态点与前缀图标。
-
-| Prop      | 类型                                                                                                           | 说明                   |
-| --------- | -------------------------------------------------------------------------------------------------------------- | ---------------------- |
-| `variant` | `UiColor` (`'primary' \| 'blue' \| 'sky' \| 'indigo' \| 'emerald' \| 'amber' \| 'orange' \| 'rose' \| 'zinc'`) | 颜色主题，默认 `zinc`  |
-| `size`    | `'sm' \| 'md' \| 'lg'`                                                                                         | 尺寸，默认 `sm`        |
-| `pill`    | `boolean`                                                                                                      | 是否胶囊圆角           |
-| `dot`     | `boolean`                                                                                                      | 文字左侧是否显示状态点 |
-| `icon`    | `ReactNode` \| `string`                                                                                        | 前缀图标               |
+语义徽章标签，支持 `UiColor`、`pill` 胶囊、`dot` 状态点与前缀 `icon`。
 
 ```tsx
 <Badge variant="emerald" dot>已上线</Badge>
 <Badge variant="amber" dot>审核中</Badge>
-<Badge variant="destructive">已驳回</Badge>
-<Badge variant="outline">轮播标签</Badge>
-<Badge variant="secondary" pill>VIP 胶囊</Badge>
+<Badge variant="zinc" pill>默认标签</Badge>
 ```
 
 ### Avatar
-
-头像组件，支持 `xs` / `sm` / `md` / `lg` / `xl` 五档尺寸，图片加载失败或未传 `src` 时自动回退为首字母彩底占位，也支持通过 `fallback` 自定义兜底内容。
+头像组件，支持 `xs` / `sm` / `md` / `lg` / `xl` 五档尺寸，无图或加载失败时自动回退为首字母彩底占位，支持自定义 `fallback`。
 
 ```tsx
-// 1. 标准头像（带首字母自动兜底）
 <Avatar src={user.avatar} name={user.nickName} size="lg" />
-
-// 2. 自定义兜底图标
-<Avatar src={user.avatar} fallback={<View className="icon-[ph--user] size-5 text-zinc-400" />} />
 ```
 
-### Description / DescriptionList
-
-描述项与规格数据表组件族。导出 `<DescriptionList>`（容器，支持 `divider` 边框线）与 `<Description>`。
+### Gender
+性别图标徽标（`'0'` 蓝男标、`'1'` 红女标，未知返回 `null`），支持 `xs` / `sm` / `md`。
 
 ```tsx
-<DescriptionList divider>
-	<Description label="鉴定订单号" value="ORD-20260729-8890" variant="between" />
-	<Description label="评估分类" value="腕表 / 劳力士" variant="between" />
-	<Description
-		label="服务方式"
-		value={
-			<Badge size="xs" variant="success">
-				上门核验
-			</Badge>
-		}
-		variant="between"
-	/>
-	<Description label="服务备注" value="客户要求在 18:00 前联系并确认上门地址。" variant="start" />
-</DescriptionList>
+<Gender gender="0" size="sm" />
+```
+
+### Icon
+通用图标与带底块图标容器，支持 `shape="none" | "circle" | "square"`、`size="sm" | "md" | "lg" | number` 与 `UiColor` 主题。
+
+```tsx
+<Icon icon="icon-[ph--shield-check-duotone]" shape="square" size="md" theme="primary" />
 ```
 
 ### Asset
-
-上下结构的数值展示，常用于个人中心头部"已发布 / 已完成"等数据。
+上下结构的数据指标展示，常用于个人中心或统计卡片。
 
 ```tsx
-<View className="flex">
-	<Asset label="已发布" value={12} />
-	<Asset label="进行中" value={3} valueColor="text-emerald-500" />
+<View className="flex items-center">
+  <Asset label="已发布" value={12} />
+  <Asset label="进行中" value={3} valueColor="text-emerald-500" />
 </View>
 ```
 
-### Alert
-
-行内提示条组件，支持语义色变体（`default` / `info` / `warning` / `success` / `destructive` / `error`）、可选标题 (`title`) 与右侧扩展操作区 (`extra`)。
+### DescriptionList / Description
+键值规格列表，`DescriptionList` 通过 Context 统一控制 `divider` 分隔线。
 
 ```tsx
-// 1. 基础提示
-<Alert variant="info">请确保凭证边缘完整、公章清晰，格式支持 JPG、PNG</Alert>
-
-// 2. 带标题与右侧操作按钮
-<Alert
-  variant="warning"
-  title="审核提示"
-  extra={<Button size="xs" variant="amber" appearance="soft">撤回</Button>}
->
-  您提交的凭证将在 1-3 个工作日内完成人工审核。
-</Alert>
+<DescriptionList divider>
+  <Description label="订单编号" value="ORD-20261125-01" variant="between" />
+  <Description label="当前状态" value={<Badge variant="emerald">已完成</Badge>} variant="between" />
+</DescriptionList>
 ```
 
-### Loading
-
-通用加载占位（中心 spinner + 文案）。
-
-```tsx
-return isLoading ? <Loading title="加载中..." /> : <List />;
-```
-
-### Empty
-
-空状态占位组件，支持自定义图标 (`icon`) 或插图 (`image`)、标题/副标题 (`ReactNode`) 以及快捷按钮 (`buttonText` + `onButtonClick`) 或自定义 `action`。
+### Skeleton
+原子骨架屏占位块，通过 `className` 自由组合尺寸与形状。
 
 ```tsx
-// 1. 快捷按钮模式
-<Empty title="暂无任何评估订单" subTitle="您可以提交需求开始体验" buttonText="去申请" onButtonClick={goApply} />
-
-// 2. 自定义操作区
-<Empty title="暂无数据" subTitle="试试其他搜索关键词吧" action={<Button size="sm" onClick={reset}>重新加载</Button>} />
-```
-
-### Feedback
-
-落地反馈/结果页（成功、失败、加载等大版式），可插入中间内容与底部按钮。
-
-```tsx
-<Feedback
-	variant="success"
-	title="支付成功"
-	subtitle="感谢您的支持"
-	extra={
-		<Button block onClick={back}>
-			返回订单
-		</Button>
-	}
-/>
+<Skeleton className="size-10 rounded-full" />
+<Skeleton className="h-4 w-2/3" />
 ```
 
 ---
 
-## 导航组件
+## 导航与入口
+
+### NavBar & `useNavInfo`
+自定义顶部导航栏（配合页面 `navigationStyle: 'custom'`），自动适配微信胶囊高度，支持滚动透明渐变吸顶与 Logo 自动反白。
+
+```tsx
+<NavBar title="首页" theme="light" transparent />
+```
+
+### NavItem
+统一导航项，支持 `layout="grid"`（宫格）与 `layout="list"`（列表），支持小程序 `openType` 与右侧 `extra`。
+
+```tsx
+<NavItem label="帮助中心" icon="icon-[ph--question]" variant="primary" onClick={goHelp} />
+<NavItem layout="list" label="在线客服" icon="icon-[ph--headset]" openType="contact" border={false} />
+```
 
 ### Tabs
-
-数据驱动选项卡组件，支持均分与横向滚动 (`scrollable`)、吸顶 (`sticky`)。
+数据驱动泛型选项卡（`Tabs<T>`），支持均分与横向滚动 (`scrollable`)、吸顶 (`sticky`)，重复点击当前项自动拦截。
 
 ```tsx
 <Tabs
-	tabs={[
-		{ label: '全部', value: 'all' },
-		{ label: '进行中', value: 'serving' },
-	]}
-	value={tab}
-	onChange={(val) => setTab(val)}
+  tabs={[{ label: '全部', value: 'all' }, { label: '进行中', value: 'active' }]}
+  value={tab}
+  onChange={setTab}
 />
-```
-
-### NavItem / GridNav / ColumnNav
-
-导航项统一组件族（支持 `layout="grid"` 垂直宫格与 `layout="list"` 横向列表），彻底解耦 `path` 转向 `onClick` 与小程序原生 `openType`（如 `openType="contact"` 微信客服）。保留 `GridNav` 与 `ColumnNav` 别名。
-
-```tsx
-// 1. Grid 宫格导航形态 (layout="grid")
-<View className="grid grid-cols-4 gap-4">
-  <NavItem label="需求大厅" icon="icon-[ph--hand-coins]" variant="primary" onClick={goDemand} />
-  <NavItem label="志愿活动" icon="icon-[ph--confetti]" variant="success" onClick={goActivity} />
-</View>
-
-// 2. List 列表条目形态 (layout="list"，含微信客服与 ghost 变体)
-<NavItem layout="list" icon="icon-[ph--gear]" label="设置" onClick={goSettings} />
-<NavItem layout="list" icon="icon-[ph--headset]" label="联系客服" openType="contact" border={false} />
-```
-
-### EntryCard
-
-带主题色背景与装饰的玄关式入口卡片。
-
-```tsx
-<EntryCard
-	theme="orange"
-	icon="icon-[ph--user-focus-duotone]"
-	title="志愿者认证"
-	desc="完成实名认证后可承接需求"
-	url="/pages/apply/volunteer/index"
-/>
-```
-
-### Carousel
-
-轮播图组件，支持数据驱动 (`list` + 可选 `renderItem`) 及高度/圆角配置。
-
-```tsx
-<Carousel list={bannerList} heightClass="h-44" onItemClick={(item) => item.url && Taro.navigateTo({ url: item.url })} />
 ```
 
 ### SearchBar
-
-搜索栏组件（shadcn 范式），支持 `variant="filled" | "outline"` 变体、`pill` 胶囊圆角、`action` 右侧解耦槽位 (可自由传入 `<Button>` 或文本)、只读跳转模式与 `onClear` 清除事件。
+搜索栏组件，支持 `variant="filled" | "outline"`、`pill`、`readonly` 跳转模式、`action` 外置槽位与清空按钮。
 
 ```tsx
-// 1. filled 填充胶囊搜索框 (解耦外置按钮 Slot)
-<SearchBar
-  variant="filled"
-  action={<Button size="xs" onClick={doSearch}>搜索</Button>}
-  value={kw}
-  onInput={setKw}
-  onClear={() => setKw('')}
-  placeholder="搜索物品或服务..."
-/>
-
-// 2. outline 线框模式
-<SearchBar variant="outline" placeholder="搜索关键词" />
-
-// 3. 只读跳转模式
-<SearchBar readonly placeholder="搜索需求" onClick={() => Taro.navigateTo({ url: '/pages/search/index' })} />
+<SearchBar variant="filled" value={kw} onInput={setKw} placeholder="搜索关键词..." action={<Button size="sm">搜索</Button>} />
 ```
+
+### ActionTile
+快捷功能磁贴，支持 `layout="square" | "compact"`、`tone="dark" | "light"` 与 `UiColor` 主题，可展示统计数值 (`value` + `unit`) 或副标题。
+
+```tsx
+<ActionTile layout="square" tone="dark" theme="primary" title="UI 组件库" subTitle="完整交互示例" icon="icon-[ph--squares-four-duotone]" />
+```
+
+### EntryCard
+带主题渐变背景与装饰图标的入口卡片，支持 `theme?: UiColor` 与 `disabled`。
+
+```tsx
+<EntryCard theme="blue" icon="icon-[ph--buildings-duotone]" title="企业认证" desc="完成资质核验解锁服务" onClick={goAuth} />
+```
+
+### FloatQuickMenu & FloatCustomerService
+可拖拽悬浮组件（纯 CSS `fixed` + 触摸拖拽，已规避 H5 `MovableArea` 懒加载水合 Bug）：
+- `FloatQuickMenu`：快捷返回/首页/置顶菜单（`Page` 默认内置，可通过 `showQuickMenu={false}` 关闭）。
+- `FloatCustomerService`：在线客服悬浮球（`openType="contact"`，H5 自动 Portal 挂载）。
 
 ---
 
-## 表单组件
+## 表单与输入
 
 ### FormItem
-
-表单项容器组件，专注于字段标签 (`label`)、必填标识 (`required`)、辅助说明 (`helper`)、错误提示 (`error`) 与 `row` / `column` 排版。`border` 默认在 `row` 模式下开启、`column` 模式下关闭。
+纯粹的表单项布局容器，负责 `label`（支持 `ReactNode`）、`required`、`helper`、`error` 与 `row` / `column` 排版。`border` 默认在 `row` 模式下开启、`column` 模式下关闭。
 
 ```tsx
-// 1. row 模式（左右排版，搭配 ghost Input）
-<FormItem label="微信真实姓名" required helper="用于核对估价协议与转账卡号">
-  <Input variant="ghost" inputClassName="text-right" value={form.name} onChange={(v) => setField('name', v)} />
+<FormItem label="真实姓名" required helper="用于实名核验">
+  <Input variant="ghost" inputClassName="text-right" value={name} onChange={setName} placeholder="请输入姓名" />
 </FormItem>
 
-// 2. column 模式（上下排版，搭配 filled Input 与错误提示）
-<FormItem layout="column" label="提现银行卡号" required error={form.bankCard ? '' : '银行卡号不能为空'}>
-  <Input variant="filled" placeholder="请输入卡号" value={form.bankCard} onChange={(v) => setField('bankCard', v)} clearable />
+<FormItem layout="column" label="详细地址" error={addrError}>
+  <Input variant="filled" value={addr} onChange={setAddr} clearable error={!!addrError} />
 </FormItem>
 ```
 
 ### Input
-
-单行输入框组件，支持 `filled`（淡灰框）/ `underline`（下划线）/ `ghost`（无边框）三种变体，以及前后缀插槽 (`prefix`/`suffix`)、一键清空 (`clearable`) 和错误态 (`error`)。
+单行输入框，支持 `variant="filled" | "underline" | "ghost"`、`prefix`、`suffix`、`clearable`、`error`、`onChange` 与 `inputClassName`。
 
 ```tsx
 <Input variant="filled" prefix="icon-[ph--user]" placeholder="请输入账号" value={val} onChange={setVal} clearable />
@@ -370,202 +257,75 @@ return isLoading ? <Loading title="加载中..." /> : <List />;
 ```
 
 ### Textarea
-
-多行文本域组件，支持 `filled` / `outlined` / `ghost` 三种变体、右下角字数统计 (`showCount`) 与错误态 (`error`)。
+多行文本域，支持 `variant="filled" | "outlined" | "ghost"`、右下角字数统计 (`showCount`) 与 `error`。
 
 ```tsx
-<Textarea variant="filled" placeholder="请输入详细描述..." value={desc} onChange={setDesc} maxlength={200} showCount />
+<Textarea variant="filled" placeholder="请输入描述..." value={desc} onChange={setDesc} maxlength={200} showCount />
 ```
 
 ### Select
-
-全能选择器组件（收归普通单选 `selector`、日期 `date`、省市区 `region`、时间 `time`），统一支持 `outlined`（框体卡片）/ `underline`（单下划线）/ `ghost`（极简行内）三种主题变体。
-
-| Prop          | 类型                                         | 适用模式   | 说明                                   |
-| ------------- | -------------------------------------------- | ---------- | -------------------------------------- |
-| `mode`        | `'selector' \| 'date' \| 'region' \| 'time'` | 全部       | 选择器模式，默认 `'selector'`          |
-| `variant`     | `'outlined' \| 'underline' \| 'ghost'`       | 全部       | 变体风格，默认 `'outlined'`            |
-| `placeholder` | `string`                                     | 全部       | 占位文案                               |
-| `icon`        | `ReactNode \| string`                        | 全部       | 左侧图标                               |
-| `children`    | `ReactNode`                                  | 全部       | 自定义触发插槽（不传则渲染内置标准框） |
-| `options`     | `(T \| string \| number)[]`                  | `selector` | 数据源数组                             |
-| `value`       | `any`                                        | 全部       | 当前选中的值                           |
-| `onChange`    | `Function`                                   | 全部       | 选中变更回调（根据 mode 智能推导参数） |
-| `fields`      | `'year' \| 'month' \| 'day'`                 | `date`     | 日期选择粒度，默认 `'day'`             |
+全能选择器，支持 `mode="selector" | "date" | "region" | "time"`（`region` 内置本地省市区数据），统一提供 `outlined` / `underline` / `ghost` 三种风格。
 
 ```tsx
-// 1. 普通下拉单选 (估价页 / 独立卡片)
-<Select
-  options={categoryList}
-  value={selectedCatId}
-  onChange={(val) => setCatId(val)}
-  placeholder="请点击选择大类"
-  icon="icon-[ph--cube-light]"
-  variant="outlined"
-/>
-
-// 2. 日期 / 生日选择 (mode="date")
-<Select
-  mode="date"
-  variant="underline"
-  value={birthday}
-  onChange={(dateStr) => setBirthday(dateStr)}
-  placeholder="请选择生日"
-  icon="icon-[ph--calendar-light]"
-/>
-
-// 3. 省市区级联选择 (mode="region")
-<Select
-  mode="region"
-  variant="ghost"
-  value={regionCodes}
-  onChange={(res) => setRegion(res.province.name + res.city.name)}
-/>
+<Select mode="selector" options={options} value={val} onChange={setVal} placeholder="请选择" />
+<Select mode="date" variant="underline" value={date} onChange={setDate} />
+<Select mode="region" value={region} onChange={(res) => setRegion(res.rawNames || [])} />
 ```
 
-### ImageUploader
+### ImageUploader & FileUploader
+- `ImageUploader`：单图/多图上传组件（`maxCount` 控制模式），内置点击预览与 `readonly` 只读态。
+- `FileUploader`：微信聊天文档选择与上传组件（支持 PDF/Word 等格式预览与清除）。
 
-图片上传组件，支持单图/多图模式，内置点击大图预览 (`preview`) 与只读模式 (`readonly`)。
-
-| Prop       | 类型                                     | 说明                                                                 |
-| ---------- | ---------------------------------------- | -------------------------------------------------------------------- |
-| `value`    | `string[]`                               | 已上传图片 URL 数组                                                  |
-| `onChange` | `(urls: string[]) => void`               | 图片列表变动回调                                                     |
-| `onUpload` | `(paths: string[]) => Promise<string[]>` | 处理实际上传接口，返回最终 URL 数组                                  |
-| `maxCount` | `number`                                 | 最大上传数量，默认 `1`（单图为全宽卡片，>1 为九宫格）                |
-| `preview`  | `boolean`                                | 点击已上传缩略图是否自动调起大图预览，默认 `true`                    |
-| `readonly` | `boolean`                                | 是否只读态（只读模式下隐藏上传按钮与删除角标，仅展示图片与点击放大） |
-
-```tsx
-// 1. 多图上传态 (带上传回调与大图预览)
-<ImageUploader
-  maxCount={4}
-  value={urls}
-  onChange={setUrls}
-  onUpload={uploadApi}
-  label="添加凭证"
-/>
-
-// 2. 只读态 (表单查看页)
-<ImageUploader readonly value={urls} />
-```
+### Rate & Signature
+- `Rate`：星级评分组件，支持交互评分、自定义文案 `texts` 与 `readonly`。
+- `Signature`：微信原生 Canvas 2D 手写签名画板，支持一键清空与透明 PNG 导出。
 
 ---
 
-## 交互组件
+## 交互与反馈
 
 ### Button
-
-多变体、多尺寸按钮组件（shadcn 范式），支持左侧 `icon` 图标、全局原生伪元素边框防锯齿重置与 `destructive` / `outline` 变体。
+多外观多尺寸按钮，支持 `size="xs" | "sm" | "md" | "lg" | "xl"`、`appearance="solid" | "soft" | "outline" | "ghost"`、`variant?: UiColor | 'none'`、`icon`、`block`、`loading`、`rounded`。
 
 ```tsx
-<Button variant="primary" icon="icon-[ph--paper-plane]" onClick={submit}>提交</Button>
-<Button variant="outline" size="sm">取消</Button>
-<Button variant="destructive" size="xs">删除记录</Button>
+<Button size="md" variant="primary" icon="icon-[ph--paper-plane-tilt-bold]" loading={submitting} onClick={submit}>
+  提交
+</Button>
+<Button size="sm" variant="zinc" appearance="outline">取消</Button>
 ```
 
-### Drawer
-
-抽屉组件，支持 `right` / `bottom` / `left` / `top` 四个弹出方向，内置标题栏 (`title`/`description`)、滚动内容区（可通过 `scrollable={false}` 关闭以自管内部 `ScrollView`）与吸底操作栏 (`footer`)。
+### Alert
+行内提示条，支持 `variant="default" | "info" | "warning" | "success" | "destructive" | "error"`、可选 `title` 与右侧 `extra` 操作区。
 
 ```tsx
-// 1. 右侧弹出筛选抽屉
-<Drawer
-  open={isOpen}
-  onOpenChange={setIsOpen}
-  position="right"
-  title="高阶参数筛选"
-  description="筛选条件设置"
-  footer={
-    <>
-      <Button appearance="outline" size="xs" onClick={reset}>重置</Button>
-      <Button variant="primary" size="xs" onClick={apply}>确定</Button>
-    </>
-  }
->
-  <View className="p-4">筛选内容区...</View>
+<Alert variant="warning" title="审核提示" extra={<Button size="xs" variant="amber" appearance="soft">去修改</Button>}>
+  您提交的材料将在 1-3 个工作日内完成审核。
+</Alert>
+```
+
+### Loading / Empty / Feedback
+- `Loading`：通用旋转加载占位（`<Loading title="加载中..." />`）。
+- `Empty`：空状态占位，支持 `title`/`subTitle`（`ReactNode`）、`icon`/`image`、`buttonText`+`onButtonClick` 或自定义 `action`，并提供 `setDefaultEmptyImage(url)` 全局注册默认插图。
+- `Feedback`：大版式落地结果页，支持 `variant="success" | "error" | "warning" | "info" | "loading"`、`title`、`subtitle` 与底部 `extra`。
+
+### AuthMask
+未登录局部高斯模糊遮罩组件，控制 `locked` 切换遮挡态与正常内容态。
+
+```tsx
+<AuthMask locked={!isLoggedIn} title="登录后查看完整数据" onLoginClick={goLogin}>
+  <Card>受保护内容</Card>
+</AuthMask>
+```
+
+### Dialog & Drawer
+均为单组件声明式 API（H5 端自动 Portal 挂载至 `document.body`，完整覆盖 TabBar）：
+- `Dialog`：居中模态对话框（`open` / `onOpenChange` / `title` / `description` / `footer` / `showClose`）。
+- `Drawer`：四向滑出抽屉（`position="right" | "bottom" | "left" | "top"`、`sizeClass`、`title`、`description`、`footer`、`scrollable`）。
+
+```tsx
+<Dialog open={open} onOpenChange={setOpen} title="二次确认" description="确定删除该记录吗？" footer={<Button size="xs" variant="rose" onClick={del}>确认</Button>} />
+
+<Drawer open={open} onOpenChange={setOpen} position="bottom" title="筛选条件" footer={<Button block onClick={apply}>确定</Button>}>
+  <View className="p-4">抽屉内容</View>
 </Drawer>
-
-// 2. 底部弹出面板
-<Drawer
-  open={isBottomOpen}
-  onOpenChange={setBottomOpen}
-  position="bottom"
-  title="确认预约"
-  footer={<Button block variant="primary" onClick={confirm}>提交</Button>}
->
-  <View className="p-4">确认信息...</View>
-</Drawer>
 ```
-
-### ImagePreview
-
-全屏高保真图片预览组件，支持单图及多图 Swiper 滚动预览（带 `1 / 5` 页码指示器与底部动作栏），并提供静态快捷 API `ImagePreview.show({ urls, current })`。
-
-```tsx
-// 1. JSX 组件模式
-<ImagePreview open={visible} urls={imgList} current={0} onClose={() => setVisible(false)} />;
-
-// 2. 静态 Helper API 直接调起原生全屏预览
-ImagePreview.show({ urls: imgList, current: 0 });
-```
-
-### Dialog
-
-居中模态对话框组件，内置高斯模糊遮罩、缩放动画、关闭按钮以及 `title`、`description`、`footer` 槽位。
-
-```tsx
-<Dialog
-	open={open}
-	onOpenChange={setOpen}
-	title="二次确认"
-	description="确定要删除此条记录吗？"
-	footer={
-		<>
-			<Button size="xs" appearance="outline" onClick={() => setOpen(false)}>
-				取消
-			</Button>
-			<Button size="xs" variant="rose" onClick={handleDelete}>
-				删除
-			</Button>
-		</>
-	}
-/>
-```
-
-### Skeleton
-
-骨架屏原子组件，基于 Tailwind `animate-pulse` 实现预加载占位，通过 `className` 自由组合任意尺寸与形状。
-
-```tsx
-<Skeleton className="size-10 rounded-full" />
-<Skeleton className="h-4 w-full" />
-<Skeleton className="h-32 w-full rounded-card" />
-```
-
-### Signature
-
-亲笔手写签名画板组件。基于微信原生 Canvas 2D 高清绘制（自动适配 Retina 屏幕像素比），0 外部依赖，支持平滑圆润笔触、防空白拦截、一键重写与透明背景 PNG 导出。
-
-```tsx
-<Signature
-	height={200}
-	strokeWidth={3.5}
-	placeholder="请在此区域亲笔手写您的全名"
-	onConfirm={(tempFilePath) => {
-		console.log('导出透明签名图片路径:', tempFilePath);
-	}}
-	onClear={() => {
-		console.log('签名已清空');
-	}}
-/>
-```
-
----
-
-## 设计约定
-
-- **样式来源**：组件内部直接写 Tailwind class，样式覆盖优先通过 `className` 追加。
-- **数据流**：组件保持**纯展示与解耦**；副作用（请求、Toast、跳转）通过回调交由业务侧。
-- **命名空间**：原子 UI 组件放在 `components/ui/`，业务组件放在 `components/biz/`。
-- **图标**：统一使用 Iconify Phosphor（如 `icon-[ph--gear]`）。
