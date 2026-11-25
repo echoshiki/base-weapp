@@ -1,17 +1,7 @@
 import { View, Text, Input, ScrollView } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import { useCallback, useEffect, useState } from 'react';
-import {
-	Page,
-	Button,
-	Drawer,
-	DrawerContent,
-	DrawerHeader,
-	DrawerTitle,
-	DrawerFooter,
-	Empty,
-	Alert,
-} from '@/components/ui';
+import { Page, Button, Drawer, Empty, Alert } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
 import { getEnterpriseOptionsAPI } from '@/services/auth';
 import { EnterpriseOptionItem } from '@/types/auth';
@@ -304,15 +294,25 @@ const EnterpriseRegisterPage = () => {
 			</View>
 
 			{/* 企业列表动态搜索选择抽屉 */}
-			<Drawer isOpen={drawerOpen} onClose={() => setDrawerOpen(false)} position="bottom">
-				<DrawerContent sizeClass="h-[75vh] overflow-hidden">
-					<View className="flex flex-col h-[75vh]">
-						<DrawerHeader>
-							<DrawerTitle>选择归属企业</DrawerTitle>
-						</DrawerHeader>
-
-						{/* 搜索栏 */}
-						<View className="px-4 py-3 border-b border-slate-100 shrink-0">
+			<Drawer
+				open={drawerOpen}
+				onClose={() => setDrawerOpen(false)}
+				position="bottom"
+				sizeClass="h-[75vh]"
+				title="选择归属企业"
+				scrollable={false}
+				footer={
+					<View
+						onClick={handleSwitchToManual}
+						className="w-full py-2.5 rounded-xl bg-primary/5 border border-primary/20 flex items-center justify-center gap-1.5 cursor-pointer active:bg-blue-100"
+					>
+						<View className="icon-[ph--pencil-simple-line] size-4 text-primary" />
+						<Text className="text-sm text-primary">未找到我的企业？点击手动输入名称</Text>
+					</View>
+				}
+			>
+				{/* 搜索栏 */}
+				<View className="px-4 py-3 border-b border-slate-100 shrink-0">
 							<View className="flex items-center gap-2">
 								<View className="flex-1 flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-3 h-10">
 									<View className="icon-[ph--magnifying-glass] size-4 text-slate-400 shrink-0" />
@@ -395,18 +395,6 @@ const EnterpriseRegisterPage = () => {
 								) : null}
 							</View>
 						</ScrollView>
-
-						<DrawerFooter>
-							<View
-								onClick={handleSwitchToManual}
-								className="w-full py-2.5 rounded-xl bg-primary/5 border border-primary/20 flex items-center justify-center gap-1.5 cursor-pointer active:bg-blue-100"
-							>
-								<View className="icon-[ph--pencil-simple-line] size-4 text-primary" />
-								<Text className="text-sm text-primary">未找到我的企业？点击手动输入名称</Text>
-							</View>
-						</DrawerFooter>
-					</View>
-				</DrawerContent>
 			</Drawer>
 		</Page>
 	);

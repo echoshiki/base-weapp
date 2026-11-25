@@ -126,7 +126,7 @@ const EXAMPLE_GROUPS: ExampleGroup[] = [
 			{
 				key: 'page',
 				name: 'Page 页面容器',
-				desc: '全站统一背景、container-x 边距与 PageContent',
+				desc: '全站统一背景、container-x 边距、Loading 与安全区',
 				render: () => <PageDemo />,
 			},
 			{

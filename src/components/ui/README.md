@@ -37,7 +37,7 @@ import { Page, Card, Button, FormItem, Badge, Avatar, Drawer, Tabs } from '@/com
 
 ### Page
 
-页面级 Layout 顶级容器组件。自动收归全站背景色 (`bg-main-bg`)、左右边距 (`paddingX`/`container-x`)、页面级 Loading 居中占位与底部 TabBar/安全区留白 (`hasTabBar`/`pb-safe`)。导出 `<Page>` 与 `<PageContent>`。
+页面级 Layout 顶级容器组件。自动收归全站背景色 (`bg-main-bg`)、左右边距 (`paddingX`/`container-x`)、页面级 Loading 居中占位与底部 TabBar/安全区留白 (`hasTabBar`/`pb-safe`)。
 
 | Prop        | 类型        | 说明                                                   |
 | ----------- | ----------- | ------------------------------------------------------ |
@@ -176,7 +176,7 @@ import { Page, Card, Button, FormItem, Badge, Avatar, Drawer, Tabs } from '@/com
 
 ### Description / DescriptionList
 
-描述项与规格数据表组件族。导出 `<DescriptionList>` (容器，支持 `divider` 边框线) 与 `<Description>` / `<DescriptionItem>`。
+描述项与规格数据表组件族。导出 `<DescriptionList>`（容器，支持 `divider` 边框线）与 `<Description>`。
 
 ```tsx
 <DescriptionList divider>
@@ -208,20 +208,19 @@ import { Page, Card, Button, FormItem, Badge, Avatar, Drawer, Tabs } from '@/com
 
 ### Alert
 
-行内提示条，采用 shadcn 风格的复合组件架构，支持语义色变体（`default`/`info`/`warning`/`success`/`destructive`）。
+行内提示条组件，支持语义色变体（`default` / `info` / `warning` / `success` / `destructive` / `error`）、可选标题 (`title`) 与右侧扩展操作区 (`extra`)。
 
 ```tsx
-// 1. 经典单体简化用法
+// 1. 基础提示
 <Alert variant="info">请确保凭证边缘完整、公章清晰，格式支持 JPG、PNG</Alert>
-<Alert variant="destructive" icon="icon-[ph--x-circle]">提交失败，请稍后重试</Alert>
 
-// 2. shadcn 优雅复合组件用法
-<Alert variant="warning">
-  <AlertTitle>审核提示</AlertTitle>
-  <AlertDescription>您提交的凭证将在 1-3 个工作日内完成人工审核。</AlertDescription>
-  <AlertAction>
-    <Button size="xs" variant="outline">撤回</Button>
-  </AlertAction>
+// 2. 带标题与右侧操作按钮
+<Alert
+  variant="warning"
+  title="审核提示"
+  extra={<Button size="xs" variant="amber" appearance="soft">撤回</Button>}
+>
+  您提交的凭证将在 1-3 个工作日内完成人工审核。
 </Alert>
 ```
 
@@ -235,21 +234,14 @@ return isLoading ? <Loading title="加载中..." /> : <List />;
 
 ### Empty
 
-空状态组件族，导出 `<Empty>`, `<EmptyIcon>`, `<EmptyTitle>`, `<EmptyDescription>`, `<EmptyAction>`。
+空状态占位组件，支持自定义图标 (`icon`) 或插图 (`image`)、标题/副标题 (`ReactNode`) 以及快捷按钮 (`buttonText` + `onButtonClick`) 或自定义 `action`。
 
 ```tsx
-// 1. 简易模式
+// 1. 快捷按钮模式
 <Empty title="暂无任何评估订单" subTitle="您可以提交需求开始体验" buttonText="去申请" onButtonClick={goApply} />
 
-// 2. 复合模式 (自由定制按钮或插画)
-<Empty>
-  <EmptyIcon icon="icon-[ph--mailbox-duotone]" />
-  <EmptyTitle>暂无数据</EmptyTitle>
-  <EmptyDescription>试试其他搜索关键词吧</EmptyDescription>
-  <EmptyAction>
-    <Button size="sm" onClick={reset}>重新加载</Button>
-  </EmptyAction>
-</Empty>
+// 2. 自定义操作区
+<Empty title="暂无数据" subTitle="试试其他搜索关键词吧" action={<Button size="sm" onClick={reset}>重新加载</Button>} />
 ```
 
 ### Feedback
@@ -275,23 +267,12 @@ return isLoading ? <Loading title="加载中..." /> : <List />;
 
 ### Tabs
 
-选项卡组件族，导出 `<Tabs>`, `<TabsList>`, `<TabsTrigger>`, `<TabsContent>`。
+数据驱动选项卡组件，支持均分与横向滚动 (`scrollable`)、吸顶 (`sticky`)。
 
 ```tsx
-// 1. shadcn 声明式复合模式
-<Tabs value={activeTab} onValueChange={setActiveTab}>
-  <TabsList>
-    <TabsTrigger value="tab1">基础视图</TabsTrigger>
-    <TabsTrigger value="tab2">高级数据</TabsTrigger>
-  </TabsList>
-  <TabsContent value="tab1">视图 1 内容</TabsContent>
-  <TabsContent value="tab2">视图 2 内容</TabsContent>
-</Tabs>
-
-// 2. 简易数据驱动模式
 <Tabs
   tabs={[{ label: '全部', value: 'all' }, { label: '进行中', value: 'serving' }]}
-  current={tab}
+  value={tab}
   onChange={(val) => setTab(val)}
 />
 ```
@@ -328,23 +309,14 @@ return isLoading ? <Loading title="加载中..." /> : <List />;
 
 ### Carousel
 
-轮播图组件，完全解耦业务逻辑。导出 `<Carousel>`, `<CarouselContent>`, `<CarouselItem>`。
+轮播图组件，支持数据驱动 (`list` + 可选 `renderItem`) 及高度/圆角配置。
 
 ```tsx
-// 1. 简易数据驱动模式
 <Carousel
   list={bannerList}
+  heightClass="h-44"
   onItemClick={(item) => item.url && Taro.navigateTo({ url: item.url })}
 />
-
-// 2. shadcn 复合组件模式
-<Carousel>
-  <CarouselContent autoplay circular heightClass="h-48">
-    <CarouselItem onClick={() => console.log('item 1')}>
-      <Image src="https://.../banner1.jpg" className="w-full h-full rounded-card" mode="aspectFill" />
-    </CarouselItem>
-  </CarouselContent>
-</Carousel>
 ```
 
 ### SearchBar
@@ -495,35 +467,35 @@ return isLoading ? <Loading title="加载中..." /> : <List />;
 
 ### Drawer
 
-抽屉组件族（shadcn Sheet 范式）。导出 `<Drawer>`, `<DrawerContent>`, `<DrawerHeader>`, `<DrawerTitle>`, `<DrawerDescription>`, `<DrawerFooter>`。支持 `position` 弹出方向（`right` / `bottom` / `left` / `top`）。
+抽屉组件，支持 `right` / `bottom` / `left` / `top` 四个弹出方向，内置标题栏 (`title`/`description`)、滚动内容区（可通过 `scrollable={false}` 关闭以自管内部 `ScrollView`）与吸底操作栏 (`footer`)。
 
 ```tsx
-// 1. 右侧弹出筛选抽屉 (position="right")
-<Drawer open={isOpen} onOpenChange={setIsOpen} position="right">
-  <DrawerContent>
-    <DrawerHeader>
-      <DrawerTitle>高阶参数筛选</DrawerTitle>
-      <DrawerDescription>筛选条件设置</DrawerDescription>
-    </DrawerHeader>
-    <View className="p-4">筛选内容区...</View>
-    <DrawerFooter>
-      <Button variant="outline" size="xs" onClick={reset}>重置</Button>
+// 1. 右侧弹出筛选抽屉
+<Drawer
+  open={isOpen}
+  onOpenChange={setIsOpen}
+  position="right"
+  title="高阶参数筛选"
+  description="筛选条件设置"
+  footer={
+    <>
+      <Button appearance="outline" size="xs" onClick={reset}>重置</Button>
       <Button variant="primary" size="xs" onClick={apply}>确定</Button>
-    </DrawerFooter>
-  </DrawerContent>
+    </>
+  }
+>
+  <View className="p-4">筛选内容区...</View>
 </Drawer>
 
-// 2. 底部弹出面板 (position="bottom")
-<Drawer open={isBottomOpen} onOpenChange={setBottomOpen} position="bottom">
-  <DrawerContent>
-    <DrawerHeader>
-      <DrawerTitle>确认预约</DrawerTitle>
-    </DrawerHeader>
-    <View className="p-4">确认信息...</View>
-    <DrawerFooter>
-      <Button block variant="primary" onClick={confirm}>提交</Button>
-    </DrawerFooter>
-  </DrawerContent>
+// 2. 底部弹出面板
+<Drawer
+  open={isBottomOpen}
+  onOpenChange={setBottomOpen}
+  position="bottom"
+  title="确认预约"
+  footer={<Button block variant="primary" onClick={confirm}>提交</Button>}
+>
+  <View className="p-4">确认信息...</View>
 </Drawer>
 ```
 
@@ -541,41 +513,35 @@ ImagePreview.show({ urls: imgList, current: 0 });
 
 ### Dialog
 
-居中模态对话框复合组件族（shadcn 对话框架构）。提供透明高斯模糊遮罩、缩放动画（`animate-scale-in`）、右上角关闭按钮与弹窗卡片全套组件。
+居中模态对话框组件，内置高斯模糊遮罩、缩放动画、关闭按钮以及 `title`、`description`、`footer` 槽位。
 
 ```tsx
-<Dialog open={open} onOpenChange={setOpen}>
-	<DialogContent>
-		<DialogHeader>
-			<DialogTitle>二次确认</DialogTitle>
-			<DialogDescription>确定要删除此条记录吗？</DialogDescription>
-		</DialogHeader>
-		<DialogFooter>
-			<Button size="xs" variant="outline" onClick={() => setOpen(false)}>
+<Dialog
+	open={open}
+	onOpenChange={setOpen}
+	title="二次确认"
+	description="确定要删除此条记录吗？"
+	footer={
+		<>
+			<Button size="xs" appearance="outline" onClick={() => setOpen(false)}>
 				取消
 			</Button>
-			<Button size="xs" variant="destructive" onClick={handleDelete}>
+			<Button size="xs" variant="rose" onClick={handleDelete}>
 				删除
 			</Button>
-		</DialogFooter>
-	</DialogContent>
-</Dialog>
+		</>
+	}
+/>
 ```
 
 ### Skeleton
 
-骨架屏预加载组件族（shadcn 架构）。基于 Tailwind `animate-pulse` 实现呼吸感波浪微调预加载占位，避免图片/列表异步加载时的页面跳变。
+骨架屏原子组件，基于 Tailwind `animate-pulse` 实现预加载占位，通过 `className` 自由组合任意尺寸与形状。
 
 ```tsx
-// 1. 基础波浪块
+<Skeleton className="size-10 rounded-full" />
 <Skeleton className="h-4 w-full" />
-
-// 2. 头像骨架与多行文本骨架
-<SkeletonAvatar size="md" />
-<SkeletonText lines={3} />
-
-// 3. 全套图文卡片组合骨架
-<SkeletonCard />
+<Skeleton className="h-32 w-full rounded-card" />
 ```
 
 ### Signature

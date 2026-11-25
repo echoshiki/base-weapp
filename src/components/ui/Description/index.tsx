@@ -91,6 +91,3 @@ export function Description({
 		</View>
 	);
 }
-
-/** 别名导出 */
-export const DescriptionItem = Description;

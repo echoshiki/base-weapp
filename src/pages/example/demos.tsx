@@ -4,25 +4,13 @@ import { useState } from 'react';
 import {
 	Card,
 	Alert,
-	AlertTitle,
-	AlertDescription,
 	Badge,
 	Avatar,
 	Button,
 	Carousel,
-	CarouselContent,
-	CarouselItem,
 	Empty,
 	Tabs,
-	TabsList,
-	TabsTrigger,
-	TabsContent,
 	Drawer,
-	DrawerContent,
-	DrawerHeader,
-	DrawerTitle,
-	DrawerDescription,
-	DrawerFooter,
 	SearchBar,
 	Description,
 	DescriptionList,
@@ -33,21 +21,13 @@ import {
 	NavItem,
 	AspectRatio,
 	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-	DialogDescription,
-	DialogFooter,
-	SkeletonAvatar,
-	SkeletonText,
-	SkeletonCard,
+	Skeleton,
 	Signature,
 	Heading,
 	Asset,
 	Divider,
 	Icon,
 	Gender,
-	PageContent,
 	ImagePreview,
 	ActionTile,
 	EntryCard,
@@ -175,10 +155,17 @@ export function SkeletonDemo() {
 	return (
 		<View className="flex flex-col gap-3">
 			<View className="flex items-center gap-3">
-				<SkeletonAvatar size="md" />
-				<SkeletonText lines={2} className="flex-1" />
+				<Skeleton className="size-10 rounded-full" />
+				<View className="flex-1 flex flex-col gap-2">
+					<Skeleton className="h-3.5 w-full" />
+					<Skeleton className="h-3.5 w-3/5" />
+				</View>
 			</View>
-			<SkeletonCard />
+			<Card className="gap-3">
+				<Skeleton className="h-28 w-full rounded-card" />
+				<Skeleton className="h-4 w-2/3" />
+				<Skeleton className="h-3 w-1/2" />
+			</Card>
 		</View>
 	);
 }
@@ -215,15 +202,11 @@ export function AspectRatioDemo() {
 
 export function CarouselDemo() {
 	return (
-		<Carousel>
-			<CarouselContent heightClass="h-36" autoplay circular>
-				{MOCK_BANNERS.map((banner) => (
-					<CarouselItem key={banner.id}>
-						<Image src={banner.pic} className="w-full h-full rounded-card" mode="aspectFill" />
-					</CarouselItem>
-				))}
-			</CarouselContent>
-		</Carousel>
+		<Carousel
+			list={MOCK_BANNERS}
+			heightClass="h-36"
+			onItemClick={(item) => Taro.showToast({ title: item.title, icon: 'none' })}
+		/>
 	);
 }
 
@@ -279,22 +262,23 @@ export function NavItemDemo() {
 }
 
 export function TabsDemo() {
-	const [activeTabSub, setActiveTabSub] = useState<string | number>('tab1');
+	const [activeTab, setActiveTab] = useState<string | number>('tab1');
 
 	return (
 		<View className="bg-white rounded-card overflow-hidden border border-zinc-100/80">
-			<Tabs value={activeTabSub} onValueChange={setActiveTabSub}>
-				<TabsList>
-					<TabsTrigger value="tab1">基础视图</TabsTrigger>
-					<TabsTrigger value="tab2">高级数据</TabsTrigger>
-				</TabsList>
-				<TabsContent value="tab1" className="p-3">
-					<Text className="text-xs">这是 Tab1 的复合内容视图。</Text>
-				</TabsContent>
-				<TabsContent value="tab2" className="p-3">
-					<Text className="text-xs">这是 Tab2 的高级数据视图。</Text>
-				</TabsContent>
-			</Tabs>
+			<Tabs
+				tabs={[
+					{ label: '基础视图', value: 'tab1' },
+					{ label: '高级数据', value: 'tab2' },
+				]}
+				value={activeTab}
+				onChange={(val) => setActiveTab(val)}
+			/>
+			<View className="p-3">
+				<Text className="text-xs">
+					{activeTab === 'tab1' ? '这是 Tab1 的内容视图。' : '这是 Tab2 的高级数据视图。'}
+				</Text>
+			</View>
 		</View>
 	);
 }
@@ -333,9 +317,16 @@ export function AlertDemo() {
 	return (
 		<View className="flex flex-col gap-3">
 			<Alert variant="info">请确保凭证边缘完整、公章清晰，格式支持 JPG、PNG</Alert>
-			<Alert variant="warning">
-				<AlertTitle>实名认证提示</AlertTitle>
-				<AlertDescription>您提交的凭证将在 1-3 个工作日内完成审核，请耐心等待。</AlertDescription>
+			<Alert
+				variant="warning"
+				title="实名认证提示"
+				extra={
+					<Button size="xs" variant="amber" appearance="soft" onClick={() => Taro.showToast({ title: '去认证', icon: 'none' })}>
+						去认证
+					</Button>
+				}
+			>
+				您提交的凭证将在 1-3 个工作日内完成审核，请耐心等待。
 			</Alert>
 		</View>
 	);
@@ -361,13 +352,13 @@ export function DialogDemo() {
 				打开 Dialog 居中对话框
 			</Button>
 
-			<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-				<DialogContent>
-					<DialogHeader>
-						<DialogTitle>二次确认提示</DialogTitle>
-						<DialogDescription>您确定要撤回提交的奢品真伪鉴定申请吗？此操作无法撤销。</DialogDescription>
-					</DialogHeader>
-					<DialogFooter>
+			<Dialog
+				open={dialogOpen}
+				onOpenChange={setDialogOpen}
+				title="二次确认提示"
+				description="您确定要撤回提交的奢品真伪鉴定申请吗？此操作无法撤销。"
+				footer={
+					<>
 						<Button size="xs" appearance="outline" onClick={() => setDialogOpen(false)}>
 							取消
 						</Button>
@@ -381,9 +372,9 @@ export function DialogDemo() {
 						>
 							确认撤回
 						</Button>
-					</DialogFooter>
-				</DialogContent>
-			</Dialog>
+					</>
+				}
+			/>
 		</View>
 	);
 }
@@ -404,52 +395,54 @@ export function DrawerDemo() {
 			</View>
 
 			{/* 侧边滑出抽屉 */}
-			<Drawer open={drawerOpen} onOpenChange={setDrawerOpen} position="right">
-				<DrawerContent>
-					<DrawerHeader>
-						<DrawerTitle>高阶参数筛选</DrawerTitle>
-						<DrawerDescription>按品牌、年份与估价区间条件过滤</DrawerDescription>
-					</DrawerHeader>
-					<View className="p-4 space-y-4">
-						<Text className="text-xs opacity-60 block">成色要求</Text>
-						<View className="flex flex-wrap gap-2">
-							<Badge variant="primary">全新未拆</Badge>
-							<Badge variant="zinc">95新微瑕</Badge>
-							<Badge variant="zinc">90新正常使用</Badge>
-						</View>
-					</View>
-					<DrawerFooter>
+			<Drawer
+				open={drawerOpen}
+				onOpenChange={setDrawerOpen}
+				position="right"
+				title="高阶参数筛选"
+				description="按品牌、年份与估价区间条件过滤"
+				footer={
+					<>
 						<Button size="xs" appearance="outline" onClick={() => setDrawerOpen(false)}>
 							重置
 						</Button>
 						<Button size="xs" variant="primary" onClick={() => setDrawerOpen(false)}>
 							应用筛选
 						</Button>
-					</DrawerFooter>
-				</DrawerContent>
+					</>
+				}
+			>
+				<View className="p-4 space-y-4">
+					<Text className="text-xs opacity-60 block">成色要求</Text>
+					<View className="flex flex-wrap gap-2">
+						<Badge variant="primary">全新未拆</Badge>
+						<Badge variant="zinc">95新微瑕</Badge>
+						<Badge variant="zinc">90新正常使用</Badge>
+					</View>
+				</View>
 			</Drawer>
 
 			{/* 底部滑出抽屉 */}
-			<Drawer open={bottomDrawerOpen} onOpenChange={setBottomDrawerOpen} position="bottom">
-				<DrawerContent>
-					<DrawerHeader>
-						<DrawerTitle>快捷服务确认</DrawerTitle>
-					</DrawerHeader>
-					<View className="p-6 flex flex-col items-center gap-3">
-						<Avatar src={MOCK_USER.avatar} name={MOCK_USER.name} size="lg" />
-						<Text className="font-bold text-base">
-							{MOCK_USER.name} ({MOCK_USER.role})
-						</Text>
-						<Text className="text-xs opacity-60 text-center">
-							确认使用 138****8888 预约上门成色评估服务？
-						</Text>
-					</View>
-					<DrawerFooter>
-						<Button block variant="primary" onClick={() => setBottomDrawerOpen(false)}>
-							确认预约
-						</Button>
-					</DrawerFooter>
-				</DrawerContent>
+			<Drawer
+				open={bottomDrawerOpen}
+				onOpenChange={setBottomDrawerOpen}
+				position="bottom"
+				title="快捷服务确认"
+				footer={
+					<Button block variant="primary" onClick={() => setBottomDrawerOpen(false)}>
+						确认预约
+					</Button>
+				}
+			>
+				<View className="p-6 flex flex-col items-center gap-3">
+					<Avatar src={MOCK_USER.avatar} name={MOCK_USER.name} size="lg" />
+					<Text className="font-bold text-base">
+						{MOCK_USER.name} ({MOCK_USER.role})
+					</Text>
+					<Text className="text-xs opacity-60 text-center">
+						确认使用 138****8888 预约上门成色评估服务？
+					</Text>
+				</View>
 			</Drawer>
 		</View>
 	);
@@ -713,16 +706,11 @@ export function GenderDemo() {
 
 export function PageDemo() {
 	return (
-		<View className="flex flex-col gap-2.5">
+		<View className="flex flex-col gap-2">
 			<Text className="text-xs opacity-60 leading-relaxed">
 				当前示例页即由 &lt;Page&gt; 包裹，自动提供全站背景色 (bg-main-bg)、左右边距 (container-x)、页面级
-				Loading 与悬浮快捷菜单。
+				Loading、底部安全区留白与悬浮快捷菜单。
 			</Text>
-			<View className="bg-white rounded-card border border-zinc-200/80 overflow-hidden py-2">
-				<PageContent className="bg-zinc-100/80 py-2 rounded">
-					<Text className="text-xs text-zinc-600">PageContent 局部左右安全边距容器</Text>
-				</PageContent>
-			</View>
 		</View>
 	);
 }

@@ -18,31 +18,34 @@ export function setDefaultEmptyImage(url?: string) {
 
 export interface EmptyProps extends ViewProps {
 	/** 状态提示标题 */
-	title?: string;
+	title?: ReactNode;
 	/** 状态提示副标题 */
-	subTitle?: string;
-	/** 按钮文本 */
+	subTitle?: ReactNode;
+	/** 快捷操作按钮文本（需配合 onButtonClick 使用） */
 	buttonText?: string;
+	/** 快捷按钮点击事件 */
+	onButtonClick?: () => void;
+	/** 自定义底部操作区（优先级高于 buttonText） */
+	action?: ReactNode;
 	/** 图标名，使用 Iconify 图标类名 */
 	icon?: string;
 	/** 自定义空状态图片/动图 URL（优先级高于全局注册的默认图片） */
 	image?: string;
-	/** 按钮点击事件 */
-	onButtonClick?: () => void;
 	className?: string;
 	children?: ReactNode;
 }
 
 /**
- * Empty 空状态根组件
+ * Empty 空状态组件
  */
 export function Empty({
 	title = '空空如也',
 	subTitle = '暂无数据，试试其他搜索关键词吧',
 	buttonText,
+	onButtonClick,
+	action,
 	icon = 'icon-[ph--mailbox-duotone]',
 	image,
-	onButtonClick,
 	className,
 	children,
 	...props
@@ -60,101 +63,49 @@ export function Empty({
 
 	const activeImage = image ?? globalImg;
 
-	if (!children) {
-		return (
-			<View
-				className={cn(
-					'w-full py-12 flex flex-col gap-4 items-center justify-center animate-fade-in flex-1',
-					className,
-				)}
-				{...props}
-			>
-				<EmptyIcon icon={icon} image={activeImage} />
-				<View className="flex flex-col items-center gap-1">
-					<EmptyTitle>{title}</EmptyTitle>
-					{subTitle && <EmptyDescription>{subTitle}</EmptyDescription>}
-				</View>
-				{buttonText && onButtonClick && (
-					<EmptyAction>
-						<Button size="sm" variant="primary" rounded onClick={onButtonClick}>
-							{buttonText}
-						</Button>
-					</EmptyAction>
-				)}
-			</View>
-		);
-	}
-
 	return (
 		<View
-			className={cn('w-full py-12 flex flex-col gap-4 items-center justify-center animate-fade-in', className)}
+			className={cn(
+				'w-full py-12 flex flex-col gap-4 items-center justify-center animate-fade-in flex-1',
+				className,
+			)}
 			{...props}
 		>
+			{/* 插图 / 图标 */}
+			{activeImage ? (
+				<Image src={activeImage} mode="aspectFit" className="size-28 rounded-xl" />
+			) : (
+				<View className="rounded-full bg-zinc-100 p-4 flex items-center justify-center">
+					<View className={cn('size-10 text-zinc-400', icon)} />
+				</View>
+			)}
+
+			{/* 标题与描述 */}
+			<View className="flex flex-col items-center gap-1">
+				{title && (
+					<View className="text-base font-bold text-center">
+						{typeof title === 'string' ? <Text>{title}</Text> : title}
+					</View>
+				)}
+				{subTitle && (
+					<View className="text-xs opacity-60 text-center px-6 leading-relaxed">
+						{typeof subTitle === 'string' ? <Text>{subTitle}</Text> : subTitle}
+					</View>
+				)}
+			</View>
+
+			{/* 自定义扩展内容或底部按钮 */}
 			{children}
-		</View>
-	);
-}
 
-/**
- * EmptyIcon 空状态图标/插图
- */
-export function EmptyIcon({
-	icon = 'icon-[ph--mailbox-duotone]',
-	image,
-	className,
-	children,
-}: {
-	icon?: string;
-	image?: string;
-	className?: string;
-	children?: ReactNode;
-}) {
-	if (image && !children) {
-		return (
-			<Image
-				src={image}
-				mode="aspectFit"
-				className={cn('size-28 rounded-xl', className)}
-			/>
-		);
-	}
-
-	return (
-		<View className={cn('rounded-full bg-zinc-100 p-4 flex items-center justify-center', className)}>
-			{children ? children : <View className={cn('w-10 h-10 text-zinc-400', icon)} />}
-		</View>
-	);
-}
-
-/**
- * EmptyTitle 空状态主标题
- */
-export function EmptyTitle({ className, children, ...props }: ViewProps) {
-	return (
-		<View className={cn('text-base font-bold text-center', className)} {...props}>
-			{typeof children === 'string' ? <Text>{children}</Text> : children}
-		</View>
-	);
-}
-
-/**
- * EmptyDescription 空状态副标题/描述
- */
-export function EmptyDescription({ className, children, ...props }: ViewProps) {
-	return (
-		<View className={cn('text-xs opacity-60 text-center px-6 leading-relaxed', className)} {...props}>
-			{typeof children === 'string' ? <Text>{children}</Text> : children}
-		</View>
-	);
-}
-
-/**
- * EmptyAction 空状态底部按钮/操作区
- */
-export function EmptyAction({ className, children, ...props }: ViewProps) {
-	return (
-		<View className={cn('mt-2 flex items-center justify-center gap-2', className)} {...props}>
-			{children}
+			{action ? (
+				<View className="mt-1 flex items-center justify-center gap-2">{action}</View>
+			) : buttonText && onButtonClick ? (
+				<View className="mt-1 flex items-center justify-center gap-2">
+					<Button size="sm" variant="primary" rounded onClick={onButtonClick}>
+						{buttonText}
+					</Button>
+				</View>
+			) : null}
 		</View>
 	);
 }

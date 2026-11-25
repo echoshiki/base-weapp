@@ -52,15 +52,3 @@ export function Page({
 		</View>
 	);
 }
-
-/**
- * PageContent - 页面局部内容容器
- * 专供通栏 Banner/背景图页面在局部包裹需要 paddingX 的内容块
- */
-export function PageContent({ className, children, ...props }: ViewProps) {
-	return (
-		<View className={cn('container-x flex flex-col', className)} {...props}>
-			{children}
-		</View>
-	);
-}

@@ -54,9 +54,13 @@ const VARIANT_MAP: Record<
 	},
 };
 
-export interface AlertProps extends React.ComponentProps<typeof View> {
+export interface AlertProps extends ViewProps {
 	/** 变体样式，默认为 default */
 	variant?: AlertVariant;
+	/** 可选标题 */
+	title?: ReactNode;
+	/** 右侧扩展操作区（如按钮、跳转链接或关闭图标） */
+	extra?: ReactNode;
 	/** 是否隐藏默认图标，默认 false */
 	hideIcon?: boolean;
 	/** 自定义图标（支持 Iconify 类名 string 或 ReactNode） */
@@ -67,20 +71,29 @@ export interface AlertProps extends React.ComponentProps<typeof View> {
 }
 
 /**
- * Alert 主容器组件
+ * Alert 行内提示条组件
  */
-export function Alert({ variant = 'default', hideIcon = false, icon, className, children, ...props }: AlertProps) {
+export function Alert({
+	variant = 'default',
+	title,
+	extra,
+	hideIcon = false,
+	icon,
+	className,
+	children,
+	...props
+}: AlertProps) {
 	const config = VARIANT_MAP[variant] || VARIANT_MAP.default;
 
 	const renderIcon = () => {
 		if (hideIcon) return null;
 		if (icon) {
 			if (typeof icon === 'string') {
-				return <View className={cn('size-4.5 shrink-0', config.iconClass, icon)} />;
+				return <View className={cn('size-4.5 shrink-0 mt-0.5', config.iconClass, icon)} />;
 			}
 			return icon;
 		}
-		return <View className={cn('size-4.5 shrink-0', config.iconClass, config.defaultIcon)} />;
+		return <View className={cn('size-4.5 shrink-0 mt-0.5', config.iconClass, config.defaultIcon)} />;
 	};
 
 	return (
@@ -95,45 +108,21 @@ export function Alert({ variant = 'default', hideIcon = false, icon, className, 
 			{...props}
 		>
 			{renderIcon()}
-			<View className="flex-1 min-w-0 flex flex-col justify-center text-xs leading-normal">
-				{typeof children === 'string' ? <Text>{children}</Text> : children}
+
+			<View className="flex-1 min-w-0 flex flex-col justify-center gap-0.5">
+				{title && (
+					<View className="font-semibold text-sm leading-tight tracking-tight text-inherit">
+						{typeof title === 'string' ? <Text>{title}</Text> : title}
+					</View>
+				)}
+				{children && (
+					<View className="text-xs opacity-90 leading-relaxed text-inherit">
+						{typeof children === 'string' ? <Text>{children}</Text> : children}
+					</View>
+				)}
 			</View>
-		</View>
-	);
-}
 
-/**
- * Alert 标题组件
- */
-export function AlertTitle({ className, children, ...props }: React.ComponentProps<typeof View>) {
-	return (
-		<View
-			className={cn('font-semibold text-sm leading-tight tracking-tight mb-1 text-inherit', className)}
-			{...props}
-		>
-			{typeof children === 'string' ? <Text>{children}</Text> : children}
-		</View>
-	);
-}
-
-/**
- * Alert 描述内容组件
- */
-export function AlertDescription({ className, children, ...props }: React.ComponentProps<typeof View>) {
-	return (
-		<View className={cn('text-xs opacity-90 leading-relaxed text-inherit', className)} {...props}>
-			{typeof children === 'string' ? <Text>{children}</Text> : children}
-		</View>
-	);
-}
-
-/**
- * Alert 尾部/右侧操作区组件
- */
-export function AlertAction({ className, children, ...props }: React.ComponentProps<typeof View>) {
-	return (
-		<View className={cn('ml-auto shrink-0 self-center pl-2', className)} {...props}>
-			{children}
+			{extra && <View className="shrink-0 self-center pl-1">{extra}</View>}
 		</View>
 	);
 }
