@@ -120,6 +120,7 @@ export default function AddressListPage() {
 						size="lg"
 						variant="emerald"
 						appearance="soft"
+						icon="icon-[ph--arrow-square-in-bold]"
 						className="shrink-0"
 						loading={isImporting}
 						onClick={handleWechatImport}
