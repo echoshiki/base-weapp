@@ -42,7 +42,11 @@ import { Page, Card, Heading, Button, Input, Textarea, FormItem, Badge, Avatar, 
 | `hasTabBar` | `boolean` | `false` | 是否为 TabBar 页（启用 `pb-24` 留白） |
 | `paddingX` | `boolean` | `true` | 是否启用全站左右边距 `container-x` |
 | `loading` | `boolean` | `false` | 页面级 Loading 状态 |
-| `showQuickMenu` | `boolean` | `true` | 是否挂载右下角 `FloatQuickMenu` |
+| `showQuickMenu` | `boolean` | `false` | 是否挂载右下角 `FloatQuickMenu` |
+| `showH5Nav` | `boolean` | 非 TabBar 且非微信浏览器时 `true` | H5 端是否显示顶部 44px 吸顶返回导航栏（小程序端自动走原生 Header） |
+| `title` | `string` | 自动读取 `document.title` | H5 顶部导航栏标题 |
+| `navExtra` | `ReactNode` | - | H5 顶部导航栏右侧扩展槽位 |
+| `onBack` | `() => void` | 智能返回/回首页 | 自定义返回按钮点击回调 |
 | `header` | `ReactNode` | - | 顶部自定义插槽 |
 
 ```tsx
