@@ -75,7 +75,7 @@ description: >-
 2. **全局浮层在 H5 端必须走 Portal**：Taro H5 的 `.taro_page` 带有 `z-index: 0` 层叠上下文且 `.weui-tabbar` 为 `z-index: 500`。新增全屏模态或全局悬浮组件（类似 `Drawer`、`Dialog`、`ImagePreview`、`FloatCustomerService`）时，必须用 `src/components/ui/portal.ts` 的 `renderPortal()` 在 H5 端挂载到 `document.body`，层级设为 `z-[550]`~`z-[600]`（高于 TabBar `500`，低于系统 Toast/Modal `1000+`）。
 3. **悬浮拖拽严禁使用 `MovableArea` / `MovableView`**：Taro H5 中其 Web Component 懒加载会导致首次挂载落到左上角 `(0, 0)`；统一采用纯 CSS `fixed` + `catchMove` + `onTouchStart`/`onTouchMove`。
 4. **严禁在微信小程序原生 `<Input>` 上写 `display: flex`**：会破坏小程序原生 `<input>` 的 `text-align: right`。H5 端的 `Input`/`Textarea` 居中与透明背景已在 `src/app.css` 全局处理，组件内无需重复加 `flex`。
-5. **自定义原生能力按钮**：如 `openType="chooseAvatar"` 包裹复杂图形时，优先使用原生 `TaroButton` 并清理 `m-0 p-0 bg-transparent after:border-0 overflow-visible`，避免 `ui/Button` 的固定高度与 `overflow-hidden` 裁剪角标。
+5. **自定义原生能力按钮**：如 `openType="chooseAvatar"` 包裹复杂图形时，优先使用原生 `TaroButton` 并显式加上 `inline-flex w-fit m-0 p-0 bg-transparent after:border-0 overflow-visible`（Taro H5 端 `TaroButton` 默认带 `width: 100%`，不写 `w-fit` 会被拉成整行），避免 `ui/Button` 的固定高度与 `overflow-hidden` 裁剪角标。
 
 ---
 
@@ -89,3 +89,26 @@ description: >-
 2. **统一响应协议**：所有接口统一使用 `BaseResponse<T>`（`{ code, msg, data }`），分页数据统一放在 `data` 中使用 `PageData<T>`（`{ list, total, page, pageSize, hasMore? }`）。
 3. **传参方式**：`GET` 用 Query，`POST`/`PUT` 业务接口一律用 Body `application/json`，仅文件上传使用 `multipart/form-data`（`http.upload`）。
 4. **后台静默请求**：冷启动 Token 校验、静默微信登录、全局配置拉取等非用户主动触发的请求，必须传 `{ silent: true }`，避免失败时弹 Toast 或 401 Modal 打扰用户。
+
+---
+
+## 6. 热插拔业务模块规范 (`src/packages/<module>/`)
+
+新业务领域（如 `article`、`guestbook`、`shop`、`exam`）一律按「Feature 即 Taro 分包」的物理自包含方式组织在 `src/packages/<module>/` 下，以 `src/packages/article/` 为标准样板：
+
+```text
+src/packages/<module>/
+├── routes.ts       # 纯对象导出 <MODULE>_ROUTES 路径常量与 <module>SubPackage（供 app.config.ts 引入，禁止 import React/Taro）
+├── types.ts        # 模块独立类型定义
+├── services.ts     # 纯一行接口声明（统一 BaseResponse<T> / PageData<T>）
+├── hooks.ts        # 模块 React Query / 业务编排 Hooks
+├── components/     # 模块私有组件（必须优先组合 @/components/ui）
+├── pages/          # 模块页面（每个页面含 index.tsx 与 index.config.ts）
+└── openapi.json    # 模块专属 OpenAPI 3.0 Mock 契约（可选）
+```
+
+**强制依赖边界**：
+- 主包仅保留核心底座（`components/ui`、`utils`、`store/auth`、`hooks/useAuth`、`pages/home`、`pages/user`、`pages/login`、`pages/example`）；
+- `packages/<module>` 允许单向引用核心底座；
+- **严禁 `packages/A` 直接 `import` `packages/B`**，跨模块跳转只通过路由 URL，确保删除任意 `packages/<module>` 目录并从 `src/app.config.ts` 的 `subPackages` 移除对应一行即可零残留卸载。
+

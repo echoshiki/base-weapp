@@ -1,0 +1,169 @@
+{
+	"openapi": "3.0.3",
+	"info": {
+		"title": "Article 模块接口（热插拔分包）",
+		"version": "1.0.0",
+		"description": "src/packages/article 独立模块的 OpenAPI 3.0 接口文档，可直接导入 Apifox 开启云端 Mock 调试。"
+	},
+	"tags": [{ "name": "文章模块", "description": "文章分类、分页列表与详情" }],
+	"paths": {
+		"/article/categories": {
+			"get": {
+				"tags": ["文章模块"],
+				"summary": "获取文章分类列表",
+				"responses": {
+					"200": {
+						"description": "分类列表",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "example": 200 },
+										"msg": { "type": "string", "example": "ok" },
+										"data": {
+											"type": "array",
+											"items": {
+												"type": "object",
+												"required": ["id", "name"],
+												"properties": {
+													"id": { "type": "string" },
+													"name": { "type": "string" }
+												}
+											}
+										}
+									}
+								},
+								"example": {
+									"code": 200,
+									"msg": "ok",
+									"data": [
+										{ "id": "notice", "name": "平台公告" },
+										{ "id": "guide", "name": "使用指南" },
+										{ "id": "news", "name": "行业动态" }
+									]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/article/list": {
+			"get": {
+				"tags": ["文章模块"],
+				"summary": "获取文章分页列表",
+				"parameters": [
+					{ "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 } },
+					{ "name": "pageSize", "in": "query", "schema": { "type": "integer", "default": 10 } },
+					{ "name": "categoryId", "in": "query", "schema": { "type": "string" } },
+					{ "name": "keyword", "in": "query", "schema": { "type": "string" } }
+				],
+				"responses": {
+					"200": {
+						"description": "文章分页列表",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "example": 200 },
+										"msg": { "type": "string", "example": "ok" },
+										"data": {
+											"type": "object",
+											"required": ["list", "total", "page", "pageSize"],
+											"properties": {
+												"list": { "type": "array", "items": { "type": "object" } },
+												"total": { "type": "integer", "example": 2 },
+												"page": { "type": "integer", "example": 1 },
+												"pageSize": { "type": "integer", "example": 10 },
+												"hasMore": { "type": "boolean", "example": false }
+											}
+										}
+									}
+								},
+								"example": {
+									"code": 200,
+									"msg": "ok",
+									"data": {
+										"list": [
+											{
+												"id": "art_001",
+												"title": "Base Taro 热插拔分包架构使用说明",
+												"summary": "通过 packages/<module> 目录实现逻辑与物理分包合一，删目录即可卸载模块。",
+												"cover": "https://images.unsplash.com/photo-1519046904884-53103b34b206?w=600&auto=format&fit=crop&q=80",
+												"categoryId": "guide",
+												"categoryName": "使用指南",
+												"author": "Base Taro",
+												"publishTime": "2026-11-26 09:00:00",
+												"views": 128
+											},
+											{
+												"id": "art_002",
+												"title": "UI 设计标准化与双端避坑最佳实践",
+												"summary": "统一 zinc 灰色系与最小 xs 尺寸，规避 Taro H5 端 Portal、Input 与 MovableArea 常见坑点。",
+												"categoryId": "notice",
+												"categoryName": "平台公告",
+												"author": "前端架构组",
+												"publishTime": "2026-11-25 18:30:00",
+												"views": 86
+											}
+										],
+										"total": 2,
+										"page": 1,
+										"pageSize": 10,
+										"hasMore": false
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/article/detail": {
+			"get": {
+				"tags": ["文章模块"],
+				"summary": "获取文章详情",
+				"parameters": [
+					{ "name": "id", "in": "query", "required": true, "schema": { "type": "string", "example": "art_001" } }
+				],
+				"responses": {
+					"200": {
+						"description": "文章详情",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "example": 200 },
+										"msg": { "type": "string", "example": "ok" },
+										"data": { "type": "object" }
+									}
+								},
+								"example": {
+									"code": 200,
+									"msg": "ok",
+									"data": {
+										"id": "art_001",
+										"title": "Base Taro 热插拔分包架构使用说明",
+										"cover": "https://images.unsplash.com/photo-1519046904884-53103b34b206?w=800&auto=format&fit=crop&q=80",
+										"categoryId": "guide",
+										"categoryName": "使用指南",
+										"author": "Base Taro",
+										"publishTime": "2026-11-26 09:00:00",
+										"views": 129,
+										"content": "<p>欢迎使用 Base Taro 热插拔业务模块样板。</p><p>每个独立业务模块均位于 <strong>src/packages/&lt;module&gt;/</strong> 下，内部闭环包含 pages、components、hooks、services、types、routes 与 openapi.json。</p><p>新项目无需该模块时，仅需删除整个目录并从 app.config.ts 的 subPackages 中移除对应行即可完成干净卸载。</p>"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

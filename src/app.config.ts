@@ -1,3 +1,5 @@
+import { articleSubPackage } from './packages/article/routes';
+
 export default defineAppConfig({
 	pages: [
 		'pages/home/index',
@@ -7,6 +9,11 @@ export default defineAppConfig({
 		'pages/login/index',
 		'pages/login/register/index',
 	],
+	/**
+	 * 热插拔业务模块（Taro 分包）
+	 * 需要卸载某个模块时，直接删除 src/packages/<module> 目录并移除此处对应一行即可
+	 */
+	subPackages: [articleSubPackage],
 	tabBar: {
 		color: '#71717a',
 		selectedColor: '#155dfc',

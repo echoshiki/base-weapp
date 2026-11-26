@@ -2,6 +2,7 @@ import { View, Text } from '@tarojs/components';
 import { Page, Card, Heading, ActionTile, Badge, Button } from '@/components/ui';
 import { useAuth } from '@/hooks/useAuth';
 import { useAuthStore } from '@/store/auth';
+import { ARTICLE_ROUTES } from '@/packages/article/routes';
 import { mapsTo } from '@/utils/common';
 
 export default function Home() {
@@ -74,18 +75,18 @@ export default function Home() {
 					<ActionTile
 						layout="compact"
 						theme="blue"
-						title="登录页"
-						subTitle="手机号 / 账号切换"
-						icon="icon-[ph--sign-in-duotone]"
-						onClick={() => mapsTo('/pages/login/index')}
+						title="文章模块"
+						subTitle="热插拔分包样板"
+						icon="icon-[ph--article-duotone]"
+						onClick={() => mapsTo(ARTICLE_ROUTES.list)}
 					/>
 					<ActionTile
 						layout="compact"
 						theme="amber"
-						title="注册页"
-						subTitle="新用户快速注册"
-						icon="icon-[ph--user-plus-duotone]"
-						onClick={() => mapsTo('/pages/login/register/index')}
+						title="登录 / 注册"
+						subTitle="多端认证流演示"
+						icon="icon-[ph--sign-in-duotone]"
+						onClick={() => mapsTo('/pages/login/index')}
 					/>
 				</View>
 			</View>

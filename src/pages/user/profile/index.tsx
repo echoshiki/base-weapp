@@ -19,9 +19,9 @@ export default function UserProfilePage() {
 					<TaroButton
 						openType="chooseAvatar"
 						onChooseAvatar={onChooseAvatar}
-						className="m-0 p-0 bg-transparent after:border-0 overflow-visible leading-none active:scale-95 transition-transform"
+						className="inline-flex w-fit m-0 p-0 bg-transparent after:border-0 overflow-visible leading-none active:scale-95 transition-transform"
 					>
-						<View className="relative p-1 rounded-full bg-white shadow-sm ring-1 ring-zinc-200/70">
+						<View className="relative inline-flex w-fit p-1 rounded-full bg-white shadow-sm ring-1 ring-zinc-200/70">
 							<Avatar src={form.avatar} size="xl" name={form.nickName} className="border-0 shadow-none" />
 							<View className="absolute right-0.5 bottom-0.5 size-7 rounded-full bg-zinc-900 border-2 border-white shadow-sm flex items-center justify-center">
 								<View className="icon-[ph--camera-fill] size-3.5 text-white" />
