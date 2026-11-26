@@ -106,7 +106,7 @@ export function Button({
 	return (
 		<TaroButton
 			className={cn(
-				'relative inline-flex items-center justify-center transition-all overflow-hidden m-0 min-h-0 min-w-0 after:hidden after:border-none',
+				'relative inline-flex items-center justify-center whitespace-nowrap transition-all overflow-hidden m-0 min-h-0 min-w-0 after:hidden after:border-none',
 				block ? 'w-full' : 'w-fit',
 				rounded ? 'rounded-full' : 'rounded-card',
 				isDisabled ? 'opacity-50 grayscale pointer-events-none' : 'active:scale-[0.98]',

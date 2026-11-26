@@ -1,0 +1,353 @@
+{
+	"openapi": "3.0.3",
+	"info": {
+		"title": "Address 模块接口（热插拔分包）",
+		"version": "1.0.0",
+		"description": "src/packages/address 独立模块的 OpenAPI 3.0 文档。已为每个字段配置 x-apifox-mock 规则，导入 Apifox 开启云端 Mock 即可直接生成语义准确的中文收货地址数据。"
+	},
+	"tags": [{ "name": "收货地址", "description": "收货地址列表、详情、新增、更新、删除与设为默认" }],
+	"components": {
+		"schemas": {
+			"AddressItem": {
+				"type": "object",
+				"required": ["id", "name", "phone", "province", "city", "district", "detail", "isDefault"],
+				"properties": {
+					"id": {
+						"type": "string",
+						"x-apifox-mock": "ADDR_@natural(10000, 99999)",
+						"example": "ADDR_202601"
+					},
+					"name": {
+						"type": "string",
+						"x-apifox-mock": "@cname",
+						"example": "林知远"
+					},
+					"phone": {
+						"type": "string",
+						"x-apifox-mock": "138@string('number', 8)",
+						"example": "13800138000"
+					},
+					"province": {
+						"type": "string",
+						"x-apifox-mock": "@province",
+						"example": "浙江省"
+					},
+					"city": {
+						"type": "string",
+						"x-apifox-mock": "@city",
+						"example": "杭州市"
+					},
+					"district": {
+						"type": "string",
+						"x-apifox-mock": "@county",
+						"example": "西湖区"
+					},
+					"detail": {
+						"type": "string",
+						"x-apifox-mock": "文三路 @integer(100, 999) 号 @pick(['高新大厦', '西溪花园', '科创中心']) @integer(1, 20) 栋 @integer(101, 1808) 室",
+						"example": "文三路 259 号昌地火炬大厦 2 号楼 802 室"
+					},
+					"tag": {
+						"type": "string",
+						"x-apifox-mock": "@pick(['家', '公司', '学校', ''])",
+						"example": "公司"
+					},
+					"isDefault": {
+						"type": "boolean",
+						"x-apifox-mock": "@boolean",
+						"example": true
+					},
+					"createTime": {
+						"type": "string",
+						"x-apifox-mock": "@datetime('yyyy-MM-dd HH:mm:ss')",
+						"example": "2026-11-26 10:00:00"
+					}
+				}
+			},
+			"AddressFormPayload": {
+				"type": "object",
+				"required": ["name", "phone", "province", "city", "district", "detail", "isDefault"],
+				"properties": {
+					"name": { "type": "string", "example": "林知远" },
+					"phone": { "type": "string", "example": "13800138000" },
+					"province": { "type": "string", "example": "浙江省" },
+					"city": { "type": "string", "example": "杭州市" },
+					"district": { "type": "string", "example": "西湖区" },
+					"detail": { "type": "string", "example": "文三路 259 号昌地火炬大厦 2 号楼 802 室" },
+					"tag": { "type": "string", "example": "公司" },
+					"isDefault": { "type": "boolean", "example": true }
+				}
+			}
+		}
+	},
+	"paths": {
+		"/address/list": {
+			"get": {
+				"tags": ["收货地址"],
+				"summary": "获取收货地址列表",
+				"responses": {
+					"200": {
+						"description": "获取成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "success", "example": "success" },
+										"data": {
+											"type": "array",
+											"minItems": 2,
+											"maxItems": 4,
+											"items": { "$ref": "#/components/schemas/AddressItem" }
+										}
+									}
+								},
+								"example": {
+									"code": 200,
+									"msg": "success",
+									"data": [
+										{
+											"id": "ADDR_202601",
+											"name": "林知远",
+											"phone": "13800138000",
+											"province": "浙江省",
+											"city": "杭州市",
+											"district": "西湖区",
+											"detail": "文三路 259 号昌地火炬大厦 2 号楼 802 室",
+											"tag": "公司",
+											"isDefault": true,
+											"createTime": "2026-11-26 10:00:00"
+										},
+										{
+											"id": "ADDR_202602",
+											"name": "苏晚晴",
+											"phone": "13912345678",
+											"province": "浙江省",
+											"city": "杭州市",
+											"district": "余杭区",
+											"detail": "五常街道西溪花园 6 栋 1203 室",
+											"tag": "家",
+											"isDefault": false,
+											"createTime": "2026-11-20 15:30:00"
+										}
+									]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/address/detail": {
+			"get": {
+				"tags": ["收货地址"],
+				"summary": "获取收货地址详情",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "query",
+						"required": true,
+						"schema": { "type": "string", "example": "ADDR_202601" },
+						"description": "地址 ID"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "获取成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "success", "example": "success" },
+										"data": { "$ref": "#/components/schemas/AddressItem" }
+									}
+								},
+								"example": {
+									"code": 200,
+									"msg": "success",
+									"data": {
+										"id": "ADDR_202601",
+										"name": "林知远",
+										"phone": "13800138000",
+										"province": "浙江省",
+										"city": "杭州市",
+										"district": "西湖区",
+										"detail": "文三路 259 号昌地火炬大厦 2 号楼 802 室",
+										"tag": "公司",
+										"isDefault": true,
+										"createTime": "2026-11-26 10:00:00"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/address/create": {
+			"post": {
+				"tags": ["收货地址"],
+				"summary": "新增收货地址",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": { "$ref": "#/components/schemas/AddressFormPayload" }
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "新增成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "添加成功", "example": "添加成功" },
+										"data": {
+											"type": "object",
+											"required": ["id"],
+											"properties": {
+												"id": { "type": "string", "x-apifox-mock": "ADDR_@natural(10000, 99999)", "example": "ADDR_202603" }
+											}
+										}
+									}
+								},
+								"example": {
+									"code": 200,
+									"msg": "添加成功",
+									"data": { "id": "ADDR_202603" }
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/address/update": {
+			"put": {
+				"tags": ["收货地址"],
+				"summary": "更新收货地址",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"allOf": [
+									{
+										"type": "object",
+										"required": ["id"],
+										"properties": {
+											"id": { "type": "string", "example": "ADDR_202601" }
+										}
+									},
+									{ "$ref": "#/components/schemas/AddressFormPayload" }
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "保存成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "保存成功", "example": "保存成功" },
+										"data": { "type": "null", "x-apifox-mock": "null", "example": null }
+									}
+								},
+								"example": { "code": 200, "msg": "保存成功", "data": null }
+							}
+						}
+					}
+				}
+			}
+		},
+		"/address/delete": {
+			"delete": {
+				"tags": ["收货地址"],
+				"summary": "删除收货地址",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "query",
+						"required": true,
+						"schema": { "type": "string", "example": "ADDR_202601" },
+						"description": "地址 ID"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "删除成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "已删除", "example": "已删除" },
+										"data": { "type": "null", "x-apifox-mock": "null", "example": null }
+									}
+								},
+								"example": { "code": 200, "msg": "已删除", "data": null }
+							}
+						}
+					}
+				}
+			}
+		},
+		"/address/set-default": {
+			"put": {
+				"tags": ["收货地址"],
+				"summary": "设为默认收货地址",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"required": ["id"],
+								"properties": {
+									"id": { "type": "string", "example": "ADDR_202601" }
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "设置成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "已设为默认地址", "example": "已设为默认地址" },
+										"data": { "type": "null", "x-apifox-mock": "null", "example": null }
+									}
+								},
+								"example": { "code": 200, "msg": "已设为默认地址", "data": null }
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

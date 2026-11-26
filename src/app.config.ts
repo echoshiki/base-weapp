@@ -1,6 +1,7 @@
 import { articleSubPackage } from './packages/article/routes';
 import { feedbackSubPackage } from './packages/feedback/routes';
 import { messageSubPackage } from './packages/message/routes';
+import { addressSubPackage } from './packages/address/routes';
 
 export default defineAppConfig({
 	pages: [
@@ -15,7 +16,7 @@ export default defineAppConfig({
 	 * 热插拔业务模块（Taro 分包）
 	 * 需要卸载某个模块时，直接删除 src/packages/<module> 目录并移除此处对应一行即可
 	 */
-	subPackages: [articleSubPackage, feedbackSubPackage, messageSubPackage],
+	subPackages: [articleSubPackage, feedbackSubPackage, messageSubPackage, addressSubPackage],
 	tabBar: {
 		color: '#71717a',
 		selectedColor: '#155dfc',

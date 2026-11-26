@@ -7,6 +7,7 @@ import { useAppConfig } from '@/hooks/useAppConfig';
 import { Avatar, NavItem, Page, Card, Asset, Gender, Divider, Badge } from '@/components/ui';
 import { FEEDBACK_ROUTES } from '@/packages/feedback/routes';
 import { MESSAGE_ROUTES } from '@/packages/message/routes';
+import { ADDRESS_ROUTES } from '@/packages/address/routes';
 import { useUnreadCount } from '@/packages/message/hooks';
 import { mapsTo } from '@/utils/common';
 
@@ -92,6 +93,12 @@ export default function UserPage() {
 						label="个人资料"
 						extra={isLoggedIn ? '去编辑' : '需登录'}
 						onClick={() => navigateWithAuth('/pages/user/profile/index')}
+					/>
+					<NavItem
+						icon="icon-[ph--map-pin]"
+						layout="list"
+						label="收货地址"
+						onClick={() => mapsTo(ADDRESS_ROUTES.list)}
 					/>
 					<NavItem
 						icon="icon-[ph--squares-four]"

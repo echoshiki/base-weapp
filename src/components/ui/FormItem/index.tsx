@@ -72,7 +72,7 @@ export function FormItem({
 		<View
 			className={cn(
 				'flex flex-col justify-center min-h-12 py-2.5',
-				showBorder && 'border-b border-zinc-100/80',
+				showBorder && 'border-b border-zinc-200',
 				className,
 			)}
 			onClick={onClick}
