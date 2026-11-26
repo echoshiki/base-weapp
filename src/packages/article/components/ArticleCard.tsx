@@ -20,11 +20,7 @@ export function ArticleCard({ item, onClick }: ArticleCardProps) {
 			onClick={() => onClick?.(item)}
 		>
 			{hasCover && (
-				<Image
-					src={item.cover!}
-					mode="aspectFill"
-					className="w-26 h-20 rounded-lg bg-zinc-100 shrink-0"
-				/>
+				<Image src={item.cover!} mode="aspectFill" className="w-26 h-20 rounded-lg bg-zinc-100 shrink-0" />
 			)}
 
 			<View className="flex-1 min-w-0 flex flex-col justify-between gap-2">
@@ -38,7 +34,6 @@ export function ArticleCard({ item, onClick }: ArticleCardProps) {
 				<View className="flex items-center justify-between gap-2">
 					<View className="flex items-center gap-1.5 min-w-0">
 						{item.categoryName && <Badge variant="zinc">{item.categoryName}</Badge>}
-						{item.author && <Text className="text-xs text-zinc-400 truncate">{item.author}</Text>}
 					</View>
 
 					<View className="flex items-center gap-2 shrink-0 text-xs text-zinc-400">

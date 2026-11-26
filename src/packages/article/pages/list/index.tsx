@@ -121,13 +121,19 @@ export default function ArticleListPage() {
 							<ArticleCard
 								key={item.id}
 								item={item}
-								onClick={(target) => mapsTo(`${ARTICLE_ROUTES.detail}?id=${encodeURIComponent(target.id)}`)}
+								onClick={(target) =>
+									mapsTo(`${ARTICLE_ROUTES.detail}?id=${encodeURIComponent(target.id)}`)
+								}
 							/>
 						))}
 
 						<View className="py-4 flex justify-center">
 							<Text className="text-xs text-zinc-400">
-								{isFetching ? '加载中...' : hasMore ? '上拉加载更多' : `已加载全部 ${list.length} 篇文章`}
+								{isFetching
+									? '加载中...'
+									: hasMore
+										? '上拉加载更多'
+										: `已加载全部 ${list.length} 篇文章`}
 							</Text>
 						</View>
 					</>
