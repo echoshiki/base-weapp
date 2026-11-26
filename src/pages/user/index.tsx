@@ -5,6 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useUser } from '@/hooks/useUser';
 import { useAppConfig } from '@/hooks/useAppConfig';
 import { Avatar, NavItem, Page, Card, Asset, Gender, Divider } from '@/components/ui';
+import { FEEDBACK_ROUTES } from '@/packages/feedback/routes';
 import { mapsTo } from '@/utils/common';
 
 export default function UserPage() {
@@ -85,6 +86,12 @@ export default function UserPage() {
 						layout="list"
 						label="UI 组件示例"
 						onClick={() => mapsTo('/pages/example/index')}
+					/>
+					<NavItem
+						icon="icon-[ph--chat-circle-text]"
+						layout="list"
+						label="意见反馈"
+						onClick={() => mapsTo(FEEDBACK_ROUTES.form)}
 					/>
 					<NavItem icon="icon-[ph--headset]" layout="list" label="在线客服" openType="contact" />
 					<NavItem

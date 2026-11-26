@@ -78,17 +78,17 @@ export function FormItem({
 			onClick={onClick}
 			{...props}
 		>
-			<View className={cn('flex w-full', isColumn ? 'flex-col gap-2.5' : 'flex-row justify-between items-center')}>
-				{isColumn ? (
-					(label !== undefined || (!error && helper)) && (
-						<View className="flex items-center justify-between gap-2 w-full">
-							{renderLabel()}
-							{!error && renderHelper('mt-0 shrink-0')}
-						</View>
-					)
-				) : (
-					renderLabel()
-				)}
+			<View
+				className={cn('flex w-full', isColumn ? 'flex-col gap-2.5' : 'flex-row justify-between items-center')}
+			>
+				{isColumn
+					? (label !== undefined || (!error && helper)) && (
+							<View className="flex items-center justify-between gap-2 w-full">
+								{renderLabel()}
+								{!error && renderHelper('mt-0 shrink-0')}
+							</View>
+						)
+					: renderLabel()}
 
 				<View className={cn('flex-1 min-w-0', !isColumn && 'text-right flex justify-end')}>{children}</View>
 			</View>

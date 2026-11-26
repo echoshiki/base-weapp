@@ -1,0 +1,258 @@
+{
+	"openapi": "3.0.3",
+	"info": {
+		"title": "Feedback 模块接口（热插拔分包）",
+		"version": "1.0.0",
+		"description": "src/packages/feedback 独立模块的 OpenAPI 3.0 文档。已为每个字段配置 x-apifox-mock 规则，导入 Apifox 开启云端 Mock 即可直接生成语义准确的中文测试数据。"
+	},
+	"tags": [{ "name": "意见反馈", "description": "反馈提交、我的记录列表与处理进度详情" }],
+	"components": {
+		"schemas": {
+			"FeedbackItem": {
+				"type": "object",
+				"required": ["id", "type", "status", "content", "createTime"],
+				"properties": {
+					"id": { "type": "string", "x-apifox-mock": "FB_@natural(10000, 99999)", "example": "FB_202601" },
+					"type": {
+						"type": "string",
+						"enum": ["suggestion", "bug", "complaint", "other"],
+						"x-apifox-mock": "@pick(['suggestion', 'bug', 'complaint', 'other'])",
+						"example": "suggestion"
+					},
+					"typeLabel": {
+						"type": "string",
+						"x-apifox-mock": "@pick(['功能建议', '异常报错', '服务投诉', '其他问题'])",
+						"example": "功能建议"
+					},
+					"status": {
+						"type": "string",
+						"enum": ["pending", "processing", "replied"],
+						"x-apifox-mock": "@pick(['pending', 'processing', 'replied'])",
+						"example": "replied"
+					},
+					"content": {
+						"type": "string",
+						"x-apifox-mock": "@cparagraph(1, 2)",
+						"example": "希望个人中心增加深色模式开关，夜间使用体验会更舒适。"
+					},
+					"images": {
+						"type": "array",
+						"maxItems": 2,
+						"items": {
+							"type": "string",
+							"x-apifox-mock": "https://images.unsplash.com/photo-1519046904884-53103b34b206?w=600&auto=format&fit=crop&q=80"
+						},
+						"example": [
+							"https://images.unsplash.com/photo-1519046904884-53103b34b206?w=600&auto=format&fit=crop&q=80"
+						]
+					},
+					"contact": {
+						"type": "string",
+						"x-apifox-mock": "13800138000",
+						"example": "13800138000"
+					},
+					"reply": {
+						"type": "string",
+						"x-apifox-mock": "感谢您的反馈！我们已将该需求纳入下个版本排期，完成后会第一时间通知您。",
+						"example": "感谢您的反馈！我们已将该需求纳入下个版本排期，完成后会第一时间通知您。"
+					},
+					"replyTime": {
+						"type": "string",
+						"x-apifox-mock": "@datetime('yyyy-MM-dd HH:mm:ss')",
+						"example": "2026-11-26 10:30:00"
+					},
+					"createTime": {
+						"type": "string",
+						"x-apifox-mock": "@datetime('yyyy-MM-dd HH:mm:ss')",
+						"example": "2026-11-26 09:15:00"
+					}
+				}
+			}
+		}
+	},
+	"paths": {
+		"/feedback/submit": {
+			"post": {
+				"tags": ["意见反馈"],
+				"summary": "提交意见反馈",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"required": ["type", "content"],
+								"properties": {
+									"type": {
+										"type": "string",
+										"enum": ["suggestion", "bug", "complaint", "other"],
+										"example": "suggestion"
+									},
+									"content": { "type": "string", "example": "建议优化列表加载速度" },
+									"images": { "type": "array", "items": { "type": "string" } },
+									"contact": { "type": "string", "example": "13800138000" }
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "提交成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "提交成功", "example": "提交成功" },
+										"data": {
+											"type": "object",
+											"required": ["id"],
+											"properties": {
+												"id": { "type": "string", "x-apifox-mock": "FB_@natural(10000, 99999)", "example": "FB_202601" }
+											}
+										}
+									}
+								},
+								"example": {
+									"code": 200,
+									"msg": "提交成功",
+									"data": { "id": "FB_202601" }
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/feedback/list": {
+			"get": {
+				"tags": ["意见反馈"],
+				"summary": "获取我的反馈列表",
+				"parameters": [
+					{ "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 } },
+					{ "name": "pageSize", "in": "query", "schema": { "type": "integer", "default": 10 } },
+					{
+						"name": "status",
+						"in": "query",
+						"schema": { "type": "string", "enum": ["pending", "processing", "replied"] }
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "反馈分页列表",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "ok", "example": "ok" },
+										"data": {
+											"type": "object",
+											"required": ["list", "total", "page", "pageSize", "hasMore"],
+											"properties": {
+												"list": {
+													"type": "array",
+													"minItems": 3,
+													"maxItems": 5,
+													"items": { "$ref": "#/components/schemas/FeedbackItem" }
+												},
+												"total": { "type": "integer", "x-apifox-mock": "4", "example": 4 },
+												"page": { "type": "integer", "x-apifox-mock": "1", "example": 1 },
+												"pageSize": { "type": "integer", "x-apifox-mock": "10", "example": 10 },
+												"hasMore": { "type": "boolean", "x-apifox-mock": "false", "example": false }
+											}
+										}
+									}
+								},
+								"example": {
+									"code": 200,
+									"msg": "ok",
+									"data": {
+										"list": [
+											{
+												"id": "FB_202601",
+												"type": "suggestion",
+												"typeLabel": "功能建议",
+												"status": "replied",
+												"content": "希望个人中心增加深色模式开关，夜间使用体验会更舒适。",
+												"images": [
+													"https://images.unsplash.com/photo-1519046904884-53103b34b206?w=600&auto=format&fit=crop&q=80"
+												],
+												"contact": "13800138000",
+												"reply": "感谢您的反馈！我们已将该需求纳入下个版本排期。",
+												"replyTime": "2026-11-26 10:30:00",
+												"createTime": "2026-11-26 09:15:00"
+											},
+											{
+												"id": "FB_202602",
+												"type": "bug",
+												"typeLabel": "异常报错",
+												"status": "processing",
+												"content": "在弱网环境下点击图片上传时，进度提示消失得稍微有点快。",
+												"createTime": "2026-11-25 16:40:00"
+											}
+										],
+										"total": 2,
+										"page": 1,
+										"pageSize": 10,
+										"hasMore": false
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/feedback/detail": {
+			"get": {
+				"tags": ["意见反馈"],
+				"summary": "获取反馈详情",
+				"parameters": [
+					{ "name": "id", "in": "query", "required": true, "schema": { "type": "string", "example": "FB_202601" } }
+				],
+				"responses": {
+					"200": {
+						"description": "反馈详情",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "ok", "example": "ok" },
+										"data": { "$ref": "#/components/schemas/FeedbackItem" }
+									}
+								},
+								"example": {
+									"code": 200,
+									"msg": "ok",
+									"data": {
+										"id": "FB_202601",
+										"type": "suggestion",
+										"typeLabel": "功能建议",
+										"status": "replied",
+										"content": "希望个人中心增加深色模式开关，夜间使用体验会更舒适。",
+										"images": [
+											"https://images.unsplash.com/photo-1519046904884-53103b34b206?w=600&auto=format&fit=crop&q=80"
+										],
+										"contact": "13800138000",
+										"reply": "感谢您的反馈！我们已将该需求纳入下个版本排期。",
+										"replyTime": "2026-11-26 10:30:00",
+										"createTime": "2026-11-26 09:15:00"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

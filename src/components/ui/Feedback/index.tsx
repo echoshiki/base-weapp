@@ -5,10 +5,7 @@ import { ReactNode } from 'react';
 export type FeedbackVariant = 'success' | 'error' | 'warning' | 'info' | 'loading';
 
 // 变体映射字典
-const variantMap: Record<
-	FeedbackVariant,
-	{ defaultIcon: string; bgClass: string; iconClass: string }
-> = {
+const variantMap: Record<FeedbackVariant, { defaultIcon: string; bgClass: string; iconClass: string }> = {
 	success: {
 		defaultIcon: 'icon-[ph--check-circle-fill]',
 		bgClass: 'bg-green-50',
@@ -84,19 +81,11 @@ export const Feedback = ({
 			</View>
 
 			{/* 标题区 */}
-			{title && (
-				<Text
-					className={`font-bold mb-2 ${isLoading ? 'text-base' : 'text-2xl'}`}
-				>
-					{title}
-				</Text>
-			)}
+			{title && <Text className={`font-bold mb-2 ${isLoading ? 'text-base' : 'text-2xl'}`}>{title}</Text>}
 
 			{/* 副标题/描述区 */}
 			{subtitle && (
-				<Text
-					className={`text-sm opacity-60 text-center leading-relaxed px-4 ${children ? 'mb-6' : 'mb-10'}`}
-				>
+				<Text className={`text-sm opacity-60 text-center leading-relaxed px-4 ${children ? 'mb-6' : 'mb-10'}`}>
 					{subtitle}
 				</Text>
 			)}

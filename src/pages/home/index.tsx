@@ -3,6 +3,7 @@ import { Page, Card, Heading, ActionTile, Badge, Button } from '@/components/ui'
 import { useAuth } from '@/hooks/useAuth';
 import { useAuthStore } from '@/store/auth';
 import { ARTICLE_ROUTES } from '@/packages/article/routes';
+import { FEEDBACK_ROUTES } from '@/packages/feedback/routes';
 import { mapsTo } from '@/utils/common';
 
 export default function Home() {
@@ -76,17 +77,17 @@ export default function Home() {
 						layout="compact"
 						theme="blue"
 						title="文章模块"
-						subTitle="热插拔分包样板"
+						subTitle="列表 + 详情样板"
 						icon="icon-[ph--article-duotone]"
 						onClick={() => mapsTo(ARTICLE_ROUTES.list)}
 					/>
 					<ActionTile
 						layout="compact"
 						theme="amber"
-						title="登录 / 注册"
-						subTitle="多端认证流演示"
-						icon="icon-[ph--sign-in-duotone]"
-						onClick={() => mapsTo('/pages/login/index')}
+						title="意见反馈"
+						subTitle="表单 + 进度样板"
+						icon="icon-[ph--chat-circle-text-duotone]"
+						onClick={() => mapsTo(FEEDBACK_ROUTES.form)}
 					/>
 				</View>
 			</View>

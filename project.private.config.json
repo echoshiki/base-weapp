@@ -23,11 +23,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "资料页",
-          "pathName": "pages/user/profile/index",
+          "name": "落地页",
+          "pathName": "packages/feedback/pages/form/index",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "资料页",
+          "pathName": "pages/user/profile/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "组件页",
