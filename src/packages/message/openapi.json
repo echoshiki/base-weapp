@@ -1,0 +1,324 @@
+{
+	"openapi": "3.0.3",
+	"info": {
+		"title": "Message 模块接口（热插拔分包）",
+		"version": "1.0.0",
+		"description": "src/packages/message 独立模块的 OpenAPI 3.0 文档。已为每个字段配置 x-apifox-mock 规则，导入 Apifox 开启云端 Mock 即可直接生成语义准确的中文测试数据。"
+	},
+	"tags": [{ "name": "消息通知", "description": "消息分页列表、消息详情、未读数统计与已读标记" }],
+	"components": {
+		"schemas": {
+			"MessageItem": {
+				"type": "object",
+				"required": ["id", "type", "title", "content", "isRead", "createTime"],
+				"properties": {
+					"id": {
+						"type": "string",
+						"x-apifox-mock": "MSG_@natural(10000, 99999)",
+						"example": "MSG_202601"
+					},
+					"type": {
+						"type": "string",
+						"enum": ["system", "business"],
+						"x-apifox-mock": "@pick(['system', 'business'])",
+						"example": "system"
+					},
+					"title": {
+						"type": "string",
+						"x-apifox-mock": "@ctitle(8, 16)",
+						"example": "系统版本 v1.2.0 更新维护通知"
+					},
+					"summary": {
+						"type": "string",
+						"x-apifox-mock": "@csentence(12, 24)",
+						"example": "为了给您带来更流畅的使用体验，系统将于本周六凌晨进行短暂升级维护。"
+					},
+					"content": {
+						"type": "string",
+						"x-apifox-mock": "@cparagraph(2, 4)",
+						"example": "尊敬的用户，您好：\n\n为了持续提升服务稳定性与交互体验，我们计划于本周六 02:00 - 04:00 进行例行系统升级维护。维护期间部分服务可能出现短暂波动，请提前保存相关操作。感谢您的理解与支持！"
+					},
+					"isRead": {
+						"type": "boolean",
+						"x-apifox-mock": "@boolean",
+						"example": false
+					},
+					"targetUrl": {
+						"type": "string",
+						"x-apifox-mock": "/packages/article/pages/list/index",
+						"example": "/packages/article/pages/list/index"
+					},
+					"createTime": {
+						"type": "string",
+						"x-apifox-mock": "@datetime('yyyy-MM-dd HH:mm:ss')",
+						"example": "2026-11-26 10:20:00"
+					}
+				}
+			}
+		}
+	},
+	"paths": {
+		"/message/list": {
+			"get": {
+				"tags": ["消息通知"],
+				"summary": "获取消息分页列表",
+				"parameters": [
+					{
+						"name": "page",
+						"in": "query",
+						"schema": { "type": "integer", "default": 1, "example": 1 },
+						"description": "页码（从 1 开始）"
+					},
+					{
+						"name": "pageSize",
+						"in": "query",
+						"schema": { "type": "integer", "default": 10, "example": 10 },
+						"description": "每页数量"
+					},
+					{
+						"name": "type",
+						"in": "query",
+						"schema": { "type": "string", "enum": ["system", "business"] },
+						"description": "消息分类筛选：system-系统公告，business-业务通知"
+					},
+					{
+						"name": "unreadOnly",
+						"in": "query",
+						"schema": { "type": "boolean" },
+						"description": "是否仅返回未读消息"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "获取成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "success", "example": "success" },
+										"data": {
+											"type": "object",
+											"required": ["list", "total", "page", "pageSize", "hasMore"],
+											"properties": {
+												"list": {
+													"type": "array",
+													"minItems": 4,
+													"maxItems": 6,
+													"items": { "$ref": "#/components/schemas/MessageItem" }
+												},
+												"total": { "type": "integer", "x-apifox-mock": "12", "example": 12 },
+												"page": { "type": "integer", "x-apifox-mock": "1", "example": 1 },
+												"pageSize": { "type": "integer", "x-apifox-mock": "10", "example": 10 },
+												"hasMore": { "type": "boolean", "x-apifox-mock": "false", "example": false }
+											}
+										}
+									}
+								},
+								"example": {
+									"code": 200,
+									"msg": "success",
+									"data": {
+										"list": [
+											{
+												"id": "MSG_202601",
+												"type": "system",
+												"title": "系统版本 v1.2.0 更新维护通知",
+												"summary": "为了给您带来更流畅的使用体验，系统将于本周六凌晨进行短暂升级维护。",
+												"content": "尊敬的用户，您好：\n\n为了持续提升服务稳定性与交互体验，我们计划于本周六 02:00 - 04:00 进行例行系统升级维护。维护期间部分服务可能出现短暂波动，请提前保存相关操作。",
+												"isRead": false,
+												"targetUrl": "/packages/article/pages/list/index",
+												"createTime": "2026-11-26 10:20:00"
+											},
+											{
+												"id": "MSG_202602",
+												"type": "business",
+												"title": "您的意见反馈已收到官方回复",
+												"summary": "感谢您提交的建议，客服团队已回复并纳入下个版本优化计划。",
+												"content": "您提交的意见反馈已由产品团队跟进处理，点击下方按钮可查看完整回复内容。",
+												"isRead": false,
+												"targetUrl": "/packages/feedback/pages/list/index",
+												"createTime": "2026-11-25 18:45:00"
+											},
+											{
+												"id": "MSG_202603",
+												"type": "system",
+												"title": "隐私政策与用户协议更新说明",
+												"summary": "我们更新了隐私保护条款，以更透明地说明数据收集与使用方式。",
+												"content": "为了更好地保障您的个人信息安全，我们对《隐私政策》与《用户服务协议》进行了修订，主要补充了账号注销与权限管理相关说明。",
+												"isRead": true,
+												"createTime": "2026-11-22 09:00:00"
+											}
+										],
+										"total": 3,
+										"page": 1,
+										"pageSize": 10,
+										"hasMore": false
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/message/detail": {
+			"get": {
+				"tags": ["消息通知"],
+				"summary": "获取消息详情",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "query",
+						"required": true,
+						"schema": { "type": "string", "example": "MSG_202601" },
+						"description": "消息 ID"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "获取成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "success", "example": "success" },
+										"data": { "$ref": "#/components/schemas/MessageItem" }
+									}
+								},
+								"example": {
+									"code": 200,
+									"msg": "success",
+									"data": {
+										"id": "MSG_202601",
+										"type": "system",
+										"title": "系统版本 v1.2.0 更新维护通知",
+										"summary": "为了给您带来更流畅的使用体验，系统将于本周六凌晨进行短暂升级维护。",
+										"content": "尊敬的用户，您好：\n\n为了持续提升服务稳定性与交互体验，我们计划于本周六 02:00 - 04:00 进行例行系统升级维护。维护期间部分服务可能出现短暂波动，请提前保存相关操作。感谢您的理解与支持！",
+										"isRead": false,
+										"targetUrl": "/packages/article/pages/list/index",
+										"createTime": "2026-11-26 10:20:00"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/message/unread-count": {
+			"get": {
+				"tags": ["消息通知"],
+				"summary": "获取未读消息数",
+				"responses": {
+					"200": {
+						"description": "获取成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "success", "example": "success" },
+										"data": {
+											"type": "object",
+											"required": ["count"],
+											"properties": {
+												"count": { "type": "integer", "x-apifox-mock": "@integer(0, 9)", "example": 2 }
+											}
+										}
+									}
+								},
+								"example": {
+									"code": 200,
+									"msg": "success",
+									"data": {
+										"count": 2
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/message/read": {
+			"put": {
+				"tags": ["消息通知"],
+				"summary": "标记单条消息已读",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"required": ["id"],
+								"properties": {
+									"id": { "type": "string", "example": "MSG_202601" }
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "标记成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "success", "example": "success" },
+										"data": { "type": "null", "x-apifox-mock": "null", "example": null }
+									}
+								},
+								"example": {
+									"code": 200,
+									"msg": "success",
+									"data": null
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/message/read-all": {
+			"put": {
+				"tags": ["消息通知"],
+				"summary": "一键全部已读",
+				"responses": {
+					"200": {
+						"description": "标记成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "已全部标为已读", "example": "已全部标为已读" },
+										"data": { "type": "null", "x-apifox-mock": "null", "example": null }
+									}
+								},
+								"example": {
+									"code": 200,
+									"msg": "已全部标为已读",
+									"data": null
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

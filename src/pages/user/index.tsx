@@ -4,8 +4,10 @@ import { useAuthStore } from '@/store/auth';
 import { useAuth } from '@/hooks/useAuth';
 import { useUser } from '@/hooks/useUser';
 import { useAppConfig } from '@/hooks/useAppConfig';
-import { Avatar, NavItem, Page, Card, Asset, Gender, Divider } from '@/components/ui';
+import { Avatar, NavItem, Page, Card, Asset, Gender, Divider, Badge } from '@/components/ui';
 import { FEEDBACK_ROUTES } from '@/packages/feedback/routes';
+import { MESSAGE_ROUTES } from '@/packages/message/routes';
+import { useUnreadCount } from '@/packages/message/hooks';
 import { mapsTo } from '@/utils/common';
 
 export default function UserPage() {
@@ -13,9 +15,13 @@ export default function UserPage() {
 	const { isLoggedIn, onLogout, navigateWithAuth } = useAuth();
 	const { data: appConfig } = useAppConfig();
 	const { refetch } = useUser();
+	const { data: unreadCount = 0, refetch: refetchUnread } = useUnreadCount(isLoggedIn);
 
 	useDidShow(() => {
-		if (isLoggedIn) refetch().catch((err) => console.error('用户中心同步最新身份失败:', err));
+		if (isLoggedIn) {
+			refetch().catch((err) => console.error('用户中心同步最新身份失败:', err));
+			refetchUnread().catch(() => {});
+		}
 	});
 
 	return (
@@ -69,7 +75,13 @@ export default function UserPage() {
 					<Divider orientation="vertical" />
 					<Asset label="待办事项" value={0} valueColor="text-zinc-700" />
 					<Divider orientation="vertical" />
-					<Asset label="消息通知" value={0} valueColor="text-zinc-700" />
+					<Asset
+						label="消息通知"
+						value={unreadCount}
+						valueColor={unreadCount > 0 ? 'text-rose-500' : 'text-zinc-700'}
+						className="cursor-pointer active:opacity-70"
+						onClick={() => mapsTo(MESSAGE_ROUTES.list)}
+					/>
 				</Card>
 
 				{/* 功能列表 */}
@@ -86,6 +98,19 @@ export default function UserPage() {
 						layout="list"
 						label="UI 组件示例"
 						onClick={() => mapsTo('/pages/example/index')}
+					/>
+					<NavItem
+						icon="icon-[ph--bell-ringing]"
+						layout="list"
+						label="消息通知"
+						extra={
+							unreadCount > 0 ? (
+								<Badge variant="rose" pill>
+									{unreadCount > 99 ? '99+' : unreadCount}
+								</Badge>
+							) : undefined
+						}
+						onClick={() => mapsTo(MESSAGE_ROUTES.list)}
 					/>
 					<NavItem
 						icon="icon-[ph--chat-circle-text]"
