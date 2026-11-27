@@ -21,6 +21,7 @@ export default function CartPage() {
 		items,
 		validItems,
 		invalidItems,
+		selectedItems,
 		totalCount,
 		selectedCount,
 		totalPrice,
@@ -100,11 +101,12 @@ export default function CartPage() {
 	};
 
 	const handleCheckout = () => {
-		if (selectedCount <= 0) {
+		if (selectedCount <= 0 || selectedItems.length === 0) {
 			Taro.showToast({ title: '请先选择要结算的商品', icon: 'none' });
 			return;
 		}
-		Taro.showToast({ title: '确认订单页将在第 3 步接入', icon: 'none' });
+		const cartIds = selectedItems.map((item) => item.id).join(',');
+		mapsTo(`${SHOP_ROUTES.checkout}?mode=cart&cartIds=${encodeURIComponent(cartIds)}`);
 	};
 
 	const goGoodsDetail = (item: CartItem) => {

@@ -45,7 +45,10 @@ export default function GoodsDetailPage() {
 			if (!detail) return;
 			addCart({ goodsId: detail.id, skuId: sku.id, quantity });
 		} else {
-			Taro.showToast({ title: `已选 ${quantity} 件，结算页将在第 3 步接入`, icon: 'none' });
+			if (!detail) return;
+			mapsTo(
+				`${SHOP_ROUTES.checkout}?mode=buy_now&goodsId=${encodeURIComponent(detail.id)}&skuId=${encodeURIComponent(sku.id)}&quantity=${quantity}`,
+			);
 		}
 	};
 

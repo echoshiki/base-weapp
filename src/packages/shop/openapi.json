@@ -7,7 +7,8 @@
 	},
 	"tags": [
 		{ "name": "电商-商品", "description": "商品分类、分页列表与多规格 SKU 详情" },
-		{ "name": "电商-购物车", "description": "购物车列表、加购、数量/勾选更新、全选与批量删除" }
+		{ "name": "电商-购物车", "description": "购物车列表、加购、数量/勾选更新、全选与批量删除" },
+		{ "name": "电商-订单", "description": "结算预览、下单、支付、订单列表与详情流转" }
 	],
 	"components": {
 		"schemas": {
@@ -102,6 +103,61 @@
 					"stock": { "type": "integer", "x-apifox-mock": "@integer(10, 50)", "example": 28 },
 					"selected": { "type": "boolean", "x-apifox-mock": "true", "example": true },
 					"invalid": { "type": "boolean", "x-apifox-mock": "false", "example": false }
+				}
+			},
+			"OrderItem": {
+				"type": "object",
+				"required": ["id", "orderNo", "status", "items", "address", "goodsAmount", "freightAmount", "payAmount", "createTime"],
+				"properties": {
+					"id": { "type": "string", "x-apifox-mock": "ORD_@natural(10000, 99999)", "example": "ORD_202601" },
+					"orderNo": { "type": "string", "x-apifox-mock": "20261127@string('number', 8)", "example": "2026112716280001" },
+					"status": {
+						"type": "string",
+						"enum": ["pending_pay", "pending_ship", "pending_receive", "completed", "cancelled"],
+						"x-apifox-mock": "@pick(['pending_pay', 'pending_ship', 'pending_receive', 'completed'])",
+						"example": "pending_receive"
+					},
+					"items": {
+						"type": "array",
+						"minItems": 1,
+						"maxItems": 2,
+						"items": {
+							"type": "object",
+							"properties": {
+								"goodsId": { "type": "string", "x-apifox-mock": "GOODS_10001" },
+								"skuId": { "type": "string", "x-apifox-mock": "SKU_10001_1" },
+								"title": { "type": "string", "x-apifox-mock": "极简无线降噪蓝牙耳机 Pro" },
+								"image": {
+									"type": "string",
+									"x-apifox-mock": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80"
+								},
+								"specText": { "type": "string", "x-apifox-mock": "云白 / 标准版" },
+								"price": { "type": "integer", "x-apifox-mock": "29900" },
+								"quantity": { "type": "integer", "x-apifox-mock": "1" }
+							}
+						}
+					},
+					"address": {
+						"type": "object",
+						"properties": {
+							"id": { "type": "string", "x-apifox-mock": "ADDR_202601" },
+							"name": { "type": "string", "x-apifox-mock": "林知远" },
+							"phone": { "type": "string", "x-apifox-mock": "13800138000" },
+							"province": { "type": "string", "x-apifox-mock": "浙江省" },
+							"city": { "type": "string", "x-apifox-mock": "杭州市" },
+							"district": { "type": "string", "x-apifox-mock": "西湖区" },
+							"detail": { "type": "string", "x-apifox-mock": "文三路 259 号昌地火炬大厦 2 号楼 802 室" }
+						}
+					},
+					"goodsAmount": { "type": "integer", "x-apifox-mock": "29900", "example": 29900 },
+					"freightAmount": { "type": "integer", "x-apifox-mock": "0", "example": 0 },
+					"discountAmount": { "type": "integer", "x-apifox-mock": "0", "example": 0 },
+					"payAmount": { "type": "integer", "x-apifox-mock": "29900", "example": 29900 },
+					"remark": { "type": "string", "x-apifox-mock": "请尽量发顺丰", "example": "请尽量发顺丰" },
+					"expressCompany": { "type": "string", "x-apifox-mock": "顺丰速运", "example": "顺丰速运" },
+					"expressNo": { "type": "string", "x-apifox-mock": "SF14@string('number', 11)", "example": "SF1420261127001" },
+					"createTime": { "type": "string", "x-apifox-mock": "@datetime('yyyy-MM-dd HH:mm:ss')", "example": "2026-11-27 16:00:00" },
+					"payTime": { "type": "string", "x-apifox-mock": "@datetime('yyyy-MM-dd HH:mm:ss')", "example": "2026-11-27 16:02:10" }
 				}
 			}
 		}
@@ -671,6 +727,368 @@
 									}
 								},
 								"example": { "code": 200, "msg": "已移出购物车", "data": null }
+							}
+						}
+					}
+				}
+			}
+		},
+		"/shop/order/preview": {
+			"post": {
+				"tags": ["电商-订单"],
+				"summary": "获取确认订单预览（默认地址、商品清单与金额汇总）",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"required": ["mode"],
+								"properties": {
+									"mode": { "type": "string", "enum": ["cart", "buy_now"], "example": "cart" },
+									"cartIds": { "type": "array", "items": { "type": "string" }, "example": ["CART_1001"] },
+									"goodsId": { "type": "string" },
+									"skuId": { "type": "string" },
+									"quantity": { "type": "integer" }
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "获取成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "success", "example": "success" },
+										"data": {
+											"type": "object",
+											"required": ["items", "goodsAmount", "freightAmount", "payAmount"],
+											"properties": {
+												"address": {
+													"type": "object",
+													"properties": {
+														"id": { "type": "string", "x-apifox-mock": "ADDR_202601" },
+														"name": { "type": "string", "x-apifox-mock": "林知远" },
+														"phone": { "type": "string", "x-apifox-mock": "13800138000" },
+														"province": { "type": "string", "x-apifox-mock": "浙江省" },
+														"city": { "type": "string", "x-apifox-mock": "杭州市" },
+														"district": { "type": "string", "x-apifox-mock": "西湖区" },
+														"detail": { "type": "string", "x-apifox-mock": "文三路 259 号昌地火炬大厦 2 号楼 802 室" }
+													}
+												},
+												"items": {
+													"type": "array",
+													"minItems": 1,
+													"maxItems": 2,
+													"items": {
+														"type": "object",
+														"properties": {
+															"goodsId": { "type": "string", "x-apifox-mock": "GOODS_10001" },
+															"skuId": { "type": "string", "x-apifox-mock": "SKU_10001_1" },
+															"title": { "type": "string", "x-apifox-mock": "极简无线降噪蓝牙耳机 Pro" },
+															"image": {
+																"type": "string",
+																"x-apifox-mock": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80"
+															},
+															"specText": { "type": "string", "x-apifox-mock": "云白 / 标准版" },
+															"price": { "type": "integer", "x-apifox-mock": "29900" },
+															"quantity": { "type": "integer", "x-apifox-mock": "1" }
+														}
+													}
+												},
+												"goodsAmount": { "type": "integer", "x-apifox-mock": "29900" },
+												"freightAmount": { "type": "integer", "x-apifox-mock": "0" },
+												"discountAmount": { "type": "integer", "x-apifox-mock": "0" },
+												"payAmount": { "type": "integer", "x-apifox-mock": "29900" }
+											}
+										}
+									}
+								},
+								"example": {
+									"code": 200,
+									"msg": "success",
+									"data": {
+										"address": {
+											"id": "ADDR_202601",
+											"name": "林知远",
+											"phone": "13800138000",
+											"province": "浙江省",
+											"city": "杭州市",
+											"district": "西湖区",
+											"detail": "文三路 259 号昌地火炬大厦 2 号楼 802 室"
+										},
+										"items": [
+											{
+												"goodsId": "GOODS_10001",
+												"skuId": "SKU_10001_1",
+												"title": "极简无线降噪蓝牙耳机 Pro",
+												"image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80",
+												"specText": "云白 / 标准版",
+												"price": 29900,
+												"quantity": 1
+											}
+										],
+										"goodsAmount": 29900,
+										"freightAmount": 0,
+										"discountAmount": 0,
+										"payAmount": 29900
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/shop/order/create": {
+			"post": {
+				"tags": ["电商-订单"],
+				"summary": "提交创建订单",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"required": ["mode", "addressId"],
+								"properties": {
+									"mode": { "type": "string", "enum": ["cart", "buy_now"] },
+									"cartIds": { "type": "array", "items": { "type": "string" } },
+									"goodsId": { "type": "string" },
+									"skuId": { "type": "string" },
+									"quantity": { "type": "integer" },
+									"addressId": { "type": "string", "example": "ADDR_202601" },
+									"remark": { "type": "string", "example": "请尽量发顺丰" }
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "创建成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "下单成功", "example": "下单成功" },
+										"data": {
+											"type": "object",
+											"required": ["id", "orderNo"],
+											"properties": {
+												"id": { "type": "string", "x-apifox-mock": "ORD_@natural(10000, 99999)", "example": "ORD_202601" },
+												"orderNo": { "type": "string", "x-apifox-mock": "20261127@string('number', 8)", "example": "2026112716280001" }
+											}
+										}
+									}
+								},
+								"example": { "code": 200, "msg": "下单成功", "data": { "id": "ORD_202601", "orderNo": "2026112716280001" } }
+							}
+						}
+					}
+				}
+			}
+		},
+		"/shop/order/list": {
+			"get": {
+				"tags": ["电商-订单"],
+				"summary": "获取订单分页列表",
+				"parameters": [
+					{ "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 } },
+					{ "name": "pageSize", "in": "query", "schema": { "type": "integer", "default": 10 } },
+					{
+						"name": "status",
+						"in": "query",
+						"schema": { "type": "string", "enum": ["pending_pay", "pending_ship", "pending_receive", "completed", "cancelled"] }
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "获取成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "success", "example": "success" },
+										"data": {
+											"type": "object",
+											"required": ["list", "total", "page", "pageSize", "hasMore"],
+											"properties": {
+												"list": {
+													"type": "array",
+													"minItems": 2,
+													"maxItems": 4,
+													"items": { "$ref": "#/components/schemas/OrderItem" }
+												},
+												"total": { "type": "integer", "x-apifox-mock": "3", "example": 3 },
+												"page": { "type": "integer", "x-apifox-mock": "1", "example": 1 },
+												"pageSize": { "type": "integer", "x-apifox-mock": "10", "example": 10 },
+												"hasMore": { "type": "boolean", "x-apifox-mock": "false", "example": false }
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/shop/order/detail": {
+			"get": {
+				"tags": ["电商-订单"],
+				"summary": "获取订单详情",
+				"parameters": [
+					{ "name": "id", "in": "query", "required": true, "schema": { "type": "string", "example": "ORD_202601" } }
+				],
+				"responses": {
+					"200": {
+						"description": "获取成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "success", "example": "success" },
+										"data": { "$ref": "#/components/schemas/OrderItem" }
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/shop/order/pay": {
+			"post": {
+				"tags": ["电商-订单"],
+				"summary": "发起订单支付",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"required": ["id"],
+								"properties": {
+									"id": { "type": "string", "example": "ORD_202601" }
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "支付参数获取成功或模拟支付完成",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "支付成功", "example": "支付成功" },
+										"data": {
+											"type": "object",
+											"properties": {
+												"paid": { "type": "boolean", "x-apifox-mock": "true", "example": true }
+											}
+										}
+									}
+								},
+								"example": { "code": 200, "msg": "支付成功", "data": { "paid": true } }
+							}
+						}
+					}
+				}
+			}
+		},
+		"/shop/order/cancel": {
+			"put": {
+				"tags": ["电商-订单"],
+				"summary": "取消订单",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"required": ["id"],
+								"properties": {
+									"id": { "type": "string", "example": "ORD_202601" }
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "取消成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "订单已取消", "example": "订单已取消" },
+										"data": { "type": "null", "x-apifox-mock": "null", "example": null }
+									}
+								},
+								"example": { "code": 200, "msg": "订单已取消", "data": null }
+							}
+						}
+					}
+				}
+			}
+		},
+		"/shop/order/confirm-receive": {
+			"put": {
+				"tags": ["电商-订单"],
+				"summary": "确认收货",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"required": ["id"],
+								"properties": {
+									"id": { "type": "string", "example": "ORD_202601" }
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "确认成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "已确认收货", "example": "已确认收货" },
+										"data": { "type": "null", "x-apifox-mock": "null", "example": null }
+									}
+								},
+								"example": { "code": 200, "msg": "已确认收货", "data": null }
 							}
 						}
 					}

@@ -9,9 +9,22 @@ export const SHOP_ROUTES = {
 	goodsDetail: '/packages/shop/pages/goods-detail/index',
 	/** 购物车页 */
 	cart: '/packages/shop/pages/cart/index',
+	/** 确认订单页（传 ?mode=cart&cartIds=... 或 ?mode=buy_now&goodsId=...&skuId=...&quantity=...） */
+	checkout: '/packages/shop/pages/checkout/index',
+	/** 我的订单列表页（可选 ?status=pending_pay） */
+	orderList: '/packages/shop/pages/order-list/index',
+	/** 订单详情页（传 ?id=xxx） */
+	orderDetail: '/packages/shop/pages/order-detail/index',
 } as const;
 
 export const shopSubPackage = {
 	root: 'packages/shop',
-	pages: ['pages/goods-list/index', 'pages/goods-detail/index', 'pages/cart/index'],
+	pages: [
+		'pages/goods-list/index',
+		'pages/goods-detail/index',
+		'pages/cart/index',
+		'pages/checkout/index',
+		'pages/order-list/index',
+		'pages/order-detail/index',
+	],
 };
