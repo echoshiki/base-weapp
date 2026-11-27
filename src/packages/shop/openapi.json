@@ -1,0 +1,415 @@
+{
+	"openapi": "3.0.3",
+	"info": {
+		"title": "Shop 模块接口（热插拔分包）",
+		"version": "1.0.0",
+		"description": "src/packages/shop 独立电商模块的 OpenAPI 3.0 文档。金额字段统一以「分」为单位，已为所有字段配置 x-apifox-mock 规则，导入 Apifox 开启云端 Mock 即可直接联调。"
+	},
+	"tags": [{ "name": "电商-商品", "description": "商品分类、分页列表与多规格 SKU 详情" }],
+	"components": {
+		"schemas": {
+			"GoodsCategory": {
+				"type": "object",
+				"required": ["id", "name"],
+				"properties": {
+					"id": { "type": "string", "x-apifox-mock": "CAT_@natural(1, 20)", "example": "CAT_01" },
+					"name": {
+						"type": "string",
+						"x-apifox-mock": "@pick(['精选数码', '居家生活', '个护美妆', '文创礼品', '户外出行'])",
+						"example": "精选数码"
+					}
+				}
+			},
+			"GoodsItem": {
+				"type": "object",
+				"required": ["id", "title", "cover", "price", "sales"],
+				"properties": {
+					"id": { "type": "string", "x-apifox-mock": "GOODS_@natural(10000, 99999)", "example": "GOODS_10001" },
+					"title": {
+						"type": "string",
+						"x-apifox-mock": "@pick(['极简无线降噪蓝牙耳机 Pro', '桌面磁吸无线快充支架', '日式手工粗陶手冲咖啡壶', '轻量化折叠机械键盘 75%', '便携保温随行咖啡杯 480ml', '高支长绒棉四季四件套'])",
+						"example": "极简无线降噪蓝牙耳机 Pro"
+					},
+					"subtitle": {
+						"type": "string",
+						"x-apifox-mock": "@csentence(10, 20)",
+						"example": "主动降噪 45dB · 36 小时超长续航 · 轻盈无感佩戴"
+					},
+					"cover": {
+						"type": "string",
+						"x-apifox-mock": "@pick(['https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format&fit=crop&q=80', 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&auto=format&fit=crop&q=80', 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=600&auto=format&fit=crop&q=80'])",
+						"example": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80"
+					},
+					"price": { "type": "integer", "x-apifox-mock": "@integer(4900, 59900)", "example": 29900 },
+					"originalPrice": { "type": "integer", "x-apifox-mock": "@integer(69000, 89900)", "example": 39900 },
+					"sales": { "type": "integer", "x-apifox-mock": "@integer(80, 3200)", "example": 1280 },
+					"categoryId": { "type": "string", "x-apifox-mock": "CAT_01", "example": "CAT_01" },
+					"tags": {
+						"type": "array",
+						"maxItems": 2,
+						"items": { "type": "string", "x-apifox-mock": "@pick(['官方自营', '顺丰包邮', '热销爆款', '新品上市'])" },
+						"example": ["官方自营", "顺丰包邮"]
+					}
+				}
+			},
+			"GoodsSku": {
+				"type": "object",
+				"required": ["id", "specs", "price", "stock"],
+				"properties": {
+					"id": { "type": "string", "example": "SKU_10001_1" },
+					"specs": {
+						"type": "object",
+						"additionalProperties": { "type": "string" },
+						"example": { "颜色": "云白", "版本": "标准版" }
+					},
+					"price": { "type": "integer", "example": 29900 },
+					"originalPrice": { "type": "integer", "example": 39900 },
+					"stock": { "type": "integer", "example": 42 },
+					"image": {
+						"type": "string",
+						"example": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80"
+					}
+				}
+			}
+		}
+	},
+	"paths": {
+		"/shop/categories": {
+			"get": {
+				"tags": ["电商-商品"],
+				"summary": "获取商品分类列表",
+				"responses": {
+					"200": {
+						"description": "获取成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "success", "example": "success" },
+										"data": {
+											"type": "array",
+											"minItems": 4,
+											"maxItems": 5,
+											"items": { "$ref": "#/components/schemas/GoodsCategory" }
+										}
+									}
+								},
+								"example": {
+									"code": 200,
+									"msg": "success",
+									"data": [
+										{ "id": "CAT_01", "name": "精选数码" },
+										{ "id": "CAT_02", "name": "居家生活" },
+										{ "id": "CAT_03", "name": "文创礼品" },
+										{ "id": "CAT_04", "name": "户外出行" }
+									]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/shop/goods/list": {
+			"get": {
+				"tags": ["电商-商品"],
+				"summary": "获取商品分页列表",
+				"parameters": [
+					{ "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 } },
+					{ "name": "pageSize", "in": "query", "schema": { "type": "integer", "default": 10 } },
+					{ "name": "keyword", "in": "query", "schema": { "type": "string" }, "description": "搜索关键词" },
+					{ "name": "categoryId", "in": "query", "schema": { "type": "string" }, "description": "分类 ID" },
+					{
+						"name": "sort",
+						"in": "query",
+						"schema": { "type": "string", "enum": ["default", "sales", "price_asc", "price_desc"] },
+						"description": "排序方式"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "获取成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "success", "example": "success" },
+										"data": {
+											"type": "object",
+											"required": ["list", "total", "page", "pageSize", "hasMore"],
+											"properties": {
+												"list": {
+													"type": "array",
+													"minItems": 6,
+													"maxItems": 6,
+													"items": { "$ref": "#/components/schemas/GoodsItem" }
+												},
+												"total": { "type": "integer", "x-apifox-mock": "6", "example": 6 },
+												"page": { "type": "integer", "x-apifox-mock": "1", "example": 1 },
+												"pageSize": { "type": "integer", "x-apifox-mock": "10", "example": 10 },
+												"hasMore": { "type": "boolean", "x-apifox-mock": "false", "example": false }
+											}
+										}
+									}
+								},
+								"example": {
+									"code": 200,
+									"msg": "success",
+									"data": {
+										"list": [
+											{
+												"id": "GOODS_10001",
+												"title": "极简无线降噪蓝牙耳机 Pro",
+												"subtitle": "主动降噪 45dB · 36 小时超长续航",
+												"cover": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80",
+												"price": 29900,
+												"originalPrice": 39900,
+												"sales": 1280,
+												"categoryId": "CAT_01",
+												"tags": ["官方自营", "顺丰包邮"]
+											},
+											{
+												"id": "GOODS_10002",
+												"title": "极简石英腕表 蓝宝石镜面",
+												"subtitle": "超薄表盘 · 50 米生活防水",
+												"cover": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format&fit=crop&q=80",
+												"price": 45900,
+												"originalPrice": 59900,
+												"sales": 864,
+												"categoryId": "CAT_03",
+												"tags": ["热销爆款"]
+											}
+										],
+										"total": 2,
+										"page": 1,
+										"pageSize": 10,
+										"hasMore": false
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/shop/goods/detail": {
+			"get": {
+				"tags": ["电商-商品"],
+				"summary": "获取商品详情（含多规格 SKU 矩阵）",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "query",
+						"required": true,
+						"schema": { "type": "string", "example": "GOODS_10001" },
+						"description": "商品 ID"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "获取成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "success", "example": "success" },
+										"data": {
+											"type": "object",
+											"required": ["id", "title", "cover", "images", "price", "sales", "stock", "specs", "skus"],
+											"properties": {
+												"id": { "type": "string", "x-apifox-mock": "GOODS_10001" },
+												"title": { "type": "string", "x-apifox-mock": "极简无线降噪蓝牙耳机 Pro" },
+												"subtitle": { "type": "string", "x-apifox-mock": "主动降噪 45dB · 36 小时超长续航 · 轻盈无感佩戴" },
+												"cover": {
+													"type": "string",
+													"x-apifox-mock": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80"
+												},
+												"images": {
+													"type": "array",
+													"items": { "type": "string" },
+													"x-apifox-mock": "['https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80', 'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=800&auto=format&fit=crop&q=80']"
+												},
+												"price": { "type": "integer", "x-apifox-mock": "29900" },
+												"originalPrice": { "type": "integer", "x-apifox-mock": "39900" },
+												"sales": { "type": "integer", "x-apifox-mock": "1280" },
+												"stock": { "type": "integer", "x-apifox-mock": "68" },
+												"tags": {
+													"type": "array",
+													"items": { "type": "string" },
+													"x-apifox-mock": "['官方自营', '顺丰包邮']"
+												},
+												"services": {
+													"type": "array",
+													"items": { "type": "string" },
+													"x-apifox-mock": "['48小时发货', '7天无理由退换', '正品保障']"
+												},
+												"description": {
+													"type": "string",
+													"x-apifox-mock": "采用定制 40mm 复合振膜动圈单元，支持双馈混合主动降噪与通透模式一键切换；蛋白皮慢回弹耳罩，久戴不压耳，兼容双设备无缝流转。"
+												},
+												"specs": {
+													"type": "array",
+													"items": { "type": "object" },
+													"example": [
+														{ "name": "颜色", "values": ["云白", "炭黑", "深空蓝"] },
+														{ "name": "版本", "values": ["标准版", "旗舰降噪版"] }
+													]
+												},
+												"skus": {
+													"type": "array",
+													"items": { "$ref": "#/components/schemas/GoodsSku" },
+													"example": [
+														{
+															"id": "SKU_10001_1",
+															"specs": { "颜色": "云白", "版本": "标准版" },
+															"price": 29900,
+															"originalPrice": 39900,
+															"stock": 28,
+															"image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80"
+														},
+														{
+															"id": "SKU_10001_2",
+															"specs": { "颜色": "云白", "版本": "旗舰降噪版" },
+															"price": 36900,
+															"originalPrice": 45900,
+															"stock": 15,
+															"image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80"
+														},
+														{
+															"id": "SKU_10001_3",
+															"specs": { "颜色": "炭黑", "版本": "标准版" },
+															"price": 29900,
+															"originalPrice": 39900,
+															"stock": 25,
+															"image": "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=600&auto=format&fit=crop&q=80"
+														},
+														{
+															"id": "SKU_10001_4",
+															"specs": { "颜色": "炭黑", "版本": "旗舰降噪版" },
+															"price": 36900,
+															"originalPrice": 45900,
+															"stock": 0,
+															"image": "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=600&auto=format&fit=crop&q=80"
+														},
+														{
+															"id": "SKU_10001_5",
+															"specs": { "颜色": "深空蓝", "版本": "标准版" },
+															"price": 31900,
+															"originalPrice": 39900,
+															"stock": 0
+														},
+														{
+															"id": "SKU_10001_6",
+															"specs": { "颜色": "深空蓝", "版本": "旗舰降噪版" },
+															"price": 38900,
+															"originalPrice": 46900,
+															"stock": 12
+														}
+													]
+												},
+												"detailImages": {
+													"type": "array",
+													"items": { "type": "string" },
+													"example": [
+														"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900&auto=format&fit=crop&q=80",
+														"https://images.unsplash.com/photo-1583394838336-acd977736f90?w=900&auto=format&fit=crop&q=80"
+													]
+												}
+											}
+										}
+									}
+								},
+								"example": {
+									"code": 200,
+									"msg": "success",
+									"data": {
+										"id": "GOODS_10001",
+										"title": "极简无线降噪蓝牙耳机 Pro",
+										"subtitle": "主动降噪 45dB · 36 小时超长续航 · 轻盈无感佩戴",
+										"cover": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80",
+										"images": [
+											"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80",
+											"https://images.unsplash.com/photo-1583394838336-acd977736f90?w=800&auto=format&fit=crop&q=80"
+										],
+										"price": 29900,
+										"originalPrice": 39900,
+										"sales": 1280,
+										"stock": 80,
+										"tags": ["官方自营", "顺丰包邮"],
+										"services": ["48小时发货", "7天无理由退换", "正品保障"],
+										"description": "采用定制 40mm 复合振膜动圈单元，支持双馈混合主动降噪与通透模式一键切换；蛋白皮慢回弹耳罩，久戴不压耳，兼容双设备无缝流转。",
+										"specs": [
+											{ "name": "颜色", "values": ["云白", "炭黑", "深空蓝"] },
+											{ "name": "版本", "values": ["标准版", "旗舰降噪版"] }
+										],
+										"skus": [
+											{
+												"id": "SKU_10001_1",
+												"specs": { "颜色": "云白", "版本": "标准版" },
+												"price": 29900,
+												"originalPrice": 39900,
+												"stock": 28,
+												"image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80"
+											},
+											{
+												"id": "SKU_10001_2",
+												"specs": { "颜色": "云白", "版本": "旗舰降噪版" },
+												"price": 36900,
+												"originalPrice": 45900,
+												"stock": 15,
+												"image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80"
+											},
+											{
+												"id": "SKU_10001_3",
+												"specs": { "颜色": "炭黑", "版本": "标准版" },
+												"price": 29900,
+												"originalPrice": 39900,
+												"stock": 25,
+												"image": "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=600&auto=format&fit=crop&q=80"
+											},
+											{
+												"id": "SKU_10001_4",
+												"specs": { "颜色": "炭黑", "版本": "旗舰降噪版" },
+												"price": 36900,
+												"originalPrice": 45900,
+												"stock": 0,
+												"image": "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=600&auto=format&fit=crop&q=80"
+											},
+											{
+												"id": "SKU_10001_5",
+												"specs": { "颜色": "深空蓝", "版本": "标准版" },
+												"price": 31900,
+												"originalPrice": 39900,
+												"stock": 0
+											},
+											{
+												"id": "SKU_10001_6",
+												"specs": { "颜色": "深空蓝", "版本": "旗舰降噪版" },
+												"price": 38900,
+												"originalPrice": 46900,
+												"stock": 12
+											}
+										],
+										"detailImages": [
+											"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900&auto=format&fit=crop&q=80",
+											"https://images.unsplash.com/photo-1583394838336-acd977736f90?w=900&auto=format&fit=crop&q=80"
+										]
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

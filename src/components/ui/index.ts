@@ -37,3 +37,5 @@ export * from './FloatQuickMenu';
 export * from './AuthMask';
 export * from './ActionTile';
 export * from './Icon';
+export * from './Stepper';
+export * from './Price';

@@ -4,6 +4,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { useAuthStore } from '@/store/auth';
 import { ARTICLE_ROUTES } from '@/packages/article/routes';
 import { FEEDBACK_ROUTES } from '@/packages/feedback/routes';
+import { SHOP_ROUTES } from '@/packages/shop/routes';
+import { MESSAGE_ROUTES } from '@/packages/message/routes';
 import { mapsTo } from '@/utils/common';
 
 export default function Home() {
@@ -73,6 +75,22 @@ export default function Home() {
 				</View>
 
 				<View className="grid grid-cols-2 gap-3">
+					<ActionTile
+						layout="compact"
+						theme="rose"
+						title="精选商城"
+						subTitle="商品 + SKU 样板"
+						icon="icon-[ph--storefront-duotone]"
+						onClick={() => mapsTo(SHOP_ROUTES.goodsList)}
+					/>
+					<ActionTile
+						layout="compact"
+						theme="indigo"
+						title="消息通知"
+						subTitle="未读 + 详情样板"
+						icon="icon-[ph--bell-ringing-duotone]"
+						onClick={() => mapsTo(MESSAGE_ROUTES.list)}
+					/>
 					<ActionTile
 						layout="compact"
 						theme="blue"
