@@ -7,9 +7,11 @@ export const SHOP_ROUTES = {
 	goodsList: '/packages/shop/pages/goods-list/index',
 	/** 商品详情页（传 ?id=xxx） */
 	goodsDetail: '/packages/shop/pages/goods-detail/index',
+	/** 购物车页 */
+	cart: '/packages/shop/pages/cart/index',
 } as const;
 
 export const shopSubPackage = {
 	root: 'packages/shop',
-	pages: ['pages/goods-list/index', 'pages/goods-detail/index'],
+	pages: ['pages/goods-list/index', 'pages/goods-detail/index', 'pages/cart/index'],
 };

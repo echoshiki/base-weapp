@@ -14,14 +14,18 @@ import {
 	Button,
 	ImagePreview,
 } from '@/components/ui';
-import { useGoodsDetail } from '../../hooks';
+import { mapsTo } from '@/utils/common';
+import { useAddCart, useCartList, useGoodsDetail } from '../../hooks';
 import { SkuActionMode, SkuConfirmPayload, SkuPicker } from '../../components/SkuPicker';
+import { SHOP_ROUTES } from '../../routes';
 import { GoodsSku } from '../../types';
 
 export default function GoodsDetailPage() {
 	const { params } = useRouter();
 	const id = params.id ? decodeURIComponent(params.id) : '';
 	const { data: detail, isLoading } = useGoodsDetail(id);
+	const { totalCount: cartCount } = useCartList();
+	const { mutate: addCart } = useAddCart();
 
 	const [swiperIndex, setSwiperIndex] = useState(0);
 	const [skuOpen, setSkuOpen] = useState(false);
@@ -37,11 +41,11 @@ export default function GoodsDetailPage() {
 	const handleSkuConfirm = ({ sku, quantity, action }: SkuConfirmPayload) => {
 		setSelectedSku(sku);
 		setSelectedQty(quantity);
-		const specText = Object.values(sku.specs || {}).join(' / ');
 		if (action === 'cart') {
-			Taro.showToast({ title: `已加购 ${quantity} 件${specText ? `（${specText}）` : ''}`, icon: 'success' });
+			if (!detail) return;
+			addCart({ goodsId: detail.id, skuId: sku.id, quantity });
 		} else {
-			Taro.showToast({ title: `已选 ${quantity} 件，即将进入结算`, icon: 'none' });
+			Taro.showToast({ title: `已选 ${quantity} 件，结算页将在第 3 步接入`, icon: 'none' });
 		}
 	};
 
@@ -193,11 +197,16 @@ export default function GoodsDetailPage() {
 							</TaroButton>
 
 							<View
-								className="flex flex-col items-center justify-center gap-0.5 text-zinc-600 leading-none cursor-pointer active:opacity-70"
-								onClick={() => Taro.showToast({ title: '购物车将在第 2 步接入', icon: 'none' })}
+								className="relative flex flex-col items-center justify-center gap-0.5 text-zinc-600 leading-none cursor-pointer active:opacity-70"
+								onClick={() => mapsTo(SHOP_ROUTES.cart)}
 							>
 								<View className="icon-[ph--shopping-cart-simple] size-5" />
 								<Text className="text-xs">购物车</Text>
+								{cartCount > 0 && (
+									<View className="absolute -top-1.5 -right-2 min-w-4 h-4 px-1 rounded-full bg-rose-500 text-white text-xs font-semibold flex items-center justify-center leading-none">
+										<Text>{cartCount > 99 ? '99+' : cartCount}</Text>
+									</View>
+								)}
 							</View>
 						</View>
 

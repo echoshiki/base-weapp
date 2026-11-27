@@ -5,7 +5,10 @@
 		"version": "1.0.0",
 		"description": "src/packages/shop 独立电商模块的 OpenAPI 3.0 文档。金额字段统一以「分」为单位，已为所有字段配置 x-apifox-mock 规则，导入 Apifox 开启云端 Mock 即可直接联调。"
 	},
-	"tags": [{ "name": "电商-商品", "description": "商品分类、分页列表与多规格 SKU 详情" }],
+	"tags": [
+		{ "name": "电商-商品", "description": "商品分类、分页列表与多规格 SKU 详情" },
+		{ "name": "电商-购物车", "description": "购物车列表、加购、数量/勾选更新、全选与批量删除" }
+	],
 	"components": {
 		"schemas": {
 			"GoodsCategory": {
@@ -69,6 +72,36 @@
 						"type": "string",
 						"example": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80"
 					}
+				}
+			},
+			"CartItem": {
+				"type": "object",
+				"required": ["id", "goodsId", "skuId", "title", "image", "price", "quantity", "stock", "selected"],
+				"properties": {
+					"id": { "type": "string", "x-apifox-mock": "CART_@natural(1000, 9999)", "example": "CART_1001" },
+					"goodsId": { "type": "string", "x-apifox-mock": "GOODS_10001", "example": "GOODS_10001" },
+					"skuId": { "type": "string", "x-apifox-mock": "SKU_10001_1", "example": "SKU_10001_1" },
+					"title": {
+						"type": "string",
+						"x-apifox-mock": "@pick(['极简无线降噪蓝牙耳机 Pro', '极简石英腕表 蓝宝石镜面', '日式手工粗陶手冲咖啡壶'])",
+						"example": "极简无线降噪蓝牙耳机 Pro"
+					},
+					"image": {
+						"type": "string",
+						"x-apifox-mock": "@pick(['https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format&fit=crop&q=80'])",
+						"example": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80"
+					},
+					"specText": {
+						"type": "string",
+						"x-apifox-mock": "@pick(['云白 / 标准版', '炭黑 / 旗舰降噪版', '经典银 / 40mm'])",
+						"example": "云白 / 标准版"
+					},
+					"price": { "type": "integer", "x-apifox-mock": "@integer(9900, 45900)", "example": 29900 },
+					"originalPrice": { "type": "integer", "x-apifox-mock": "@integer(49900, 59900)", "example": 39900 },
+					"quantity": { "type": "integer", "x-apifox-mock": "@integer(1, 3)", "example": 1 },
+					"stock": { "type": "integer", "x-apifox-mock": "@integer(10, 50)", "example": 28 },
+					"selected": { "type": "boolean", "x-apifox-mock": "true", "example": true },
+					"invalid": { "type": "boolean", "x-apifox-mock": "false", "example": false }
 				}
 			}
 		}
@@ -405,6 +438,239 @@
 										]
 									}
 								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/shop/cart/list": {
+			"get": {
+				"tags": ["电商-购物车"],
+				"summary": "获取购物车列表",
+				"responses": {
+					"200": {
+						"description": "获取成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "success", "example": "success" },
+										"data": {
+											"type": "array",
+											"minItems": 2,
+											"maxItems": 3,
+											"items": { "$ref": "#/components/schemas/CartItem" }
+										}
+									}
+								},
+								"example": {
+									"code": 200,
+									"msg": "success",
+									"data": [
+										{
+											"id": "CART_1001",
+											"goodsId": "GOODS_10001",
+											"skuId": "SKU_10001_1",
+											"title": "极简无线降噪蓝牙耳机 Pro",
+											"image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80",
+											"specText": "云白 / 标准版",
+											"price": 29900,
+											"originalPrice": 39900,
+											"quantity": 1,
+											"stock": 28,
+											"selected": true,
+											"invalid": false
+										},
+										{
+											"id": "CART_1002",
+											"goodsId": "GOODS_10002",
+											"skuId": "SKU_10002_1",
+											"title": "极简石英腕表 蓝宝石镜面",
+											"image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format&fit=crop&q=80",
+											"specText": "经典银 / 40mm",
+											"price": 45900,
+											"originalPrice": 59900,
+											"quantity": 2,
+											"stock": 15,
+											"selected": true,
+											"invalid": false
+										}
+									]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/shop/cart/add": {
+			"post": {
+				"tags": ["电商-购物车"],
+				"summary": "加入购物车",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"required": ["goodsId", "skuId", "quantity"],
+								"properties": {
+									"goodsId": { "type": "string", "example": "GOODS_10001" },
+									"skuId": { "type": "string", "example": "SKU_10001_1" },
+									"quantity": { "type": "integer", "example": 1 }
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "加入成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "已加入购物车", "example": "已加入购物车" },
+										"data": {
+											"type": "object",
+											"required": ["id"],
+											"properties": {
+												"id": { "type": "string", "x-apifox-mock": "CART_@natural(1000, 9999)", "example": "CART_1003" }
+											}
+										}
+									}
+								},
+								"example": { "code": 200, "msg": "已加入购物车", "data": { "id": "CART_1003" } }
+							}
+						}
+					}
+				}
+			}
+		},
+		"/shop/cart/update": {
+			"put": {
+				"tags": ["电商-购物车"],
+				"summary": "更新购物车商品数量或勾选状态",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"required": ["id"],
+								"properties": {
+									"id": { "type": "string", "example": "CART_1001" },
+									"quantity": { "type": "integer", "example": 2 },
+									"selected": { "type": "boolean", "example": true }
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "更新成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "success", "example": "success" },
+										"data": { "type": "null", "x-apifox-mock": "null", "example": null }
+									}
+								},
+								"example": { "code": 200, "msg": "success", "data": null }
+							}
+						}
+					}
+				}
+			}
+		},
+		"/shop/cart/toggle-all": {
+			"put": {
+				"tags": ["电商-购物车"],
+				"summary": "全选 / 取消全选购物车",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"required": ["selected"],
+								"properties": {
+									"selected": { "type": "boolean", "example": true }
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "操作成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "success", "example": "success" },
+										"data": { "type": "null", "x-apifox-mock": "null", "example": null }
+									}
+								},
+								"example": { "code": 200, "msg": "success", "data": null }
+							}
+						}
+					}
+				}
+			}
+		},
+		"/shop/cart/remove": {
+			"post": {
+				"tags": ["电商-购物车"],
+				"summary": "批量删除购物车商品",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"required": ["ids"],
+								"properties": {
+									"ids": {
+										"type": "array",
+										"items": { "type": "string" },
+										"example": ["CART_1001"]
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "删除成功",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["code", "msg", "data"],
+									"properties": {
+										"code": { "type": "integer", "enum": [200], "x-apifox-mock": "200", "example": 200 },
+										"msg": { "type": "string", "x-apifox-mock": "已移出购物车", "example": "已移出购物车" },
+										"data": { "type": "null", "x-apifox-mock": "null", "example": null }
+									}
+								},
+								"example": { "code": 200, "msg": "已移出购物车", "data": null }
 							}
 						}
 					}

@@ -3,7 +3,7 @@ import Taro, { usePullDownRefresh, useReachBottom } from '@tarojs/taro';
 import { useEffect, useMemo, useState } from 'react';
 import { Page, SearchBar, Tabs, Card, Skeleton, Empty, AspectRatio } from '@/components/ui';
 import { cn, mapsTo } from '@/utils/common';
-import { useGoodsCategories, useGoodsList } from '../../hooks';
+import { useCartList, useGoodsCategories, useGoodsList } from '../../hooks';
 import { GoodsCard } from '../../components/GoodsCard';
 import { SHOP_ROUTES } from '../../routes';
 import { GoodsItem, GoodsSort } from '../../types';
@@ -19,6 +19,7 @@ export default function GoodsListPage() {
 	const [list, setList] = useState<GoodsItem[]>([]);
 
 	const { data: categories = [] } = useGoodsCategories();
+	const { totalCount: cartCount } = useCartList();
 	const { data, isLoading, isFetching, refetch } = useGoodsList({
 		page,
 		pageSize: PAGE_SIZE,
@@ -79,6 +80,19 @@ export default function GoodsListPage() {
 							setInputVal('');
 							resetAndQuery({ keyword: '' });
 						}}
+						action={
+							<View
+								className="relative size-10 rounded-full bg-zinc-100/80 flex items-center justify-center text-zinc-700 active:bg-zinc-200 cursor-pointer shrink-0"
+								onClick={() => mapsTo(SHOP_ROUTES.cart)}
+							>
+								<View className="icon-[ph--shopping-cart-simple] size-5" />
+								{cartCount > 0 && (
+									<View className="absolute -top-0.5 -right-0.5 min-w-4 h-4 px-1 rounded-full bg-rose-500 text-white text-xs font-semibold flex items-center justify-center leading-none">
+										<Text>{cartCount > 99 ? '99+' : cartCount}</Text>
+									</View>
+								)}
+							</View>
+						}
 					/>
 				</View>
 
